@@ -76,12 +76,6 @@ export const insertDocumentSchema = createInsertSchema(documents).omit({
   createdAt: true,
 });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
-
-export type InsertClaim = z.infer<typeof insertClaimSchema>;
-export type Claim = typeof claims.$inferSelect;
-
 // Azure Communication Services chat data
 export const chatThreads = pgTable("chat_threads", {
   id: serial("id").primaryKey(),
@@ -208,6 +202,7 @@ export const auditLogsRelations = relations(auditLogs, ({ one }) => ({
   }),
 }));
 
+// Export all the types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 

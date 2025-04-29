@@ -34,6 +34,7 @@ export default function Header() {
             <Link href="#resources" className="text-gray-300 hover:text-white transition duration-150">Resources</Link>
             <Link href="#about" className="text-gray-300 hover:text-white transition duration-150">About</Link>
             <Link href="#contact" className="text-gray-300 hover:text-white transition duration-150">Contact</Link>
+            <Link href="/azure-deployment" className="text-gold hover:text-white transition duration-150">Azure Deployment</Link>
           </nav>
           
           <div className="flex items-center">
@@ -68,6 +69,7 @@ export default function Header() {
             <Link href="#resources" className="block px-3 py-2 text-base font-medium text-white hover:bg-[hsl(220,60%,30%)] rounded-md">Resources</Link>
             <Link href="#about" className="block px-3 py-2 text-base font-medium text-white hover:bg-[hsl(220,60%,30%)] rounded-md">About</Link>
             <Link href="#contact" className="block px-3 py-2 text-base font-medium text-white hover:bg-[hsl(220,60%,30%)] rounded-md">Contact</Link>
+            <Link href="/azure-deployment" className="block px-3 py-2 text-base font-medium text-gold hover:bg-[hsl(220,60%,30%)] rounded-md">Azure Deployment</Link>
             <div className="mt-4 flex flex-col space-y-3">
               <Link href="#login" className="text-center px-4 py-2 border rounded text-white border-white hover:border-transparent hover:text-navy hover:bg-[hsl(var(--secondary))] transition duration-150">Login</Link>
               <Link href="#get-started" className="text-center px-4 py-2 rounded text-navy gold hover:bg-gold-light transition duration-150">Get Started</Link>

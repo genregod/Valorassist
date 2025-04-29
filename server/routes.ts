@@ -1,12 +1,23 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
 import { insertClaimSchema } from "@shared/schema";
 import { analyzeClaimInfo, generateDocumentTemplate } from "./openai";
+import { 
+  getClaimStatus, 
+  getPatientRecords, 
+  verifyVeteranStatus,
+  getFacilityInfo,
+  searchFacilities,
+  getEducationBenefits
+} from "./va-api";
+import { analyzeVADocument, extractVAClaimInfo } from "./document-analysis";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // API endpoints
+  // ----------------
+  // Claims API routes
+  // ----------------
   app.post("/api/claims", async (req, res) => {
     try {
       // Validate input data
@@ -72,6 +83,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // ----------------
+  // Documents API routes
+  // ----------------
   app.post("/api/claims/:id/documents", async (req, res) => {
     try {
       const claimId = parseInt(req.params.id);
@@ -128,6 +142,155 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Failed to retrieve documents" });
     }
   });
+
+  // ----------------
+  // VA API Integration routes
+  // ----------------
+  
+  // Get VA claim status
+  app.get("/api/va/claims/:claimId", async (req, res) => {
+    try {
+      const { claimId } = req.params;
+      const { ssn } = req.query;
+      
+      if (!ssn || typeof ssn !== 'string') {
+        return res.status(400).json({ message: "SSN is required as a query parameter" });
+      }
+      
+      const claimStatus = await getClaimStatus(claimId, ssn);
+      return res.json(claimStatus);
+    } catch (error) {
+      console.error("Error fetching VA claim status:", error);
+      return res.status(500).json({ message: "Failed to retrieve VA claim status" });
+    }
+  });
+  
+  // Get VA patient records
+  app.get("/api/va/patient/:icn", async (req, res) => {
+    try {
+      const { icn } = req.params;
+      const patientRecords = await getPatientRecords(icn);
+      return res.json(patientRecords);
+    } catch (error) {
+      console.error("Error fetching VA patient records:", error);
+      return res.status(500).json({ message: "Failed to retrieve VA patient records" });
+    }
+  });
+  
+  // Verify veteran status
+  app.post("/api/va/verify", async (req, res) => {
+    try {
+      const { ssn, firstName, lastName, birthDate } = req.body;
+      
+      if (!ssn || !firstName || !lastName || !birthDate) {
+        return res.status(400).json({ 
+          message: "SSN, firstName, lastName, and birthDate are required" 
+        });
+      }
+      
+      const verificationResult = await verifyVeteranStatus(
+        ssn, firstName, lastName, birthDate
+      );
+      
+      return res.json(verificationResult);
+    } catch (error) {
+      console.error("Error verifying veteran status:", error);
+      return res.status(500).json({ message: "Failed to verify veteran status" });
+    }
+  });
+  
+  // Get VA facility information
+  app.get("/api/va/facilities/:facilityId", async (req, res) => {
+    try {
+      const { facilityId } = req.params;
+      const facilityInfo = await getFacilityInfo(facilityId);
+      return res.json(facilityInfo);
+    } catch (error) {
+      console.error("Error fetching VA facility information:", error);
+      return res.status(500).json({ message: "Failed to retrieve VA facility information" });
+    }
+  });
+  
+  // Search VA facilities by location
+  app.get("/api/va/facilities", async (req, res) => {
+    try {
+      const { lat, long, radius } = req.query;
+      
+      if (!lat || !long) {
+        return res.status(400).json({ 
+          message: "Latitude (lat) and longitude (long) are required query parameters" 
+        });
+      }
+      
+      const latitude = parseFloat(lat as string);
+      const longitude = parseFloat(long as string);
+      const searchRadius = radius ? parseInt(radius as string) : 50;
+      
+      if (isNaN(latitude) || isNaN(longitude)) {
+        return res.status(400).json({ message: "Invalid latitude or longitude values" });
+      }
+      
+      const facilities = await searchFacilities(latitude, longitude, searchRadius);
+      return res.json(facilities);
+    } catch (error) {
+      console.error("Error searching VA facilities:", error);
+      return res.status(500).json({ message: "Failed to search VA facilities" });
+    }
+  });
+  
+  // Get education benefits
+  app.get("/api/va/education/:fileNumber", async (req, res) => {
+    try {
+      const { fileNumber } = req.params;
+      const educationBenefits = await getEducationBenefits(fileNumber);
+      return res.json(educationBenefits);
+    } catch (error) {
+      console.error("Error fetching education benefits:", error);
+      return res.status(500).json({ message: "Failed to retrieve education benefits" });
+    }
+  });
+  
+  // ----------------
+  // Document Analysis API routes
+  // ----------------
+  
+  // Analyze VA document
+  app.post("/api/document-analysis", async (req, res) => {
+    try {
+      const { documentUrl, documentType } = req.body;
+      
+      if (!documentUrl) {
+        return res.status(400).json({ message: "Document URL is required" });
+      }
+      
+      const analysisResult = await analyzeVADocument(documentUrl, documentType);
+      return res.json(analysisResult);
+    } catch (error) {
+      console.error("Error analyzing document:", error);
+      return res.status(500).json({ message: "Failed to analyze document" });
+    }
+  });
+  
+  // Extract VA claim information from document
+  app.post("/api/document-analysis/claim-info", async (req, res) => {
+    try {
+      const { documentUrl } = req.body;
+      
+      if (!documentUrl) {
+        return res.status(400).json({ message: "Document URL is required" });
+      }
+      
+      const claimInfo = await extractVAClaimInfo(documentUrl);
+      return res.json(claimInfo);
+    } catch (error) {
+      console.error("Error extracting claim info from document:", error);
+      return res.status(500).json({ message: "Failed to extract claim information from document" });
+    }
+  });
+
+  // ----------------
+  // Server setup
+  // ----------------
 
   const httpServer = createServer(app);
 

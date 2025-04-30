@@ -1,6 +1,19 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
+
+// Check for required API keys
+if (!process.env.OPENAI_API_KEY) {
+  console.warn("OpenAI API key not found. AI features will be disabled.");
+}
+
+if (!process.env.AZURE_COMMUNICATION_CONNECTION_STRING) {
+  console.warn("Azure Communication Services connection string not found. Chat features will be limited.");
+}
 
 const app = express();
 app.use(express.json());

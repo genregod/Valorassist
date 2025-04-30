@@ -1,5 +1,6 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
+import { WebSocketServer } from "ws";
 import { storage } from "./storage";
 import { z } from "zod";
 import { insertClaimSchema } from "@shared/schema";
@@ -13,8 +14,20 @@ import {
   getEducationBenefits
 } from "./va-api";
 import { analyzeVADocument, extractVAClaimInfo } from "./document-analysis";
+import { setupAuth } from "./auth";
+import { 
+  createChatUser, 
+  createSupportChatThread, 
+  sendChatMessage, 
+  getChatMessages 
+} from "./azure-chat";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // ----------------
+  // Setup Authentication
+  // ----------------
+  setupAuth(app);
+  
   // ----------------
   // Claims API routes
   // ----------------
@@ -289,10 +302,264 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ----------------
+  // Chat API routes
+  // ----------------
+  
+  // Create chat user
+  app.post("/api/chat/users", async (req, res) => {
+    try {
+      // Check if user is authenticated
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const userId = req.user?.id.toString();
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Invalid user" });
+      }
+      
+      // Create chat user
+      const chatUser = await createChatUser(userId);
+      
+      // Create audit log
+      await storage.createAuditLog({
+        userId: req.user.id,
+        action: "create_chat_user",
+        resourceType: "chat_user",
+        resourceId: chatUser.communicationUserId,
+        ip: req.ip || "0.0.0.0",
+        userAgent: req.get("User-Agent") || "Unknown",
+        details: { communicationUserId: chatUser.communicationUserId }
+      });
+      
+      return res.status(201).json(chatUser);
+    } catch (error) {
+      console.error("Error creating chat user:", error);
+      return res.status(500).json({ message: "Failed to create chat user" });
+    }
+  });
+  
+  // Create support chat thread
+  app.post("/api/chat/threads", async (req, res) => {
+    try {
+      // Check if user is authenticated
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const userId = req.user?.id;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Invalid user" });
+      }
+      
+      const { 
+        userDisplayName, 
+        userCommunicationId, 
+        supportDisplayName, 
+        supportCommunicationId,
+        topic
+      } = req.body;
+      
+      if (!userCommunicationId || !supportCommunicationId) {
+        return res.status(400).json({ 
+          message: "userCommunicationId and supportCommunicationId are required" 
+        });
+      }
+      
+      // Create chat thread
+      const chatThread = await createSupportChatThread(
+        userDisplayName || req.user.username,
+        userCommunicationId,
+        supportDisplayName || "VA Support Agent",
+        supportCommunicationId
+      );
+      
+      // Store the thread in our database
+      const threadData = await storage.createChatThread({
+        threadId: chatThread.threadId,
+        topic: topic || `Support chat for ${userDisplayName || req.user.username}`,
+        userId: userId,
+        status: "active"
+      });
+      
+      // Create audit log
+      await storage.createAuditLog({
+        userId: req.user.id,
+        action: "create_chat_thread",
+        resourceType: "chat_thread",
+        resourceId: chatThread.threadId,
+        ip: req.ip || "0.0.0.0",
+        userAgent: req.get("User-Agent") || "Unknown",
+        details: { threadId: chatThread.threadId }
+      });
+      
+      return res.status(201).json({
+        ...chatThread,
+        ...threadData
+      });
+    } catch (error) {
+      console.error("Error creating chat thread:", error);
+      return res.status(500).json({ message: "Failed to create chat thread" });
+    }
+  });
+  
+  // Send chat message
+  app.post("/api/chat/threads/:threadId/messages", async (req, res) => {
+    try {
+      // Check if user is authenticated
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const { threadId } = req.params;
+      const { senderCommunicationId, senderToken, content } = req.body;
+      
+      if (!senderCommunicationId || !senderToken || !content) {
+        return res.status(400).json({ 
+          message: "senderCommunicationId, senderToken, and content are required" 
+        });
+      }
+      
+      // Send the message
+      const message = await sendChatMessage(
+        threadId,
+        senderCommunicationId,
+        senderToken,
+        content
+      );
+      
+      // Store the message in our database
+      const messageData = await storage.createChatMessage({
+        threadId,
+        messageId: message.messageId || `local-${Date.now()}`,
+        senderId: senderCommunicationId,
+        content,
+        type: "text"
+      });
+      
+      // Create audit log
+      await storage.createAuditLog({
+        userId: req.user.id,
+        action: "send_chat_message",
+        resourceType: "chat_message",
+        resourceId: messageData.messageId,
+        ip: req.ip || "0.0.0.0",
+        userAgent: req.get("User-Agent") || "Unknown",
+        details: { threadId, messageId: messageData.messageId }
+      });
+      
+      return res.status(201).json({
+        ...message,
+        ...messageData
+      });
+    } catch (error) {
+      console.error("Error sending chat message:", error);
+      return res.status(500).json({ message: "Failed to send chat message" });
+    }
+  });
+  
+  // Get chat messages
+  app.get("/api/chat/threads/:threadId/messages", async (req, res) => {
+    try {
+      // Check if user is authenticated
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const { threadId } = req.params;
+      const { userToken, limit } = req.query;
+      
+      if (!userToken || typeof userToken !== 'string') {
+        return res.status(400).json({ message: "userToken is required as a query parameter" });
+      }
+      
+      const maxResults = limit ? parseInt(limit as string) : 100;
+      
+      // Get the messages from Azure
+      const messages = await getChatMessages(
+        threadId,
+        userToken,
+        maxResults
+      );
+      
+      // Also get the locally stored messages as a fallback
+      const localMessages = await storage.getChatMessages(threadId, maxResults);
+      
+      // Return the messages, giving preference to Azure if available
+      return res.json({
+        messages: messages.messages || localMessages
+      });
+    } catch (error) {
+      console.error("Error retrieving chat messages:", error);
+      return res.status(500).json({ message: "Failed to retrieve chat messages" });
+    }
+  });
+  
+  // Get user chat threads
+  app.get("/api/chat/threads", async (req, res) => {
+    try {
+      // Check if user is authenticated
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const userId = req.user?.id;
+      
+      if (!userId) {
+        return res.status(401).json({ message: "Invalid user" });
+      }
+      
+      // Get the threads from our database
+      const threads = await storage.getChatThreadsByUserId(userId);
+      
+      return res.json({ threads });
+    } catch (error) {
+      console.error("Error retrieving chat threads:", error);
+      return res.status(500).json({ message: "Failed to retrieve chat threads" });
+    }
+  });
+  
+  // ----------------
   // Server setup
   // ----------------
 
   const httpServer = createServer(app);
+  
+  // Set up WebSocket server for real-time chat
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  
+  wss.on('connection', (ws) => {
+    console.log('WebSocket client connected');
+    
+    ws.on('message', async (message) => {
+      try {
+        // Parse the message
+        const data = JSON.parse(message.toString());
+        
+        // Handle different message types
+        if (data.type === 'chat_message') {
+          // Broadcast the message to all connected clients
+          wss.clients.forEach((client) => {
+            if (client !== ws && client.readyState === WebSocket.OPEN) {
+              client.send(JSON.stringify({
+                type: 'chat_message',
+                threadId: data.threadId,
+                message: data.message
+              }));
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error handling WebSocket message:', error);
+      }
+    });
+    
+    ws.on('close', () => {
+      console.log('WebSocket client disconnected');
+    });
+  });
 
   return httpServer;
 }

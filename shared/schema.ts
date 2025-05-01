@@ -35,7 +35,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export const claims = pgTable("claims", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id"),
+  userId: integer("user_id").references(() => users.id, { onDelete: 'set null' }),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   email: text("email").notNull(),

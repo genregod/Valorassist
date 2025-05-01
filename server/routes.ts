@@ -5,6 +5,12 @@ import { createServer, type Server } from "http";
 import { 
   User
 } from "@shared/schema";
+
+// Helper function to safely get the user ID from the request
+function getUserId(req: Request): number | undefined {
+  if (!req.user) return undefined;
+  return (req.user as any).id;
+}
 import { WebSocketServer } from "ws";
 import { storage } from "./storage";
 import { z } from "zod";
@@ -481,7 +487,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Authentication required" });
       }
       
-      const userId = (req.user as AuthUser)?.id;
+      const userId = getUserId(req);
       
       if (!userId) {
         return res.status(401).json({ message: "Invalid user" });
@@ -519,7 +525,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create audit log
       await storage.createAuditLog({
-        userId: (req.user as any).id,
+        userId,
         action: "create_chat_thread",
         resourceType: "chat_thread",
         resourceId: chatThread.threadId,
@@ -544,6 +550,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if user is authenticated
       if (!req.isAuthenticated()) {
         return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const userId = getUserId(req);
+      if (!userId) {
+        return res.status(401).json({ message: "Invalid user" });
       }
       
       const { threadId } = req.params;
@@ -574,7 +585,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create audit log
       await storage.createAuditLog({
-        userId: (req.user as AuthUser).id,
+        userId,
         action: "send_chat_message",
         resourceType: "chat_message",
         resourceId: messageData.messageId,
@@ -638,7 +649,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Authentication required" });
       }
       
-      const userId = (req.user as AuthUser)?.id;
+      const userId = getUserId(req);
       
       if (!userId) {
         return res.status(401).json({ message: "Invalid user" });

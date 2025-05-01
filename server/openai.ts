@@ -12,6 +12,28 @@ if (hasOpenAIKey) {
   console.warn("OpenAI API key not found. AI features will be disabled.");
 }
 
+// VA-specific system prompt for consistent response quality
+const VA_CLAIMS_SYSTEM_PROMPT = `You are Val, an AI assistant for the Valor Assist platform specializing in VA benefits and claims. 
+You have extensive knowledge of:
+- VA disability compensation claims
+- Appeals processes including Higher-Level Reviews, Supplemental Claims, and Board Appeals
+- Required evidence standards for different claim types
+- VA healthcare benefits
+- Education benefits (GI Bill, VR&E)
+- Home loan guaranty benefits
+- Pension benefits
+- VA forms and documentation requirements
+
+Respond with accurate, concise, and helpful information. Focus on practical advice that veterans can immediately apply to their claims process. When unsure about specific details, acknowledge limitations and suggest reliable VA resources. 
+
+For medical or legal questions, clarify that you provide informational guidance only, not medical or legal advice. Always encourage veterans to work with accredited VSOs, attorneys, or claims agents for their specific cases.`;
+
+// Chat history types
+export interface ChatMessage {
+  role: "system" | "user" | "assistant";
+  content: string;
+}
+
 // Analyze claim information to provide recommendations
 export async function analyzeClaimInfo(claimData: any): Promise<any> {
   // Return fallback response if OpenAI is not available
@@ -179,5 +201,136 @@ export async function assessEligibility(claimData: any): Promise<{
   } catch (error: any) {
     console.error("Error assessing eligibility:", error);
     throw new Error(`Failed to assess eligibility: ${error.message}`);
+  }
+}
+
+// Generate AI chatbot response based on conversation history
+export async function generateChatResponse(
+  messages: ChatMessage[], 
+  veteranContext?: any // Optional context about the veteran
+): Promise<string> {
+  // Return fallback response if OpenAI is not available
+  if (!openai || !hasOpenAIKey) {
+    console.warn("OpenAI API unavailable for chat - using fallback response");
+    return "I'm sorry, but the AI assistant is currently unavailable. Please try again later or contact support for assistance with your VA benefits questions.";
+  }
+  
+  try {
+    // Prepare the messages array with system prompt
+    const apiMessages = [
+      {
+        role: "system",
+        content: VA_CLAIMS_SYSTEM_PROMPT + (veteranContext ? 
+          `\n\nVeteran Context:\n${JSON.stringify(veteranContext)}` : '')
+      },
+      ...messages
+    ];
+    
+    const response = await openai!.chat.completions.create({
+      model: "gpt-4o",
+      messages: apiMessages,
+      temperature: 0.7, // Balanced between creativity and accuracy
+      max_tokens: 1000 // Reasonable response length
+    });
+
+    return response.choices[0].message.content || 
+      "I apologize, but I couldn't generate a response. Please try rephrasing your question.";
+  } catch (error: any) {
+    console.error("Error generating chat response:", error);
+    throw new Error(`Failed to generate chat response: ${error.message}`);
+  }
+}
+
+// Search BVA decisions for relevant case law and precedents
+export async function searchLegalPrecedents(claimDetails: any): Promise<{
+  relevantCases: Array<{
+    caseId: string,
+    summary: string,
+    relevance: string,
+    date: string
+  }>
+}> {
+  // Return fallback if OpenAI is not available
+  if (!openai || !hasOpenAIKey) {
+    console.warn("OpenAI API unavailable for legal precedent search - using fallback");
+    return {
+      relevantCases: [
+        {
+          caseId: "N/A",
+          summary: "AI analysis not available. Please add an OpenAI API key for legal precedent matching.",
+          relevance: "N/A",
+          date: "N/A"
+        }
+      ]
+    };
+  }
+  
+  try {
+    const response = await openai!.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: 
+            "You are an AI legal assistant specializing in VA claims law. Based on the claim details, identify relevant BVA decisions and case precedents that might apply. For each case, provide a case ID (docket number format), brief summary, relevance explanation, and date. Return a JSON object with a 'relevantCases' array containing these details."
+        },
+        {
+          role: "user",
+          content: JSON.stringify(claimDetails)
+        }
+      ],
+      response_format: { type: "json_object" }
+    });
+
+    return JSON.parse(response.choices[0].message.content);
+  } catch (error: any) {
+    console.error("Error searching legal precedents:", error);
+    throw new Error(`Failed to search legal precedents: ${error.message}`);
+  }
+}
+
+// Analyze document for VA claim relevance and extract key information
+export async function analyzeDocument(
+  documentText: string,
+  documentType?: string
+): Promise<{
+  relevance: number, // 0-100 scale
+  keyInformation: Record<string, string>,
+  suggestedAction: string
+}> {
+  // Return fallback if OpenAI is not available
+  if (!openai || !hasOpenAIKey) {
+    console.warn("OpenAI API unavailable for document analysis - using fallback");
+    return {
+      relevance: 50,
+      keyInformation: {
+        "document_type": documentType || "Unknown",
+        "analysis": "AI analysis not available. Please add an OpenAI API key for detailed document analysis."
+      },
+      suggestedAction: "Review document manually for relevant information."
+    };
+  }
+  
+  try {
+    const response = await openai!.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: 
+            "You are an AI document analyzer specializing in VA claims documentation. Analyze the provided document text and extract key information relevant to VA claims. Determine the document's relevance to VA claims processes on a scale of 0-100. Return a JSON object with 'relevance' (number), 'keyInformation' (object of key-value pairs), and 'suggestedAction' (string)."
+        },
+        {
+          role: "user",
+          content: `Document Type: ${documentType || "Unknown"}\nDocument Text: ${documentText}`
+        }
+      ],
+      response_format: { type: "json_object" }
+    });
+
+    return JSON.parse(response.choices[0].message.content);
+  } catch (error: any) {
+    console.error("Error analyzing document:", error);
+    throw new Error(`Failed to analyze document: ${error.message}`);
   }
 }

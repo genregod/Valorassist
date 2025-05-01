@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 // Check if API key exists
 const hasOpenAIKey = !!process.env.OPENAI_API_KEY;
@@ -34,6 +35,25 @@ export interface ChatMessage {
   content: string;
 }
 
+// Utility function to safely parse JSON responses
+function safeJsonParse(jsonString: string | null): any {
+  if (!jsonString) return {};
+  try {
+    return JSON.parse(jsonString);
+  } catch (error) {
+    console.error("Error parsing JSON response:", error);
+    return {};
+  }
+}
+
+// Convert our ChatMessage type to OpenAI's ChatCompletionMessageParam
+function convertToOpenAIMessages(messages: ChatMessage[]): ChatCompletionMessageParam[] {
+  return messages.map(msg => ({
+    role: msg.role,
+    content: msg.content
+  })) as ChatCompletionMessageParam[];
+}
+
 // Analyze claim information to provide recommendations
 export async function analyzeClaimInfo(claimData: any): Promise<any> {
   // Return fallback response if OpenAI is not available
@@ -64,7 +84,8 @@ export async function analyzeClaimInfo(claimData: any): Promise<any> {
       response_format: { type: "json_object" }
     });
 
-    return JSON.parse(response.choices[0].message.content);
+    const content = response.choices[0].message.content || "{}";
+    return JSON.parse(content);
   } catch (error: any) {
     console.error("Error analyzing claim:", error);
     throw new Error(`Failed to analyze claim: ${error.message}`);
@@ -158,7 +179,8 @@ export async function identifyMissingEvidence(claimType: string, providedDocumen
       response_format: { type: "json_object" }
     });
 
-    const result = JSON.parse(response.choices[0].message.content);
+    const content = response.choices[0].message.content || "{}";
+    const result = JSON.parse(content);
     return result.missingEvidence || [];
   } catch (error: any) {
     console.error("Error identifying missing evidence:", error);
@@ -197,7 +219,8 @@ export async function assessEligibility(claimData: any): Promise<{
       response_format: { type: "json_object" }
     });
 
-    return JSON.parse(response.choices[0].message.content);
+    const content = response.choices[0].message.content || "{}";
+    return safeJsonParse(content);
   } catch (error: any) {
     console.error("Error assessing eligibility:", error);
     throw new Error(`Failed to assess eligibility: ${error.message}`);
@@ -282,7 +305,8 @@ export async function searchLegalPrecedents(claimDetails: any): Promise<{
       response_format: { type: "json_object" }
     });
 
-    return JSON.parse(response.choices[0].message.content);
+    const content = response.choices[0].message.content || "{}";
+    return safeJsonParse(content);
   } catch (error: any) {
     console.error("Error searching legal precedents:", error);
     throw new Error(`Failed to search legal precedents: ${error.message}`);
@@ -328,7 +352,8 @@ export async function analyzeDocument(
       response_format: { type: "json_object" }
     });
 
-    return JSON.parse(response.choices[0].message.content);
+    const content = response.choices[0].message.content || "{}";
+    return safeJsonParse(content);
   } catch (error: any) {
     console.error("Error analyzing document:", error);
     throw new Error(`Failed to analyze document: ${error.message}`);

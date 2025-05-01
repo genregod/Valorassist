@@ -9,7 +9,7 @@ import {
   type AuditLog, type InsertAuditLog
 } from "@shared/schema";
 import { db, pool } from "./db";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, sql } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import * as schema from "@shared/schema";
@@ -63,10 +63,18 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   // Transaction support
   async transaction<T>(callback: (trx: TransactionDB) => Promise<T>): Promise<T> {
-    return await pool.transaction(async (tx) => {
-      const txDb = drizzle(tx, { schema });
-      return await callback(txDb as TransactionDB);
-    });
+    // Since @neondatabase/serverless doesn't fully support the transaction API,
+    // we implement a basic transaction pattern with error handling
+    // In a production environment, this should be replaced with proper transaction support
+    try {
+      await db.execute(sql`BEGIN`);
+      const result = await callback(db as unknown as TransactionDB);
+      await db.execute(sql`COMMIT`);
+      return result;
+    } catch (error) {
+      await db.execute(sql`ROLLBACK`);
+      throw error;
+    }
   }
   // User operations
   async getUser(id: number): Promise<User | undefined> {

@@ -1,7 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 
-// Import User type from schema
+// Import schema and types
 import { 
   User
 } from "@shared/schema";
@@ -62,41 +62,107 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Debug auth information
-      console.log('Authentication debug: isAuthenticated=', req.isAuthenticated());
-      console.log('Authentication debug: user=', req.user);
-      
       // Get authenticated user ID if available
       const userId = getUserId(req);
-      console.log('Authentication debug: getUserId result=', userId);
       
       const claimData = {
         ...validationResult.data,
         userId: userId || null // Associate with user if authenticated
       };
       
-      // Store claim in the database
-      const claim = await storage.createClaim(claimData);
+      // Use transaction to ensure data integrity
+      const result = await storage.transaction(async (trx) => {
+        // Store claim in the database using the transaction
+        const [claim] = await trx
+          .insert(claims)
+          .values({
+            ...claimData,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          })
+          .returning();
+          
+        try {
+          // Perform AI analysis on the claim data
+          const analysis = await analyzeClaimInfo(claimData);
+          
+          // Update the claim with AI analysis results within the transaction
+          const [updatedClaim] = await trx
+            .update(claims)
+            .set({ 
+              aiAnalysis: analysis, 
+              updatedAt: new Date() 
+            })
+            .where(eq(claims.id, claim.id))
+            .returning();
+            
+          // Create audit log for claim submission (if authenticated)
+          if (userId) {
+            await trx
+              .insert(auditLogs)
+              .values({
+                userId,
+                action: 'create_claim',
+                resourceType: 'claim',
+                resourceId: claim.id.toString(),
+                ip: req.ip || '0.0.0.0',
+                userAgent: req.get('User-Agent') || 'Unknown',
+                details: { 
+                  claimTypes: claim.claimTypes,
+                  withAnalysis: true
+                },
+                timestamp: new Date()
+              });
+          }
+          
+          return { 
+            success: true, 
+            claim: updatedClaim, 
+            analysis,
+            withAnalysis: true
+          };
+        } catch (aiError) {
+          // If AI analysis fails, still save the claim but notify the client
+          console.error("AI analysis failed:", aiError);
+          
+          // Create audit log for claim submission (if authenticated) 
+          if (userId) {
+            await trx
+              .insert(auditLogs)
+              .values({
+                userId,
+                action: 'create_claim',
+                resourceType: 'claim',
+                resourceId: claim.id.toString(),
+                ip: req.ip || '0.0.0.0',
+                userAgent: req.get('User-Agent') || 'Unknown',
+                details: { 
+                  claimTypes: claim.claimTypes,
+                  withAnalysis: false,
+                  error: 'AI analysis failed'
+                },
+                timestamp: new Date()
+              });
+          }
+          
+          return { 
+            success: true, 
+            claim,
+            withAnalysis: false
+          };
+        }
+      });
       
-      // Perform AI analysis on the claim data
-      try {
-        const analysis = await analyzeClaimInfo(claimData);
-        
-        // Update the claim with AI analysis results
-        await storage.updateClaimAnalysis(claim.id, analysis);
-        
-        // Return success with the created claim and analysis
+      // Return response based on transaction result
+      if (result.withAnalysis) {
         return res.status(201).json({ 
           message: "Claim submitted successfully", 
-          claim: { ...claim, analysis }
+          claim: { ...result.claim, analysis: result.analysis }
         });
-      } catch (aiError) {
-        // If AI analysis fails, still save the claim but notify the client
-        console.error("AI analysis failed:", aiError);
-        
+      } else {
         return res.status(201).json({ 
           message: "Claim submitted successfully, but analysis is pending", 
-          claim
+          claim: result.claim
         });
       }
     } catch (error) {

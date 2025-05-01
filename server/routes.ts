@@ -62,7 +62,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      const claimData = validationResult.data;
+      // Debug auth information
+      console.log('Authentication debug: isAuthenticated=', req.isAuthenticated());
+      console.log('Authentication debug: user=', req.user);
+      
+      // Get authenticated user ID if available
+      const userId = getUserId(req);
+      console.log('Authentication debug: getUserId result=', userId);
+      
+      const claimData = {
+        ...validationResult.data,
+        userId: userId || null // Associate with user if authenticated
+      };
       
       // Store claim in the database
       const claim = await storage.createClaim(claimData);

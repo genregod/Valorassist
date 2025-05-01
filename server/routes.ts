@@ -312,16 +312,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const response = await generateChatResponse(messages, veteranContext);
       
       // Create audit log if user is authenticated
-      if (req.isAuthenticated() && req.user) {
-        await storage.createAuditLog({
-          userId: (req.user as any).id,
-          action: "ai_chat_interaction",
-          resourceType: "ai_chat",
-          resourceId: `chat-${Date.now()}`,
-          ip: req.ip || "0.0.0.0",
-          userAgent: req.get("User-Agent") || "Unknown",
-          details: { messageCount: messages.length }
-        });
+      if (req.isAuthenticated()) {
+        const userId = getUserId(req);
+        if (userId) {
+          await storage.createAuditLog({
+            userId,
+            action: "ai_chat_interaction",
+            resourceType: "ai_chat",
+            resourceId: `chat-${Date.now()}`,
+            ip: req.ip || "0.0.0.0",
+            userAgent: req.get("User-Agent") || "Unknown",
+            details: { messageCount: messages.length }
+          });
+        }
       }
       
       return res.json({ 
@@ -349,16 +352,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const precedents = await searchLegalPrecedents(claimDetails);
       
       // Create audit log if user is authenticated
-      if (req.isAuthenticated() && req.user) {
-        await storage.createAuditLog({
-          userId: (req.user as any).id,
-          action: "legal_precedent_search",
-          resourceType: "legal_search",
-          resourceId: `search-${Date.now()}`,
-          ip: req.ip || "0.0.0.0",
-          userAgent: req.get("User-Agent") || "Unknown",
-          details: { claimType: claimDetails.claimType || "Unknown" }
-        });
+      if (req.isAuthenticated()) {
+        const userId = getUserId(req);
+        if (userId) {
+          await storage.createAuditLog({
+            userId,
+            action: "legal_precedent_search",
+            resourceType: "legal_search",
+            resourceId: `search-${Date.now()}`,
+            ip: req.ip || "0.0.0.0",
+            userAgent: req.get("User-Agent") || "Unknown",
+            details: { claimType: claimDetails.claimType || "Unknown" }
+          });
+        }
       }
       
       return res.json(precedents);
@@ -380,19 +386,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const analysis = await analyzeDocument(documentText, documentType);
       
       // Create audit log if user is authenticated
-      if (req.isAuthenticated() && req.user) {
-        await storage.createAuditLog({
-          userId: (req.user as any).id,
-          action: "document_analysis",
-          resourceType: "document",
-          resourceId: `doc-${Date.now()}`,
-          ip: req.ip || "0.0.0.0",
-          userAgent: req.get("User-Agent") || "Unknown",
-          details: { 
-            documentType: documentType || "Unknown",
-            textLength: documentText.length
-          }
-        });
+      if (req.isAuthenticated()) {
+        const userId = getUserId(req);
+        if (userId) {
+          await storage.createAuditLog({
+            userId,
+            action: "document_analysis",
+            resourceType: "document",
+            resourceId: `doc-${Date.now()}`,
+            ip: req.ip || "0.0.0.0",
+            userAgent: req.get("User-Agent") || "Unknown",
+            details: { 
+              documentType: documentType || "Unknown",
+              textLength: documentText.length
+            }
+          });
+        }
       }
       
       return res.json(analysis);
@@ -452,18 +461,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Authentication required" });
       }
       
-      const userId = (req.user as any)?.id?.toString();
+      const reqUserId = getUserId(req);
       
-      if (!userId) {
+      if (!reqUserId) {
         return res.status(401).json({ message: "Invalid user" });
       }
+      
+      const userId = reqUserId.toString();
       
       // Create chat user
       const chatUser = await createChatUser(userId);
       
       // Create audit log
       await storage.createAuditLog({
-        userId: (req.user as any).id,
+        userId: reqUserId,
         action: "create_chat_user",
         resourceType: "chat_user",
         resourceId: chatUser.communicationUserId,
@@ -507,9 +518,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
+      // Get username safely
+      const username = req.user && 'username' in req.user 
+        ? (req.user as { username: string }).username 
+        : 'User';
+      
       // Create chat thread
       const chatThread = await createSupportChatThread(
-        userDisplayName || (req.user as any).username,
+        userDisplayName || username,
         userCommunicationId,
         supportDisplayName || "VA Support Agent",
         supportCommunicationId
@@ -518,7 +534,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Store the thread in our database
       const threadData = await storage.createChatThread({
         threadId: chatThread.threadId,
-        topic: topic || `Support chat for ${userDisplayName || (req.user as any).username}`,
+        topic: topic || `Support chat for ${userDisplayName || username}`,
         userId: userId,
         status: "active"
       });

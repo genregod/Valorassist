@@ -64,11 +64,16 @@ export const insertClaimSchema = createInsertSchema(claims).omit({
 
 export const documents = pgTable("documents", {
   id: serial("id").primaryKey(),
-  claimId: integer("claim_id").notNull(),
+  claimId: integer("claim_id").notNull().references(() => claims.id, { onDelete: 'cascade' }),
   name: text("name").notNull(),
   type: text("type").notNull(),
   content: text("content").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
+}, (table) => {
+  return {
+    claimIdx: uniqueIndex("document_claim_idx").on(table.claimId, table.name),
+    typeIdx: uniqueIndex("document_type_idx").on(table.type),
+  };
 });
 
 export const insertDocumentSchema = createInsertSchema(documents).omit({
@@ -81,37 +86,52 @@ export const chatThreads = pgTable("chat_threads", {
   id: serial("id").primaryKey(),
   threadId: text("thread_id").notNull().unique(),
   topic: text("topic").notNull(),
-  userId: integer("user_id").notNull(),
-  supportUserId: integer("support_user_id"),
+  userId: integer("user_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
+  supportUserId: integer("support_user_id").references(() => users.id, { onDelete: 'set null' }),
   status: text("status").default("active"),
   createdAt: timestamp("created_at").defaultNow(),
   closedAt: timestamp("closed_at"),
+}, (table) => {
+  return {
+    userIdx: uniqueIndex("chat_thread_user_idx").on(table.userId),
+    statusIdx: uniqueIndex("chat_thread_status_idx").on(table.status),
+    createdAtIdx: uniqueIndex("chat_thread_created_at_idx").on(table.createdAt),
+  };
 });
 
 export const chatMessages = pgTable("chat_messages", {
   id: serial("id").primaryKey(),
-  threadId: text("thread_id").notNull(),
+  threadId: text("thread_id").notNull().references(() => chatThreads.threadId, { onDelete: 'cascade' }),
   messageId: text("message_id").notNull().unique(),
   senderId: text("sender_id").notNull(),
   content: text("content").notNull(),
   type: text("type").default("text"),
   createdAt: timestamp("created_at").defaultNow(),
+}, (table) => {
+  return {
+    threadIdx: uniqueIndex("chat_message_thread_idx").on(table.threadId),
+    createdAtIdx: uniqueIndex("chat_message_created_at_idx").on(table.createdAt),
+  };
 });
 
 // Azure Document Analysis data
 export const documentAnalysisResults = pgTable("document_analysis_results", {
   id: serial("id").primaryKey(),
-  documentId: integer("document_id").notNull(),
+  documentId: integer("document_id").notNull().references(() => documents.id, { onDelete: 'cascade' }),
   resultType: text("result_type").notNull(),
   confidenceScore: text("confidence_score"),
   extractedData: jsonb("extracted_data"),
   createdAt: timestamp("created_at").defaultNow(),
+}, (table) => {
+  return {
+    documentResultTypeIdx: uniqueIndex("doc_analysis_result_doc_type_idx").on(table.documentId, table.resultType),
+  };
 });
 
 // Azure monitoring data
 export const auditLogs = pgTable("audit_logs", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id"),
+  userId: integer("user_id").references(() => users.id, { onDelete: 'set null' }),
   action: text("action").notNull(),
   resourceType: text("resource_type").notNull(),
   resourceId: text("resource_id"),
@@ -119,6 +139,11 @@ export const auditLogs = pgTable("audit_logs", {
   ip: text("ip"),
   userAgent: text("user_agent"),
   timestamp: timestamp("timestamp").defaultNow(),
+}, (table) => {
+  return {
+    userActionIdx: uniqueIndex("audit_log_user_action_idx").on(table.userId, table.action),
+    timestampIdx: uniqueIndex("audit_log_timestamp_idx").on(table.timestamp),
+  };
 });
 
 // Create insert schemas for the new tables

@@ -8,8 +8,14 @@ import {
   type DocumentAnalysisResult, type InsertDocumentAnalysisResult,
   type AuditLog, type InsertAuditLog
 } from "@shared/schema";
-import { db } from "./db";
+import { db, pool } from "./db";
 import { eq, and, desc } from "drizzle-orm";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { drizzle } from "drizzle-orm/neon-serverless";
+import * as schema from "@shared/schema";
+
+// Type for transactions
+type TransactionDB = PostgresJsDatabase<typeof schema>;
 
 // Full storage interface for Valor Assist
 export interface IStorage {
@@ -26,6 +32,9 @@ export interface IStorage {
   getClaimsByUserId(userId: number): Promise<Claim[]>;
   createClaim(claim: InsertClaim): Promise<Claim>;
   updateClaimAnalysis(id: number, analysis: any): Promise<Claim | undefined>;
+  
+  // Transaction support
+  transaction<T>(callback: (trx: TransactionDB) => Promise<T>): Promise<T>;
   
   // Document operations
   getDocument(id: number): Promise<Document | undefined>;
@@ -52,6 +61,13 @@ export interface IStorage {
 
 // Database implementation of the storage interface
 export class DatabaseStorage implements IStorage {
+  // Transaction support
+  async transaction<T>(callback: (trx: TransactionDB) => Promise<T>): Promise<T> {
+    return await pool.transaction(async (tx) => {
+      const txDb = drizzle(tx, { schema });
+      return await callback(txDb as TransactionDB);
+    });
+  }
   // User operations
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));

@@ -1,18 +1,10 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 
-// Extend Express Request to include user property
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        id: number;
-        username: string;
-        [key: string]: any;
-      };
-    }
-  }
-}
+// Import User type from schema
+import { 
+  User
+} from "@shared/schema";
 import { WebSocketServer } from "ws";
 import { storage } from "./storage";
 import { z } from "zod";
@@ -489,7 +481,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Authentication required" });
       }
       
-      const userId = req.user?.id;
+      const userId = (req.user as AuthUser)?.id;
       
       if (!userId) {
         return res.status(401).json({ message: "Invalid user" });
@@ -527,7 +519,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create audit log
       await storage.createAuditLog({
-        userId: req.user.id,
+        userId: (req.user as any).id,
         action: "create_chat_thread",
         resourceType: "chat_thread",
         resourceId: chatThread.threadId,
@@ -582,7 +574,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create audit log
       await storage.createAuditLog({
-        userId: req.user.id,
+        userId: (req.user as AuthUser).id,
         action: "send_chat_message",
         resourceType: "chat_message",
         resourceId: messageData.messageId,
@@ -646,7 +638,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Authentication required" });
       }
       
-      const userId = req.user?.id;
+      const userId = (req.user as AuthUser)?.id;
       
       if (!userId) {
         return res.status(401).json({ message: "Invalid user" });
@@ -704,7 +696,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               return;
             }
             
-            const validMessages = data.messages.every(msg => 
+            const validMessages = data.messages.every((msg: any) => 
               msg && typeof msg.role === 'string' && 
               ['user', 'assistant', 'system'].includes(msg.role) && 
               typeof msg.content === 'string'

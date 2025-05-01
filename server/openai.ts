@@ -240,13 +240,16 @@ export async function generateChatResponse(
   
   try {
     // Prepare the messages array with system prompt
-    const apiMessages = [
-      {
-        role: "system",
-        content: VA_CLAIMS_SYSTEM_PROMPT + (veteranContext ? 
-          `\n\nVeteran Context:\n${JSON.stringify(veteranContext)}` : '')
-      },
-      ...messages
+    const systemMessage: ChatCompletionMessageParam = {
+      role: "system",
+      content: VA_CLAIMS_SYSTEM_PROMPT + (veteranContext ? 
+        `\n\nVeteran Context:\n${JSON.stringify(veteranContext)}` : '')
+    };
+    
+    // Convert our ChatMessage type to OpenAI's type
+    const apiMessages: ChatCompletionMessageParam[] = [
+      systemMessage,
+      ...convertToOpenAIMessages(messages)
     ];
     
     const response = await openai!.chat.completions.create({

@@ -4,7 +4,14 @@ import { WebSocketServer } from "ws";
 import { storage } from "./storage";
 import { z } from "zod";
 import { insertClaimSchema } from "@shared/schema";
-import { analyzeClaimInfo, generateDocumentTemplate } from "./openai";
+import { 
+  analyzeClaimInfo, 
+  generateDocumentTemplate, 
+  generateChatResponse, 
+  searchLegalPrecedents,
+  analyzeDocument,
+  ChatMessage
+} from "./openai";
 import { 
   getClaimStatus, 
   getPatientRecords, 
@@ -21,6 +28,7 @@ import {
   sendChatMessage, 
   getChatMessages 
 } from "./azure-chat";
+import WebSocket from "ws";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // ----------------
@@ -260,6 +268,126 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching education benefits:", error);
       return res.status(500).json({ message: "Failed to retrieve education benefits" });
+    }
+  });
+  
+  // ----------------
+  // AI Features API routes
+  // ----------------
+  
+  // Generate AI chatbot response
+  app.post("/api/ai/chat", async (req, res) => {
+    try {
+      const { messages, veteranContext } = req.body;
+      
+      if (!messages || !Array.isArray(messages)) {
+        return res.status(400).json({ message: "Valid messages array is required" });
+      }
+      
+      // Validate message format
+      const validMessages = messages.every(msg => 
+        msg && typeof msg.role === 'string' && 
+        ['user', 'assistant', 'system'].includes(msg.role) && 
+        typeof msg.content === 'string'
+      );
+      
+      if (!validMessages) {
+        return res.status(400).json({ 
+          message: "Messages must have valid 'role' (user, assistant, or system) and 'content' properties" 
+        });
+      }
+      
+      // Generate AI response
+      const response = await generateChatResponse(messages, veteranContext);
+      
+      // Create audit log if user is authenticated
+      if (req.isAuthenticated()) {
+        await storage.createAuditLog({
+          userId: req.user.id,
+          action: "ai_chat_interaction",
+          resourceType: "ai_chat",
+          resourceId: `chat-${Date.now()}`,
+          ip: req.ip || "0.0.0.0",
+          userAgent: req.get("User-Agent") || "Unknown",
+          details: { messageCount: messages.length }
+        });
+      }
+      
+      return res.json({ 
+        response,
+        metadata: {
+          model: "gpt-4o",
+          timestamp: new Date().toISOString()
+        }
+      });
+    } catch (error) {
+      console.error("Error generating AI chat response:", error);
+      return res.status(500).json({ message: "Failed to generate AI response" });
+    }
+  });
+  
+  // Search for legal precedents
+  app.post("/api/ai/legal-precedents", async (req, res) => {
+    try {
+      const { claimDetails } = req.body;
+      
+      if (!claimDetails) {
+        return res.status(400).json({ message: "Claim details are required" });
+      }
+      
+      const precedents = await searchLegalPrecedents(claimDetails);
+      
+      // Create audit log if user is authenticated
+      if (req.isAuthenticated()) {
+        await storage.createAuditLog({
+          userId: req.user.id,
+          action: "legal_precedent_search",
+          resourceType: "legal_search",
+          resourceId: `search-${Date.now()}`,
+          ip: req.ip || "0.0.0.0",
+          userAgent: req.get("User-Agent") || "Unknown",
+          details: { claimType: claimDetails.claimType || "Unknown" }
+        });
+      }
+      
+      return res.json(precedents);
+    } catch (error) {
+      console.error("Error searching legal precedents:", error);
+      return res.status(500).json({ message: "Failed to search legal precedents" });
+    }
+  });
+  
+  // Analyze document text
+  app.post("/api/ai/document-analysis", async (req, res) => {
+    try {
+      const { documentText, documentType } = req.body;
+      
+      if (!documentText) {
+        return res.status(400).json({ message: "Document text is required" });
+      }
+      
+      const analysis = await analyzeDocument(documentText, documentType);
+      
+      // Create audit log if user is authenticated
+      if (req.isAuthenticated()) {
+        await storage.createAuditLog({
+          userId: req.user.id,
+          action: "document_analysis",
+          resourceType: "document",
+          resourceId: `doc-${Date.now()}`,
+          ip: req.ip || "0.0.0.0",
+          userAgent: req.get("User-Agent") || "Unknown",
+          details: { 
+            documentType: documentType || "Unknown",
+            textLength: documentText.length
+          }
+        });
+      }
+      
+      return res.json(analysis);
+    } catch (error) {
+      console.error("Error analyzing document:", error);
+      return res.status(500).json({ message: "Failed to analyze document" });
     }
   });
   
@@ -550,6 +678,117 @@ export async function registerRoutes(app: Express): Promise<Server> {
               }));
             }
           });
+        } 
+        // AI chatbot interaction
+        else if (data.type === 'ai_chat') {
+          try {
+            // Validate the message format
+            if (!data.messages || !Array.isArray(data.messages)) {
+              ws.send(JSON.stringify({
+                type: 'ai_chat_error',
+                error: 'Invalid messages format'
+              }));
+              return;
+            }
+            
+            const validMessages = data.messages.every(msg => 
+              msg && typeof msg.role === 'string' && 
+              ['user', 'assistant', 'system'].includes(msg.role) && 
+              typeof msg.content === 'string'
+            );
+            
+            if (!validMessages) {
+              ws.send(JSON.stringify({
+                type: 'ai_chat_error',
+                error: 'Messages must have valid role and content properties'
+              }));
+              return;
+            }
+            
+            // Send a typing indicator
+            ws.send(JSON.stringify({
+              type: 'ai_chat_typing',
+              status: 'started'
+            }));
+            
+            // Generate AI response
+            const response = await generateChatResponse(
+              data.messages as ChatMessage[], 
+              data.veteranContext
+            );
+            
+            // Send the response back to the client
+            ws.send(JSON.stringify({
+              type: 'ai_chat_response',
+              response,
+              requestId: data.requestId,
+              metadata: {
+                model: "gpt-4o",
+                timestamp: new Date().toISOString()
+              }
+            }));
+            
+            // Create audit log if user data is provided
+            if (data.userId) {
+              try {
+                await storage.createAuditLog({
+                  userId: parseInt(data.userId),
+                  action: "ai_chat_websocket",
+                  resourceType: "ai_chat",
+                  resourceId: `chat-${Date.now()}`,
+                  ip: "websocket", // No direct access to IP from WS
+                  userAgent: "websocket", // No direct access to user agent
+                  details: { messageCount: data.messages.length }
+                });
+              } catch (logError) {
+                console.error("Error creating audit log:", logError);
+              }
+            }
+          } catch (aiError) {
+            console.error('Error in AI chatbot interaction:', aiError);
+            ws.send(JSON.stringify({
+              type: 'ai_chat_error',
+              error: 'Failed to generate AI response',
+              requestId: data.requestId
+            }));
+          }
+        }
+        // Document analysis via WebSocket
+        else if (data.type === 'analyze_document') {
+          try {
+            // Validate input
+            if (!data.documentText) {
+              ws.send(JSON.stringify({
+                type: 'document_analysis_error',
+                error: 'Document text is required',
+                requestId: data.requestId
+              }));
+              return;
+            }
+            
+            // Analyze document
+            const analysis = await analyzeDocument(
+              data.documentText,
+              data.documentType
+            );
+            
+            // Send results back
+            ws.send(JSON.stringify({
+              type: 'document_analysis_result',
+              analysis,
+              requestId: data.requestId,
+              metadata: {
+                timestamp: new Date().toISOString()
+              }
+            }));
+          } catch (docError) {
+            console.error('Error in document analysis:', docError);
+            ws.send(JSON.stringify({
+              type: 'document_analysis_error',
+              error: 'Failed to analyze document',
+              requestId: data.requestId
+            }));
+          }
         }
       } catch (error) {
         console.error('Error handling WebSocket message:', error);

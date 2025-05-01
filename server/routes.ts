@@ -1,5 +1,18 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
+
+// Extend Express Request to include user property
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: number;
+        username: string;
+        [key: string]: any;
+      };
+    }
+  }
+}
 import { WebSocketServer } from "ws";
 import { storage } from "./storage";
 import { z } from "zod";
@@ -301,9 +314,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const response = await generateChatResponse(messages, veteranContext);
       
       // Create audit log if user is authenticated
-      if (req.isAuthenticated()) {
+      if (req.isAuthenticated() && req.user) {
         await storage.createAuditLog({
-          userId: req.user.id,
+          userId: (req.user as any).id,
           action: "ai_chat_interaction",
           resourceType: "ai_chat",
           resourceId: `chat-${Date.now()}`,
@@ -338,9 +351,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const precedents = await searchLegalPrecedents(claimDetails);
       
       // Create audit log if user is authenticated
-      if (req.isAuthenticated()) {
+      if (req.isAuthenticated() && req.user) {
         await storage.createAuditLog({
-          userId: req.user.id,
+          userId: (req.user as any).id,
           action: "legal_precedent_search",
           resourceType: "legal_search",
           resourceId: `search-${Date.now()}`,
@@ -369,9 +382,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const analysis = await analyzeDocument(documentText, documentType);
       
       // Create audit log if user is authenticated
-      if (req.isAuthenticated()) {
+      if (req.isAuthenticated() && req.user) {
         await storage.createAuditLog({
-          userId: req.user.id,
+          userId: (req.user as any).id,
           action: "document_analysis",
           resourceType: "document",
           resourceId: `doc-${Date.now()}`,
@@ -441,7 +454,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Authentication required" });
       }
       
-      const userId = req.user?.id.toString();
+      const userId = (req.user as any)?.id?.toString();
       
       if (!userId) {
         return res.status(401).json({ message: "Invalid user" });
@@ -452,7 +465,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create audit log
       await storage.createAuditLog({
-        userId: req.user.id,
+        userId: (req.user as any).id,
         action: "create_chat_user",
         resourceType: "chat_user",
         resourceId: chatUser.communicationUserId,
@@ -498,7 +511,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Create chat thread
       const chatThread = await createSupportChatThread(
-        userDisplayName || req.user.username,
+        userDisplayName || (req.user as any).username,
         userCommunicationId,
         supportDisplayName || "VA Support Agent",
         supportCommunicationId
@@ -507,7 +520,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Store the thread in our database
       const threadData = await storage.createChatThread({
         threadId: chatThread.threadId,
-        topic: topic || `Support chat for ${userDisplayName || req.user.username}`,
+        topic: topic || `Support chat for ${userDisplayName || (req.user as any).username}`,
         userId: userId,
         status: "active"
       });

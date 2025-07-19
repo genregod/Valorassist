@@ -1,7 +1,8 @@
 {
   "resourceGroupName": "valor-assist-rg",
-  "location": "eastasia",
+  "location": "eastus2",
   "appName": "valor-assist-app",
+  "keyVaultName": "valor-assist-kv-",
   "apiManagement": {
     "name": "valor-assist-apim",
     "publisherEmail": "admin@valorassist.com",
@@ -13,7 +14,7 @@
   },
   "database": {
     "name": "valor-assist-db",
-    "location": "eastasia",
+    "location": "eastus2",
     "adminLogin": "valoradmin",
     "version": "14"
   },

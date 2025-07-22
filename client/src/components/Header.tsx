@@ -17,7 +17,6 @@ const navLinks = [
   { href: "/azure-deployment", label: "Deploy" },
 ];
 
-// The "export" keyword was likely missing from the line below.
 export function Header() {
   return (
     <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-50 border-b">
@@ -25,59 +24,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2">
           <img
             alt="Valor Assist Logo"
-            className="h-8 w-8""text-3xl font-bold tracking-tighter md:text-4xl/tight text-gold">
-              Ready to Get the Benefits You Deserve?
-            </h2>
-            <p className="mx-auto max-w-[600px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Don't let a complex process stand in your way. Start your claim
-              with Valor Assist today and take the first step towards a more
-              secure future.
-            </p>
-            </div>
-            <div className="mx-auto w-full max-w-sm space-y-2">
-            <Button type="submit" size="lg" className="w-full bg-gold text-navy hover:bg-gold/90">
-              Start Your Claim for Free
-            </Button>
-            <p className="text-xs text-gray-400">
-              No credit card required."text-3xl font-bold tracking-tighter md:text-4xl/tight text-gold">
-                Ready to Get the Benefits You Deserve?
-              </h2>
-              <p className="mx-auto max-w-[600px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Don't let a complex process stand in your way. Start your claim
-                with Valor Assist today and take the first step towards a more
-                secure future.
-              </p>
-              </div>
-              <div className="mx-auto w-full max-w-sm space-y-2">
-              <Button type="submit" size="lg" className="w-full bg-gold text-navy hover:bg-gold/90">
-                Start Your Claim for Free
-              </Button>
-              <p className="text-xs text-gray-400">
-                No credit card required.
-                <Link href="/privacy" className="underline underline-offset-2 ml-1">
-                  Terms & Conditions
-                </Link>
-              </p>
-              </div>
-              </div>
-              </section>
-              );
-              }
-
-              // ---
-
-              <Link href="/privacy" className="underline underline-offset-2 ml-1">
-                Terms & Conditions
-              </Link>
-            </p>
-            </div>
-            </div>
-            </section>
-            );
-            }
-
-            // ---
-
+            className="h-8 w-8"
             src="https://placehold.co/32x32/navy/gold?text=VA"
           />
           <span className="font-bold text-lg">Valor Assist</span>
@@ -87,33 +34,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground""text-3xl font-bold tracking-tighter md:text-4xl/tight text-gold">
-                Ready to Get the Benefits You Deserve?
-              </h2>
-              <p className="mx-auto max-w-[600px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Don't let a complex process stand in your way. Start your claim
-                with Valor Assist today and take the first step towards a more
-                secure future.
-              </p>
-              </div>
-              <div className="mx-auto w-full max-w-sm space-y-2">
-              <Button type="submit" size="lg" className="w-full bg-gold text-navy hover:bg-gold/90">
-                Start Your Claim for Free
-              </Button>
-              <p className="text-xs text-gray-400">
-                No credit card required.
-                <Link href="/privacy" className="underline underline-offset-2 ml-1">
-                  Terms & Conditions
-                </Link>
-              </p>
-              </div>
-              </div>
-              </section>
-              );
-              }
-
-              // ---
-
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               {link.label}
             </Link>

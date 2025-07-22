@@ -22,8 +22,10 @@ export function log(message: string, source = "express") {
 export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
     middlewareMode: true,
-    hmr: { server },
-    allowedHosts: true,
+    // Add the port to the hmr configuration here
+    hmr: { server, port: 5000 }, 
+    // This is the corrected line
+    allowedHosts: true as const,
   };
 
   const vite = await createViteServer({

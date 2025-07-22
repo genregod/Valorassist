@@ -1,0 +1,74 @@
+Bot processed message: "Learn about appeals" with intent: "appeal_process"
+Error sending bot message: RestError: {
+  "CommunicationError": {
+    "Code": "NotFound",
+    "Details": []
+  }
+} 
+ {
+  "name": "RestError",
+  "statusCode": 404,
+  "details": {},
+  "request": {
+    "url": "https://va-comm-sev.unitedstates.communication.azure.com/chat/threads/thread-001/messages?api-version=2025-03-15",
+    "headers": {
+      "content-type": "application/json",
+      "accept": "application/json",
+      "accept-encoding": "gzip,deflate",
+      "user-agent": "azsdk-js-communication-chat/1.6.0 core-rest-pipeline/1.19.1 Node/20.19.3 OS/(x64-Linux-6.2.16)",
+      "x-ms-client-request-id": "f8ff9290-53f1-43ce-ac69-13f034f245ba",
+      "authorization": "REDACTED",
+      "content-length": "252"
+    },
+    "method": "POST",
+    "timeout": 0,
+    "disableKeepAlive": false,
+    "streamResponseStatusCodes": {},
+    "withCredentials": false,
+    "tracingOptions": {
+      "tracingContext": {
+        "_contextMap": {}
+      }
+    },
+    "requestId": "f8ff9290-53f1-43ce-ac69-13f034f245ba",
+    "allowInsecureConnection": false,
+    "enableBrowserStreams": false
+  }
+}
+Failed to send bot message to thread: RestError: {
+  "CommunicationError": {
+    "Code": "NotFound",
+    "Details": []
+  }
+} 
+ {
+  "name": "RestError",
+  "statusCode": 404,
+  "details": {},
+  "request": {
+    "url": "https://va-comm-sev.unitedstates.communication.azure.com/chat/threads/thread-001/messages?api-version=2025-03-15",
+    "headers": {
+      "content-type": "application/json",
+      "accept": "application/json",
+      "accept-encoding": "gzip,deflate",
+      "user-agent": "azsdk-js-communication-chat/1.6.0 core-rest-pipeline/1.19.1 Node/20.19.3 OS/(x64-Linux-6.2.16)",
+      "x-ms-client-request-id": "f8ff9290-53f1-43ce-ac69-13f034f245ba",
+      "authorization": "REDACTED",
+      "content-length": "252"
+    },
+    "method": "POST",
+    "timeout": 0,
+    "disableKeepAlive": false,
+    "streamResponseStatusCodes": {},
+    "withCredentials": false,
+    "tracingOptions": {
+      "tracingContext": {
+        "_contextMap": {}
+      }
+    },
+    "requestId": "f8ff9290-53f1-43ce-ac69-13f034f245ba",
+    "allowInsecureConnection": false,
+    "enableBrowserStreams": false
+  }
+}
+[API] POST /api/chat/bot/thread-001/process - 200 (208ms)

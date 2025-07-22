@@ -89,7 +89,7 @@ The application follows a modern full-stack architecture with the following core
 - **Azure Cognitive Services** - For additional AI capabilities
 
 ### Development Dependencies
-- **Node.js 20.x** - Runtime environment
+- **Node.js 22.x** - Runtime environment (updated from 20.x to address deprecation)
 - **TypeScript** - Type safety and modern JavaScript features
 - **Vite** - Fast build tooling and development server
 - **Tailwind CSS** - Utility-first CSS framework
@@ -117,3 +117,21 @@ The application is configured for Azure deployment with:
 - **Caching strategies** for frequently accessed data
 
 The application prioritizes veteran user experience while maintaining enterprise-grade security and scalability. The modular architecture allows for easy feature additions and integrations with additional VA systems as they become available.
+
+## Recent Changes (July 22, 2025)
+
+### Node.js Runtime Update
+- Updated from Node.js 20.x to 22.x LTS to address deprecation warnings
+- Modified all GitHub Actions workflows to use Node.js 22.x
+- Updated Azure deployment configurations for Node.js 22 LTS
+
+### GitHub Actions Deployment
+- Created `main_valor-assist-service.yml` workflow following Azure naming conventions
+- Configured for automatic deployment on push to main branch
+- Uses Azure Service Principal authentication for secure deployments
+- Added comprehensive deployment documentation and scripts
+
+### Azure Communication Services Fix
+- Fixed bot message sending to prevent 404 errors on demo threads
+- Bot continues to process messages and generate responses correctly
+- Azure Communication Services integration ready for production threads

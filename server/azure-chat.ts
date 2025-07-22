@@ -445,8 +445,9 @@ export async function processBotMessage(threadId: string, message: string) {
     // Process the message with the bot
     const botResponse = await chatBot.processMessage(message, threadId);
     
-    // Send bot response back to the chat thread if we have a connection
-    if (hasConnectionString && chatBot) {
+    // Only send bot response back to the chat thread if it's a real thread (not hardcoded)
+    // Skip sending for demo/test threads to avoid 404 errors
+    if (hasConnectionString && chatBot && !threadId.startsWith('thread-')) {
       try {
         await chatBot.sendMessage(threadId, botResponse.response);
       } catch (error) {

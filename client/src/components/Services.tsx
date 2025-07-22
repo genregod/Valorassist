@@ -100,9 +100,9 @@ export function Services() {
           {services.map((service, index) => (
             <div key={index} className="group relative">
               <div className="absolute inset-0 bg-gradient-to-r from-gold/20 to-navy/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative bg-gradient-to-br from-navy/95 to-navy-light/90 rounded-2xl p-8 h-full shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:scale-[1.02]">
+              <div className="relative bg-navy rounded-2xl p-8 h-full shadow-xl hover:shadow-2xl transition-all duration-300">
                 {/* Icon */}
-                <div className="bg-gradient-to-br from-gold to-yellow-400 p-4 rounded-xl w-fit mb-6 shadow-lg group-hover:shadow-gold/50 transition-all duration-300">
+                <div className="bg-gold p-4 rounded-xl w-fit mb-6 shadow-lg">
                   <service.icon className="h-8 w-8 text-navy" />
                 </div>
                 

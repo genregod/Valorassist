@@ -23,23 +23,19 @@ export function Hero() {
             </div>
 
             {/* Main Headline with blue banner background */}
-            <div className="relative">
-              {/* Blue banner with shadow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-navy to-navy-light rounded-2xl opacity-10 blur-xl"></div>
-              <div className="relative bg-gradient-to-r from-navy/95 to-navy-light/95 rounded-2xl p-8 shadow-2xl transform hover:scale-[1.02] transition-transform duration-300">
-                <h1 className="text-5xl lg:text-6xl font-black leading-none mb-4">
-                  <span className="text-white">Transform Your</span>
-                  <span className="block text-gold mt-2">VA Claims Experience</span>
-                </h1>
-                <p className="text-xl lg:text-2xl text-gold/90 font-medium leading-relaxed mb-4">
-                  Expert guidance from veterans who understand your journey
-                </p>
-                
-                {/* Subheading inside the banner */}
-                <p className="text-lg text-gray-200 leading-relaxed max-w-xl">
-                  Stop struggling with complex paperwork and endless delays. Our AI-powered platform and veteran experts help you get the benefits you've earned - faster and with less stress.
-                </p>
-              </div>
+            <div className="relative bg-navy rounded-2xl p-8 shadow-2xl">
+              <h1 className="text-5xl lg:text-6xl font-black leading-none mb-4">
+                <span className="text-white">Transform Your</span>
+                <span className="block text-gold mt-2">VA Claims Experience</span>
+              </h1>
+              <p className="text-xl lg:text-2xl text-gold font-medium leading-relaxed mb-4">
+                Expert guidance from veterans who understand your journey
+              </p>
+              
+              {/* Subheading inside the banner */}
+              <p className="text-lg text-gray-200 leading-relaxed max-w-xl">
+                Stop struggling with complex paperwork and endless delays. Our AI-powered platform and veteran experts help you get the benefits you've earned - faster and with less stress.
+              </p>
             </div>
 
             {/* CTA Section with modern buttons */}

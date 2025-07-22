@@ -66,7 +66,7 @@ echo -e "${YELLOW}Configuring Web App settings...${NC}"
 az webapp config set \
     --name $APP_NAME \
     --resource-group $RESOURCE_GROUP \
-    --startup-file "node dist/index.js" \
+    --startup-file "cd /home/site/wwwroot && node dist/index.js" \
     --output table
 
 # Enable WebSockets

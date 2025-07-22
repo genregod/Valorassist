@@ -133,8 +133,10 @@ git push origin main
 
 2. **App Not Starting**
    - Check Log Stream in Azure Portal
-   - Verify Node version is 20.x
+   - Verify Node version is 22.x
    - Check startup command: `node dist/index.js`
+   - Ensure dist folder is included in deployment
+   - Use startup script: `./startup.sh` if needed
 
 3. **Database Connection Issues**
    - Verify DATABASE_URL format

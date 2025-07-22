@@ -1,0 +1,46 @@
+Warning: Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://reactjs.org/link/invalid-hook-call for tips about how to debug and fix this problem.
+Cannot read properties of null (reading 'useRef')
+at Object.useRef (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-3TFVT2CW.js?v=e8de630b:1074:29)
+at TooltipProvider (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=6b2edc5f:67:34)
+at renderWithHooks (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=5a18e0c3:11548:26)
+at mountIndeterminateComponent (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=5a18e0c3:14926:21)
+at beginWork (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=5a18e0c3:15914:22)
+at HTMLUnknownElement.callCallback2 (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=5a18e0c3:3674:22)
+at Object.invokeGuardedCallbackDev (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=5a18e0c3:3699:24)
+at invokeGuardedCallback (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=5a18e0c3:3733:39)
+at beginWork$1 (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=5a18e0c3:19765:15)
+at performUnitOfWork (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-WERSD76P.js?v=5a18e0c3:19198:20)
+The above error occurred in the <TooltipProvider> component:
+
+    at TooltipProvider (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=6b2edc5f:61:5)
+    at QueryClientProvider (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=5a18e0c3:2805:3)
+    at ErrorBoundary (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/react-error-boundary.js?v=5a18e0c3:18:5)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+
+at TooltipProvider (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=6b2edc5f:61:5)
+at QueryClientProvider (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=5a18e0c3:2805:3)
+at ErrorBoundary (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/react-error-boundary.js?v=5a18e0c3:18:5)
+at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+at t.value (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
+[vite] server connection lost. Polling for restart...
+Failed to fetch
+at window.fetch (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/__replco/static/devtools/eruda/3.2.3/eruda.js:2:218642)
+at ping (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@vite/client:736:13)
+at waitForSuccessfulPing (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@vite/client:749:13)
+at WebSocket.<anonymous> (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@vite/client:561:13)
+Failed to fetch
+at window.fetch (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/__replco/static/devtools/eruda/3.2.3/eruda.js:2:218642)
+at ping (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@vite/client:736:13)
+at waitForSuccessfulPing (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@vite/client:755:17)
+at async WebSocket.<anonymous> (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@vite/client:561:7)

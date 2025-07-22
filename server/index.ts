@@ -57,8 +57,8 @@ app.use((req, res, next) => {
   console.log(`Application starting in ${isProduction ? "Production" : "Development"} mode.`);
 
   if (isProduction) {
-    // In production, serve the built static files from the 'client/dist' directory.
-    const clientDistPath = path.resolve(process.cwd(), "client/dist");
+    // In production, serve the built static files from the 'dist/public' directory.
+    const clientDistPath = path.resolve(process.cwd(), "dist/public");
     console.log(`Serving static files from: ${clientDistPath}`);
 
     // Serve static assets (JS, CSS, images, etc.)

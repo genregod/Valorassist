@@ -8,7 +8,7 @@ import { Testimonials } from "@/components/Testimonials";
 import { Demo } from "@/components/Demo";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
-import { ChatWindow } from "@/components/ChatWindow";
+import { SimpleChatWindow } from "@/components/SimpleChatWindow";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
 
@@ -36,7 +36,7 @@ export function HomePage() {
       </Button>
       
       {/* Chat Window */}
-      <ChatWindow isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      <SimpleChatWindow isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </div>
   );
 }

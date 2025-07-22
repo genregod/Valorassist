@@ -122,17 +122,17 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
 
   // Initialize chat when opened
   useEffect(() => {
-    if (isOpen && user && !chatUser) {
+    if (isOpen && user && !chatUser && !createChatUserMutation.isPending) {
       createChatUserMutation.mutate();
     }
-  }, [isOpen, user, chatUser]);
+  }, [isOpen, user, chatUser, createChatUserMutation]);
 
   // Create thread after chat user is created
   useEffect(() => {
-    if (chatUser && !currentThread) {
+    if (chatUser && !currentThread && !createThreadMutation.isPending) {
       createThreadMutation.mutate();
     }
-  }, [chatUser, currentThread]);
+  }, [chatUser, currentThread, createThreadMutation]);
 
   // Update messages when fetched
   useEffect(() => {

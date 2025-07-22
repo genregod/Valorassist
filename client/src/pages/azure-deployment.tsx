@@ -17,8 +17,8 @@ export function AzureDeploymentPage() {
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
+        <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
+          <CardHeader className="pb-6">
             <CardTitle className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
               Deployment Status
@@ -52,8 +52,8 @@ export function AzureDeploymentPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
+        <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
+          <CardHeader className="pb-6">
             <CardTitle>Quick Actions</CardTitle>
             <CardDescription>
               Manage your deployment with these common actions

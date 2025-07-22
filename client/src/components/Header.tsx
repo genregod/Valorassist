@@ -11,7 +11,7 @@ import { Menu } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/#features", label: "Features" },
+  { href: "/#services", label: "Features" },
   { href: "/#how-it-works", label: "How It Works" },
   { href: "/#testimonials", label: "Testimonials" },
   { href: "/azure-deployment", label: "Deploy" },

@@ -29,7 +29,7 @@ export function HomePage() {
       {/* Chat Support Button */}
       <button
         onClick={() => setIsChatOpen(!isChatOpen)}
-        className="fixed bottom-6 right-6 z-50 bg-navy-700 hover:bg-navy-800 text-white shadow-2xl rounded-full transition-all hover:scale-110 p-4"
+        className="fixed bottom-6 right-6 z-50 bg-navy hover:bg-navy-dark text-white shadow-2xl rounded-full transition-all hover:scale-110 p-4"
         style={{ 
           width: "70px", 
           height: "70px",

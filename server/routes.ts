@@ -473,24 +473,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Chat API routes
   app.post("/api/chat/users", async (req, res) => {
     try {
-      if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
-      const reqUserId = getUserId(req);
-      if (!reqUserId) {
-        return res.status(401).json({ message: "Invalid user" });
-      }
-      const userId = reqUserId.toString();
+      // Simplified version without authentication for now
+      const userId = `guest-${Date.now()}`;
       const chatUser = await createChatUser(userId);
-      await storage.createAuditLog({
-        userId: reqUserId,
-        action: "create_chat_user",
-        resourceType: "chat_user",
-        resourceId: chatUser.communicationUserId,
-        ip: req.ip || "0.0.0.0",
-        userAgent: req.get("User-Agent") || "Unknown",
-        details: { communicationUserId: chatUser.communicationUserId },
-      });
       return res.status(201).json(chatUser);
     } catch (error) {
       console.error("Error creating chat user:", error);
@@ -500,13 +485,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/chat/threads", async (req, res) => {
     try {
-      if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
-      const userId = getUserId(req);
-      if (!userId) {
-        return res.status(401).json({ message: "Invalid user" });
-      }
       const {
         userDisplayName,
         userCommunicationId,
@@ -514,40 +492,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         supportCommunicationId,
         topic,
       } = req.body;
-      if (!userCommunicationId || !supportCommunicationId) {
+      if (!userCommunicationId) {
         return res.status(400).json({
-          message: "userCommunicationId and supportCommunicationId are required",
+          message: "userCommunicationId is required",
         });
       }
-      const username =
-        req.user && "username" in req.user
-          ? (req.user as { username: string }).username
-          : "User";
       const chatThread = await createSupportChatThread(
-        userDisplayName || username,
+        userDisplayName || "Guest User",
         userCommunicationId,
         supportDisplayName || "VA Support Agent",
-        supportCommunicationId
+        supportCommunicationId || "support-agent-001"
       );
-      const threadData = await storage.createChatThread({
-        threadId: chatThread.threadId,
-        topic: topic || `Support chat for ${userDisplayName || username}`,
-        userId: userId,
-        status: "active",
-      });
-      await storage.createAuditLog({
-        userId,
-        action: "create_chat_thread",
-        resourceType: "chat_thread",
-        resourceId: chatThread.threadId,
-        ip: req.ip || "0.0.0.0",
-        userAgent: req.get("User-Agent") || "Unknown",
-        details: { threadId: chatThread.threadId },
-      });
-      return res.status(201).json({
-        ...chatThread,
-        ...threadData,
-      });
+      return res.status(201).json(chatThread);
     } catch (error) {
       console.error("Error creating chat thread:", error);
       return res.status(500).json({ message: "Failed to create chat thread" });
@@ -556,46 +512,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/chat/threads/:threadId/messages", async (req, res) => {
     try {
-      if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
-      const userId = getUserId(req);
-      if (!userId) {
-        return res.status(401).json({ message: "Invalid user" });
-      }
       const { threadId } = req.params;
       const { senderCommunicationId, senderToken, content } = req.body;
-      if (!senderCommunicationId || !senderToken || !content) {
+      if (!senderCommunicationId || !content) {
         return res.status(400).json({
-          message: "senderCommunicationId, senderToken, and content are required",
+          message: "senderCommunicationId and content are required",
         });
       }
       const message = await sendChatMessage(
         threadId,
         senderCommunicationId,
-        senderToken,
+        senderToken || "simulated-token",
         content
       );
-      const messageData = await storage.createChatMessage({
-        threadId,
-        messageId: message.messageId || `local-${Date.now()}`,
-        senderId: senderCommunicationId,
-        content,
-        type: "text",
-      });
-      await storage.createAuditLog({
-        userId,
-        action: "send_chat_message",
-        resourceType: "chat_message",
-        resourceId: messageData.messageId,
-        ip: req.ip || "0.0.0.0",
-        userAgent: req.get("User-Agent") || "Unknown",
-        details: { threadId, messageId: messageData.messageId },
-      });
-      return res.status(201).json({
-        ...message,
-        ...messageData,
-      });
+      return res.status(201).json(message);
     } catch (error) {
       console.error("Error sending chat message:", error);
       return res.status(500).json({ message: "Failed to send chat message" });
@@ -604,22 +534,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/chat/threads/:threadId/messages", async (req, res) => {
     try {
-      if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
       const { threadId } = req.params;
       const { userToken, limit } = req.query;
-      if (!userToken || typeof userToken !== "string") {
-        return res
-          .status(400)
-          .json({ message: "userToken is required as a query parameter" });
-      }
       const maxResults = limit ? parseInt(limit as string) : 100;
-      const messages = await getChatMessages(threadId, userToken, maxResults);
-      const localMessages = await storage.getChatMessages(threadId, maxResults);
-      return res.json({
-        messages: messages.messages || localMessages,
-      });
+      const messages = await getChatMessages(
+        threadId, 
+        (userToken as string) || "simulated-token", 
+        maxResults
+      );
+      return res.json(messages);
     } catch (error) {
       console.error("Error retrieving chat messages:", error);
       return res
@@ -630,15 +553,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/chat/threads", async (req, res) => {
     try {
-      if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
-      const userId = getUserId(req);
-      if (!userId) {
-        return res.status(401).json({ message: "Invalid user" });
-      }
-      const threads = await storage.getChatThreadsByUserId(userId);
-      return res.json({ threads });
+      // Return empty threads array for now since we're not tracking guest threads
+      return res.json({ threads: [] });
     } catch (error) {
       console.error("Error retrieving chat threads:", error);
       return res

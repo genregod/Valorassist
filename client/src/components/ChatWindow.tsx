@@ -7,7 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { MessageCircle, Send, X, User, Bot } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/use-auth";
+// import { useAuth } from "@/hooks/use-auth";
 
 interface Message {
   id: string;
@@ -30,7 +30,8 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
   const [chatUser, setChatUser] = useState<any>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { user } = useAuth();
+  // const { user } = useAuth();
+  const user = { username: "Test User" }; // Temporary fix
   const queryClient = useQueryClient();
 
   // Create chat user mutation

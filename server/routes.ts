@@ -43,6 +43,27 @@ function getUserId(req: Request): number | undefined {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint
+  app.get("/api/health", (req, res) => {
+    res.json({ 
+      status: "healthy",
+      timestamp: new Date().toISOString(),
+      services: {
+        openai: !!process.env.OPENAI_API_KEY,
+        azureCommunication: !!process.env.AZURE_COMMUNICATION_CONNECTION_STRING,
+        database: !!process.env.DATABASE_URL
+      }
+    });
+  });
+
+  // Test endpoint
+  app.get("/api/test", (req, res) => {
+    res.json({ 
+      message: "API is working correctly",
+      timestamp: new Date().toISOString()
+    });
+  });
+
   // Setup Authentication
   setupAuth(app);
 

@@ -26,7 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
-export default function AzureDeployment() {
+export function AzureDeploymentPage() {
   return (
     <div className="container mx-auto py-10 px-4 md:px-6">
       <div className="flex flex-col gap-8">
@@ -125,13 +125,13 @@ export default function AzureDeployment() {
                 <div>
                   <h4 className="font-bold">1. Create Resource Group</h4>
                   <div className="bg-muted p-2 rounded-md font-mono text-sm">
-                    <p>az group create --name valor-assist-rg --location eastasia</p>
+                    <p>az group create --name valor-assist-rg --location eastus2</p>
                   </div>
                 </div>
                 <div>
                   <h4 className="font-bold">2. Set up Database in Asia</h4>
                   <div className="bg-muted p-2 rounded-md font-mono text-sm">
-                    <p>az postgres server create --resource-group valor-assist-rg --name valor-assist-db --location eastasia ...</p>
+                    <p>az postgres server create --resource-group valor-assist-rg --name valor-assist-db --location eastus2 ...</p>
                   </div>
                 </div>
                 <div>

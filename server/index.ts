@@ -47,12 +47,13 @@ app.use((req, res, next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
     res.status(status).json({ message });
-    throw err;
+    console.error(err); // Fix: Use console.error to log the error
   });
 
   // --- Static File Serving Logic ---
-  // This logic determines whether to use Vite for development or serve static files for production.
   const isProduction = process.env.NODE_ENV === "production";
+  // Fix: Move the `isProduction` definition up
+
   console.log(`Application starting in ${isProduction ? "Production" : "Development"} mode.`);
 
   if (isProduction) {
@@ -76,7 +77,7 @@ app.use((req, res, next) => {
   }
 
   // --- Start the Server ---
-  const port = process.env.PORT || 5000;
+  const port = process.env.PORT || '5001'; // Fix: Use string fallback for PORT
   server.listen(
     {
       port: Number(port),

@@ -4,7 +4,7 @@ hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["jq", "jql", "jq-lsp", "azure-cli", "azure-functions-core-tools", "openssl_3_3"]
+packages = ["jq", "jql", "jq-lsp", "azure-cli", "azure-functions-core-tools", "openssl_3_3", "zip"]
 
 [deployment]
 deploymentTarget = "autoscale"
@@ -12,7 +12,7 @@ build = ["npm", "run", "build"]
 run = ["npm", "run", "start"]
 
 [workflows]
-runButton = "Project"
+runButton = "Run Production Build"
 
 [[workflows.workflow]]
 name = "Project"
@@ -29,12 +29,24 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run dev"
-waitForPort = 5000
+args = "npm run start"
+
+[[workflows.workflow]]
+name = "Run Production Build"
+mode = "sequential"
+author = 31506314
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run start"
 
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 5001
+externalPort = 3000
 
 [rules]
 

@@ -23,7 +23,7 @@ export async function setupVite(app: Express, server: Server) {
   const serverOptions = {
     middlewareMode: true,
     // Add the port to the hmr configuration here
-    hmr: { server, port: 5000 }, 
+    hmr: { server, port: 5001 }, 
     // This is the corrected line
     allowedHosts: true as const,
   };

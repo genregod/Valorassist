@@ -1,14 +1,22 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { MessageCircle, Send, X, User, Bot } from "lucide-react";
+import { MessageCircle, Send, X, User, Bot, Loader2 } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
 
 interface Message {
   id: string;
   content: string;
   isUser: boolean;
   timestamp: Date;
+  isLoading?: boolean;
+}
+
+interface BotResponse {
+  response: string;
+  suggestions?: string[];
+  intent: string;
 }
 
 interface SimpleChatWindowProps {
@@ -26,10 +34,28 @@ export function SimpleChatWindow({ isOpen, onClose }: SimpleChatWindowProps) {
       timestamp: new Date(),
     },
   ]);
+  const [suggestions, setSuggestions] = useState<string[]>([
+    "Check claim status",
+    "File a new claim", 
+    "Upload documents",
+    "Learn about appeals"
+  ]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (message.trim()) {
+    if (message.trim() && !isProcessing) {
+      setIsProcessing(true);
+      
       // Add user message
       const userMessage: Message = {
         id: Date.now().toString(),
@@ -38,17 +64,59 @@ export function SimpleChatWindow({ isOpen, onClose }: SimpleChatWindowProps) {
         timestamp: new Date(),
       };
       
-      // Add bot response
-      const botMessage: Message = {
+      // Add loading message
+      const loadingMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "Thank you for your message. A VA support agent will respond shortly. For immediate assistance, please call 1-800-827-1000.",
+        content: "",
         isUser: false,
         timestamp: new Date(),
+        isLoading: true,
       };
       
-      setMessages((prev) => [...prev, userMessage, botMessage]);
+      setMessages((prev) => [...prev, userMessage, loadingMessage]);
       setMessage("");
+      
+      try {
+        // Process message with bot
+        const response = await apiRequest("POST", "/api/chat/bot/thread-001/process", {
+          message: userMessage.content
+        });
+        const botResponse = response as unknown as BotResponse;
+        
+        // Update loading message with bot response
+        setMessages((prev) => 
+          prev.map((msg) => 
+            msg.id === loadingMessage.id 
+              ? { ...msg, content: botResponse.response, isLoading: false }
+              : msg
+          )
+        );
+        
+        // Update suggestions if provided
+        if (botResponse.suggestions && botResponse.suggestions.length > 0) {
+          setSuggestions(botResponse.suggestions);
+        }
+      } catch (error) {
+        // Update loading message with error
+        setMessages((prev) => 
+          prev.map((msg) => 
+            msg.id === loadingMessage.id 
+              ? { 
+                  ...msg, 
+                  content: "I apologize, but I'm having trouble processing your request. Please try again or contact support at 1-800-827-1000.", 
+                  isLoading: false 
+                }
+              : msg
+          )
+        );
+      } finally {
+        setIsProcessing(false);
+      }
     }
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setMessage(suggestion);
   };
 
   if (!isOpen) return null;
@@ -100,15 +168,45 @@ export function SimpleChatWindow({ isOpen, onClose }: SimpleChatWindowProps) {
                           : "bg-gray-100 text-gray-800 rounded-bl-none"
                       }`}
                     >
-                      <p className="text-sm">{msg.content}</p>
-                      <p className="text-xs opacity-70 mt-1">
-                        {msg.timestamp.toLocaleTimeString()}
-                      </p>
+                      {msg.isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span className="text-sm">Thinking...</span>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-sm">{msg.content}</p>
+                          <p className="text-xs opacity-70 mt-1">
+                            {msg.timestamp.toLocaleTimeString()}
+                          </p>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
               ))}
+              <div ref={messagesEndRef} />
             </div>
+            
+            {/* Suggestions */}
+            {suggestions.length > 0 && (
+              <div className="mt-4 p-2 bg-gray-50 rounded-lg">
+                <p className="text-xs text-gray-600 mb-2">Quick actions:</p>
+                <div className="flex flex-wrap gap-2">
+                  {suggestions.map((suggestion, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      className="text-xs hover:bg-navy-100 hover:text-navy-700 hover:border-navy-700"
+                    >
+                      {suggestion}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
         
@@ -123,10 +221,14 @@ export function SimpleChatWindow({ isOpen, onClose }: SimpleChatWindowProps) {
             />
             <Button
               type="submit"
-              disabled={!message.trim()}
+              disabled={!message.trim() || isProcessing}
               className="bg-navy-700 hover:bg-navy-800 text-white"
             >
-              <Send className="h-4 w-4" />
+              {isProcessing ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
             </Button>
           </form>
         </CardFooter>

@@ -32,6 +32,7 @@ import {
   createSupportChatThread,
   sendChatMessage,
   getChatMessages,
+  processBotMessage,
 } from "./azure-chat";
 
 // Helper function to safely get the user ID from the request
@@ -560,6 +561,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res
         .status(500)
         .json({ message: "Failed to retrieve chat threads" });
+    }
+  });
+
+  // Bot message processing endpoint
+  app.post("/api/chat/bot/:threadId/process", async (req, res) => {
+    try {
+      const { threadId } = req.params;
+      const { message } = req.body;
+      
+      if (!message || !threadId) {
+        return res.status(400).json({ 
+          message: "Message and threadId are required" 
+        });
+      }
+
+      // Process message with bot
+      const botResponse = await processBotMessage(threadId, message);
+      
+      return res.json(botResponse);
+    } catch (error) {
+      console.error("Error processing bot message:", error);
+      return res.status(500).json({ 
+        message: "Failed to process bot message" 
+      });
     }
   });
 

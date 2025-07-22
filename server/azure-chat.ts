@@ -6,6 +6,7 @@ import {
 } from "@azure/communication-chat";
 import { AzureCommunicationTokenCredential } from "@azure/communication-common";
 import { CommunicationIdentityClient } from "@azure/communication-identity";
+import { VeteranAssistantBot, createBotUser } from "./chat-bot";
 
 // Check if Azure Communication Services credentials exist
 const hasConnectionString = !!process.env.AZURE_COMMUNICATION_CONNECTION_STRING;
@@ -17,6 +18,7 @@ interface ActiveThread {
 }
 
 let communicationIdentityClient: CommunicationIdentityClient | null = null;
+let chatBot: VeteranAssistantBot | null = null;
 
 if (hasConnectionString) {
   try {
@@ -24,6 +26,9 @@ if (hasConnectionString) {
       process.env.AZURE_COMMUNICATION_CONNECTION_STRING as string
     );
     console.log("Azure Communication Services client initialized");
+    
+    // Initialize bot
+    initializeBot();
   } catch (error: any) {
     console.error("Failed to initialize Azure Communication Services:", error.message);
   }
@@ -33,6 +38,32 @@ if (hasConnectionString) {
 
 // Map to store active threads by user ID
 const activeThreadsByUser: Map<string, ActiveThread[]> = new Map();
+
+// Initialize the chat bot
+async function initializeBot() {
+  if (!hasConnectionString) return;
+  
+  try {
+    const connectionString = process.env.AZURE_COMMUNICATION_CONNECTION_STRING as string;
+    const botUser = await createBotUser(connectionString);
+    const endpoint = connectionString.match(/endpoint=https:\/\/([^;]+)/)?.[1];
+    
+    if (!endpoint) {
+      console.error("Failed to extract endpoint from connection string");
+      return;
+    }
+    
+    chatBot = new VeteranAssistantBot(
+      botUser.userId,
+      botUser.token,
+      `https://${endpoint}`
+    );
+    
+    console.log("Chat bot initialized successfully");
+  } catch (error: any) {
+    console.error("Failed to initialize chat bot:", error.message);
+  }
+}
 
 // Create a user identity for Azure Communication Services
 export async function createChatUser(userId: string) {
@@ -346,7 +377,10 @@ export async function removeChatParticipant(
       for (let i = 0; i < threads.length; i++) {
         if (threads[i].threadId === threadId) {
           threads[i].participants = threads[i].participants.filter(
-            (p: ChatParticipant) => p.id.communicationUserId !== participantCommunicationId
+            (p: ChatParticipant) => {
+              const userId = (p.id as any).communicationUserId;
+              return userId !== participantCommunicationId;
+            }
           );
           break;
         }
@@ -380,7 +414,10 @@ export async function removeChatParticipant(
       for (let i = 0; i < threads.length; i++) {
         if (threads[i].threadId === threadId) {
           threads[i].participants = threads[i].participants.filter(
-            (p: ChatParticipant) => p.id.communicationUserId !== participantCommunicationId
+            (p: ChatParticipant) => {
+              const userId = (p.id as any).communicationUserId;
+              return userId !== participantCommunicationId;
+            }
           );
           break;
         }
@@ -391,5 +428,39 @@ export async function removeChatParticipant(
   } catch (error: any) {
     console.error("Failed to remove chat participant:", error.message);
     throw new Error(`Failed to remove chat participant: ${error.message}`);
+  }
+}
+
+// Process message with bot
+export async function processBotMessage(threadId: string, message: string) {
+  if (!chatBot) {
+    return {
+      response: "I'm sorry, but the AI assistant is currently unavailable. Please try again later or contact support.",
+      suggestions: ["Contact Support", "Try Again Later"],
+      intent: "unavailable"
+    };
+  }
+
+  try {
+    // Process the message with the bot
+    const botResponse = await chatBot.processMessage(message, threadId);
+    
+    // Send bot response back to the chat thread if we have a connection
+    if (hasConnectionString && chatBot) {
+      try {
+        await chatBot.sendMessage(threadId, botResponse.response);
+      } catch (error) {
+        console.error("Failed to send bot message to thread:", error);
+      }
+    }
+    
+    return botResponse;
+  } catch (error: any) {
+    console.error("Error processing bot message:", error.message);
+    return {
+      response: "I apologize, but I encountered an error processing your message. Please try again or contact support if the issue persists.",
+      suggestions: ["Contact Support", "Try Again"],
+      intent: "error"
+    };
   }
 }

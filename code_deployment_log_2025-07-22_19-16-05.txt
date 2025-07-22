@@ -1,0 +1,2 @@
+Error: Missing required arguments.
+Usage: ./deploy-code.sh <RESOURCE_GROUP_NAME> <APP_SERVICE_NAME>

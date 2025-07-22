@@ -1,0 +1,9 @@
+Starting CODE deployment to App Service 'valor-assist-service' in resource group 'valor-assist-rg'...
+Step 1/4: Installing npm dependencies...
+npm error code EJSONPARSE
+npm error path /home/runner/workspace/package.json
+npm error JSON.parse Unexpected token "l" (0x6C), "login --us"... is not valid JSON while parsing 'login --use-device-code{
+npm error JSON.parse   "name": "rest'
+npm error JSON.parse Failed to parse JSON data.
+npm error JSON.parse Note: package.json must be actual JSON, not just JavaScript.
+npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2025-07-22T19_19_22_288Z-debug-0.log

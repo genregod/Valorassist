@@ -100,22 +100,22 @@ export function Services() {
           {services.map((service, index) => (
             <div key={index} className="group relative">
               <div className="absolute inset-0 bg-gradient-to-r from-gold/20 to-navy/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative glass-card rounded-2xl p-8 h-full hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-gold/30">
+              <div className="relative bg-gradient-to-br from-navy/95 to-navy-light/90 rounded-2xl p-8 h-full shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:scale-[1.02]">
                 {/* Icon */}
-                <div className="bg-gradient-to-br from-navy to-navy-dark p-4 rounded-xl w-fit mb-6 shadow-lg group-hover:shadow-navy/50 transition-all duration-300">
-                  <service.icon className="h-8 w-8 text-gold" />
+                <div className="bg-gradient-to-br from-gold to-yellow-400 p-4 rounded-xl w-fit mb-6 shadow-lg group-hover:shadow-gold/50 transition-all duration-300">
+                  <service.icon className="h-8 w-8 text-navy" />
                 </div>
                 
                 {/* Content */}
-                <h3 className="text-2xl font-bold gradient-text mb-3">{service.title}</h3>
-                <p className="text-gray-600 mb-6 leading-relaxed">{service.description}</p>
+                <h3 className="text-2xl font-bold text-white mb-3">{service.title}</h3>
+                <p className="text-gray-200 mb-6 leading-relaxed">{service.description}</p>
                 
                 {/* Features with cleaner design */}
                 <ul className="space-y-3 mb-8">
                   {service.features.map((feature, i) => (
                     <li key={i} className="flex items-start">
                       <div className="w-2 h-2 bg-gold rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                      <span className="text-sm text-gray-700">{feature}</span>
+                      <span className="text-sm text-gray-100">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -123,7 +123,7 @@ export function Services() {
                 {/* CTA with hover effect */}
                 <a
                   href={service.learnMoreLink}
-                  className="inline-flex items-center text-navy font-bold hover:text-gold transition-colors group/link"
+                  className="inline-flex items-center text-gold font-bold hover:text-yellow-400 transition-colors group/link"
                 >
                   Learn More
                   <svg className="w-4 h-4 ml-1 transform group-hover/link:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">

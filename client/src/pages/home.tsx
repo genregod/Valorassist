@@ -26,17 +26,52 @@ export function HomePage() {
         <CTA />
       </main>
       
-      {/* Chat Support Button */}
-      <Button
-        onClick={() => setIsChatOpen(true)}
-        className="fixed bottom-4 right-4 z-40 bg-navy-700 hover:bg-navy-800 text-white shadow-lg p-4 rounded-full"
-        size="icon"
+      {/* Test Button */}
+      <div 
+        style={{
+          position: "fixed",
+          bottom: "100px",
+          right: "20px",
+          zIndex: 99999,
+          backgroundColor: "red",
+          color: "white",
+          padding: "20px",
+          borderRadius: "10px",
+          cursor: "pointer"
+        }}
+        onClick={() => alert("Test button clicked!")}
       >
-        <MessageCircle className="h-6 w-6" />
-      </Button>
+        TEST CLICK ME
+      </div>
+      
+      {/* Chat Support Button */}
+      <div
+        onClick={() => {
+          alert("Chat button clicked!");
+          setIsChatOpen(!isChatOpen);
+        }}
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          width: "80px",
+          height: "80px",
+          backgroundColor: "#1a365d",
+          color: "white",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          zIndex: 99999,
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+        }}
+      >
+        <MessageCircle size={32} color="white" />
+      </div>
       
       {/* Chat Window */}
-      <SimpleChatWindow isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      {isChatOpen && <SimpleChatWindow isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />}
     </div>
   );
 }

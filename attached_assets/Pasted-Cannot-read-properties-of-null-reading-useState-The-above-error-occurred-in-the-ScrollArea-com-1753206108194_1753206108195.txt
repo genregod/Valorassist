@@ -1,0 +1,50 @@
+Cannot read properties of null (reading 'useState')
+The above error occurred in the <ScrollArea> component:
+
+    at https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-scroll-area.js?v=70c838ea:52:7
+    at _c (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/src/components/ui/scroll-area.tsx:21:11)
+    at div
+    at _c9 (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/src/components/ui/card.tsx:114:12)
+    at div
+    at _c (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/src/components/ui/card.tsx:20:11)
+    at div
+    at SimpleChatWindow (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/src/components/SimpleChatWindow.tsx:24:36)
+    at div
+    at HomePage (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/src/pages/home.tsx:29:39)
+    at Route (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=e8de630b:323:16)
+    at Switch (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=e8de630b:379:17)
+    at main
+    at div
+    at Provider (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-VJRUVGTI.js?v=e8de630b:38:15)
+    at TooltipProvider (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=e8de630b:61:5)
+    at QueryClientProvider (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=e8de630b:2805:3)
+    at ErrorBoundary (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/react-error-boundary.js?v=e8de630b:18:5)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+
+at https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-scroll-area.js?v=70c838ea:52:7
+at _c (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/src/components/ui/scroll-area.tsx:21:11)
+at div
+at _c9 (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/src/components/ui/card.tsx:114:12)
+at div
+at _c (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/src/components/ui/card.tsx:20:11)
+at div
+at SimpleChatWindow (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/src/components/SimpleChatWindow.tsx:24:36)
+at div
+at HomePage (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/src/pages/home.tsx:29:39)
+at Route (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=e8de630b:323:16)
+at Switch (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=e8de630b:379:17)
+at main
+at div
+at Provider (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-VJRUVGTI.js?v=e8de630b:38:15)
+at TooltipProvider (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=e8de630b:61:5)
+at QueryClientProvider (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=e8de630b:2805:3)
+at ErrorBoundary (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/@fs/home/runner/workspace/node_modules/.vite/deps/react-error-boundary.js?v=e8de630b:18:5)
+at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+at t.value (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://b14de2d7-2f4e-499e-b43a-6aa6fc098ed2-00-27nna5jfq9g37.janeway.replit.dev:3000/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400

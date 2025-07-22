@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { MessageCircle, Send, X, User, Bot } from "lucide-react";
 
@@ -75,7 +74,7 @@ export function SimpleChatWindow({ isOpen, onClose }: SimpleChatWindowProps) {
         </CardHeader>
         
         <CardContent className="flex-1 p-0 overflow-hidden">
-          <ScrollArea className="h-full p-4">
+          <div className="h-full p-4 overflow-y-auto">
             <div className="space-y-4">
               {messages.map((msg) => (
                 <div
@@ -110,7 +109,7 @@ export function SimpleChatWindow({ isOpen, onClose }: SimpleChatWindowProps) {
                 </div>
               ))}
             </div>
-          </ScrollArea>
+          </div>
         </CardContent>
         
         <CardFooter className="p-4 border-t">

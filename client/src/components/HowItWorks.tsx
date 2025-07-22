@@ -1,5 +1,6 @@
 // client/src/components/HowItWorks.tsx
 import { ProcessStep } from "@/components/ui/process-step";
+import { FileText, ClipboardList, Send } from "lucide-react";
 
 // The "export" keyword was likely missing here.
 export function HowItWorks() {
@@ -17,21 +18,24 @@ export function HowItWorks() {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid gap-12 pt-12 md:grid-cols-3">
+        <div className="mx-auto grid max-w-5xl items-start gap-12 pt-12 sm:grid-cols-3">
           <ProcessStep
-            step="1"
+            stepNumber={1}
             title="Upload Your Documents"
             description="Securely upload your military and medical records. Our AI will analyze them to find potential claims."
+            icon={FileText}
           />
           <ProcessStep
-            step="2"
+            stepNumber={2}
             title="Review & Refine"
             description="Work with our AI assistant, Val, to review the findings, answer clarifying questions, and build your case."
+            icon={ClipboardList}
           />
           <ProcessStep
-            step="3"
+            stepNumber={3}
             title="Submit with Confidence"
             description="Generate a complete, well-documented claim package ready for submission to the VA."
+            icon={Send}
           />
         </div>
       </div>

@@ -8,7 +8,7 @@ import { Footer } from "./components/Footer";
 import { HomePage } from "./pages/home";
 import { NotFoundPage } from "./pages/not-found";
 // Corrected import statement below
-import AzureDeploymentPage from "./pages/azure-deployment";
+import { AzureDeploymentPage } from "./pages/azure-deployment";
 import { HealthCheckPage } from "./pages/HealthCheck";
 
 function App() {

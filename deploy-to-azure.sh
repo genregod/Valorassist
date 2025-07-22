@@ -131,7 +131,28 @@ az webapp deployment source config \
     --manual-integration \
     --repository-type "GitHub" \
     --git-token "$github_token"
+# --- Script execution starts here ---
 
+# Define a unique log file name with a timestamp
+LOG_FILE="deployment_log_$(date +%Y-%m-%d_%H-%M-%S).txt"
+echo "Deployment output will be logged to: $LOG_FILE"
+echo "--------------------------------------------------"
+
+# Execute the main function, passing all script arguments to it.
+# Redirect both standard output (stdout) and standard error (stderr) to the 'tee' command.
+# 'tee' will simultaneously print to the console AND write to the specified log file.
+main "$@" 2>&1 | tee "$LOG_FILE"
+
+# Check the exit status of the main function in the pipe.
+# This ensures that if the deployment fails, the script reports an error.
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+    echo "--------------------------------------------------"
+    echo "Deployment failed. Please review the output above and check '$LOG_FILE' for the full log."
+    exit 1
+else
+    echo "--------------------------------------------------"
+    echo "Deployment log saved successfully to '$LOG_FILE'."
+fi
 # --- Final Output ---
 echo "--------------------------------------------------"
 echo "✅ Deployment and configuration complete!"

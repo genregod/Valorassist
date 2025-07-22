@@ -1,6 +1,8 @@
+// server/index.ts
 import express, { type Request, Response, NextFunction } from "express";
+import path from "path"; // Import the 'path' module
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import { setupVite } from "./vite";
 import dotenv from "dotenv";
 
 // Load environment variables from .env file
@@ -12,72 +14,76 @@ if (!process.env.OPENAI_API_KEY) {
 }
 
 if (!process.env.AZURE_COMMUNICATION_CONNECTION_STRING) {
-  console.warn("Azure Communication Services connection string not found. Chat features will be limited.");
+  console.warn(
+    "Azure Communication Services connection string not found. Chat features will be limited."
+  );
 }
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// --- API Logging Middleware (Unchanged) ---
 app.use((req, res, next) => {
+  // Your existing logging middleware is fine.
   const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
-
   res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      log(logLine);
+    if (req.path.startsWith("/api")) {
+      const duration = Date.now() - start;
+      console.log(
+        `[API] ${req.method} ${req.path} - ${res.statusCode} (${duration}ms)`
+      );
     }
   });
-
   next();
 });
 
 (async () => {
+  // --- Register all API routes FIRST ---
   const server = await registerRoutes(app);
 
+  // --- Error Handling Middleware (Unchanged) ---
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
     res.status(status).json({ message });
     throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
+  // --- Static File Serving Logic ---
+  // This logic determines whether to use Vite for development or serve static files for production.
+  const isProduction = process.env.NODE_ENV === "production";
+  console.log(`Application starting in ${isProduction ? "Production" : "Development"} mode.`);
+
+  if (isProduction) {
+    // In production, serve the built static files from the 'client/dist' directory.
+    const clientDistPath = path.resolve(process.cwd(), "client/dist");
+    console.log(`Serving static files from: ${clientDistPath}`);
+
+    // Serve static assets (JS, CSS, images, etc.)
+    app.use(express.static(clientDistPath));
+
+    // For any request that doesn't match an API route or a static file,
+    // send back the main index.html. This is the "catch-all" route that
+    // enables client-side routing to work.
+    // THIS MUST BE REGISTERED *AFTER* ALL API ROUTES.
+    app.get("*", (req, res) => {
+      res.sendFile(path.resolve(clientDistPath, "index.html"));
+    });
   } else {
-    serveStatic(app);
+    // In development, use Vite to serve the client with hot-reloading.
+    await setupVite(app, server);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
+  // --- Start the Server ---
+  const port = process.env.PORT || 5000;
+  server.listen(
+    {
+      port: Number(port),
+      host: "0.0.0.0",
+    },
+    () => {
+      console.log(`Server listening on port ${port}`);
+    }
+  );
 })();

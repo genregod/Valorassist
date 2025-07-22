@@ -1,0 +1,36 @@
+Starting CODE deployment to App Service 'valor-assist-service' in resource group 'valor-assist-rg'...
+Step 1/4: Installing npm dependencies...
+
+up to date, audited 537 packages in 3s
+
+67 packages are looking for funding
+  run `npm fund` for details
+
+10 vulnerabilities (3 low, 7 moderate)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+Step 2/4: Building the application for production...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.14 building for production...
+transforming...
+Browserslist: browsers data (caniuse-lite) is 9 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 17 modules transformed.
+x Build failed in 989ms
+error during build:
+Could not resolve "./pages/HealthCheck" from "client/src/App.tsx"
+file: /home/runner/workspace/client/src/App.tsx
+    at getRollupError (file:///home/runner/workspace/node_modules/rollup/dist/es/shared/parseAst.js:396:41)
+    at error (file:///home/runner/workspace/node_modules/rollup/dist/es/shared/parseAst.js:392:42)
+    at ModuleLoader.handleInvalidResolvedId (file:///home/runner/workspace/node_modules/rollup/dist/es/shared/node-entry.js:20065:24)
+    at file:///home/runner/workspace/node_modules/rollup/dist/es/shared/node-entry.js:20025:26

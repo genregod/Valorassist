@@ -58,7 +58,7 @@ az webapp create \
     --name $APP_NAME \
     --resource-group $RESOURCE_GROUP \
     --plan $PLAN_NAME \
-    --runtime "NODE:20-lts" \
+    --runtime "NODE:22-lts" \
     --output table
 
 # Configure Web App settings
@@ -142,7 +142,7 @@ az webapp config appsettings set \
         OPENAI_API_KEY="$OPENAI_API_KEY" \
         AZURE_COMMUNICATION_CONNECTION_STRING="$AZURE_COMM_STRING" \
         SESSION_SECRET="$SESSION_SECRET" \
-        WEBSITE_NODE_DEFAULT_VERSION=20 \
+        WEBSITE_NODE_DEFAULT_VERSION=22 \
     --output table
 
 # Download publish profile

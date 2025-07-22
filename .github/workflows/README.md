@@ -9,7 +9,7 @@ This directory contains GitHub Actions workflows for building and deploying Valo
 - **Purpose**: Build the application and deploy to Azure Web App
 - **Steps**:
   1. Checkout code
-  2. Setup Node.js 20.x
+  2. Setup Node.js 22.x
   3. Install dependencies
   4. Build application
   5. Run tests (if available)
@@ -62,7 +62,7 @@ SESSION_SECRET=<your-secret>
 ```
 
 ### Azure Web App Configuration:
-1. **Runtime Stack**: Node 20 LTS
+1. **Runtime Stack**: Node 22 LTS
 2. **Platform**: Linux or Windows
 3. **Region**: Southeast Asia (or your preferred region)
 4. **App Service Plan**: B1 or higher for production

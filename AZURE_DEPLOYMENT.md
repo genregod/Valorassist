@@ -101,7 +101,7 @@ az webapp create \
   --name valor-assist-service \
   --resource-group valor-assist-rg \
   --plan valor-assist-plan \
-  --runtime "NODE:20-lts"
+  --runtime "NODE:22-lts"
 ```
 
 #### API Management Setup

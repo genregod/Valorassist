@@ -69,7 +69,7 @@ az webapp create \
     --name "$appServiceName" \
     --resource-group "$resourceGroupName" \
     --plan "${appServiceName}-plan" \
-    --runtime "NODE:18-lts" \
+    --runtime "NODE:22-lts" \
     --output json
 
 echo "Enabling public network access for App Service..."

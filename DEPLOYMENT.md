@@ -9,7 +9,7 @@ This guide provides step-by-step instructions for deploying Valor Assist to Micr
 - GitHub repository with the Valor Assist code
 - Azure subscription
 - Azure CLI installed locally (optional, for manual setup)
-- Node.js 20.x for local development
+- Node.js 22.x for local development
 
 ## Quick Start
 
@@ -49,7 +49,7 @@ This script will:
 
 3. **Create Web App**
    - Name: `valor-assist` (must be globally unique)
-   - Runtime: Node 20 LTS
+   - Runtime: Node 22 LTS
    - Region: Same as resource group
 
 4. **Create PostgreSQL Database**

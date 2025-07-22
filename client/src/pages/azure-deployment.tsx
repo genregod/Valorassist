@@ -5,75 +5,21 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, AlertCircle, Clock, ExternalLink } from "lucide-react";
 
 export function AzureDeploymentPage() {
-  const deploymentStatus = "deployed"; // This would come from your deployment API
-
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl font-bold">Azure Deployment Status</h1>
-          <p className="text-muted-foreground">
-            Monitor and manage your Valor Assist deployment on Microsoft Azure
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-8">Azure Deployment</h1>
+          <p className="text-lg text-gray-600 mb-8">
+            This application is ready for Azure deployment.
           </p>
+          <div className="bg-white rounded-lg shadow p-8">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Deployment Status</h2>
+            <p className="text-gray-600">
+              Your application is configured and ready to be deployed to Azure.
+            </p>
+          </div>
         </div>
-
-        <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-          <CardHeader className="pb-6">
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-500" />
-              Deployment Status
-            </CardTitle>
-            <CardDescription>
-              Current status of your Azure App Service deployment
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span>Status</span>
-              <Badge variant="default" className="bg-green-500">
-                <CheckCircle className="h-3 w-3 mr-1" />
-                Deployed
-              </Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Environment</span>
-              <Badge variant="secondary">Production</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Region</span>
-              <span className="text-sm">East Asia</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Last Updated</span>
-              <span className="text-sm text-muted-foreground">
-                {new Date().toLocaleDateString()}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-          <CardHeader className="pb-6">
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>
-              Manage your deployment with these common actions
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button className="w-full justify-start" variant="outline">
-              <ExternalLink className="h-4 w-4 mr-2" />
-              View Application
-            </Button>
-            <Button className="w-full justify-start" variant="outline">
-              <AlertCircle className="h-4 w-4 mr-2" />
-              View Logs
-            </Button>
-            <Button className="w-full justify-start" variant="outline">
-              <Clock className="h-4 w-4 mr-2" />
-              Deployment History
-            </Button>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

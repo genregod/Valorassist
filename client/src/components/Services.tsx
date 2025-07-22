@@ -72,11 +72,11 @@ export function Services() {
   ];
 
   return (
-    <section id="services" className="py-16 bg-white">
+    <section id="services" className="py-16 bg-gradient-to-br from-blue-900 via-blue-800 to-navy">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-navy mb-4">Our Services</h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold text-white mb-4">Our Services</h2>
+          <p className="text-lg text-blue-100 max-w-3xl mx-auto">
             Valor Assist provides comprehensive AI-powered support for all your VA benefit needs.
           </p>
         </div>

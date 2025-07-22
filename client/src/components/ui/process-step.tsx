@@ -33,14 +33,14 @@ export function ProcessStep({
             reversed ? "md:pr-16 md:text-right order-2 md:order-1" : "md:pl-16 order-2"
           }`}
         >
-          <h3 className="text-xl font-bold text-navy mb-2">{title}</h3>
-          <p className="text-muted-foreground mb-4">{description}</p>
+          <h3 className="text-xl font-bold text-royal-blue mb-2">{title}</h3>
+          <p className="text-slate-600 mb-4">{description}</p>
 
           {/* This block will now only render if a testimonial is provided */}
           {testimonial && (
-            <div className="bg-white p-4 rounded-lg shadow-sm inline-block">
+            <div className="bg-white/95 backdrop-blur-sm p-4 rounded-lg shadow-sm inline-block">
               <p className="text-sm italic">"{testimonial.quote}"</p>
-              <p className="text-sm font-medium mt-2">
+              <p className="text-sm font-medium mt-2 text-royal-blue">
                 — {testimonial.author}, {testimonial.service}
               </p>
             </div>
@@ -52,12 +52,12 @@ export function ProcessStep({
           }`}
         >
           <div
-            className={`bg-white p-6 rounded-lg shadow-sharp military-border ${
+            className={`bg-royal-blue/95 backdrop-blur-sm p-6 rounded-lg shadow-sharp military-border ${
               reversed ? "ml-0 md:ml-16" : "mr-0 md:mr-16"
             }`}
           >
             <div className="flex items-center justify-center">
-              <Icon className="h-16 w-16 text-navy opacity-80" />
+              <Icon className="h-16 w-16 text-white opacity-80" />
             </div>
           </div>
         </div>

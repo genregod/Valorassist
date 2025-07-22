@@ -32,10 +32,10 @@ export function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="w-full py-12 md:py-24 lg:py-32 bg-muted"
+      className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900"
     >
       <div className="container px-4 md:px-6">
-        <h2 className="text-3xl font-bold tracking-tighter text-center sm:text-5xl mb-12">
+        <h2 className="text-3xl font-bold tracking-tighter text-center sm:text-5xl mb-12 text-white">
           Trusted by Veterans Like You
         </h2>
         <Carousel

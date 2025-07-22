@@ -12,26 +12,29 @@ interface MilitaryCardProps {
 
 export function MilitaryCard({ icon: Icon, title, description, features, learnMoreLink }: MilitaryCardProps) {
   return (
-    <Card className="bg-neutral-100 rounded-lg overflow-hidden shadow-sharp transition-transform duration-300 hover:-translate-y-1">
-      <div className="h-2 bg-[hsl(var(--secondary))]"></div>
-      <CardContent className="p-6">
-        <div className="rounded-full navy h-12 w-12 flex items-center justify-center mb-4">
-          <Icon className="text-gold text-lg" />
+    <Card className="h-full hover:shadow-sharp transition-shadow duration-300 military-border bg-white/95 backdrop-blur-sm">
+      <CardHeader>
+        <div className="flex items-center mb-2">
+          <Icon className="h-8 w-8 text-gold mr-3" />
+          <CardTitle className="text-lg font-semibold text-navy">
+            {title}
+          </CardTitle>
         </div>
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className="text-muted-foreground mb-4">
+        <CardDescription className="text-slate-600">
           {description}
-        </p>
-        <ul className="space-y-2 mb-4">
-          {features.map((feature, index) => (
-            <li key={index} className="flex items-start">
-              <i className="fas fa-check text-green-600 mt-1 mr-2"></i>
-              <span>{feature}</span>
-            </li>
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ul className="list-disc pl-5 text-sm text-slate-700">
+          {features.map((feature, i) => (
+            <li key={i}>{feature}</li>
           ))}
         </ul>
-        <a href={learnMoreLink} className="text-navy font-medium hover:text-navy-light">
-          Learn more <i className="fas fa-arrow-right ml-1"></i>
+        <a
+          href={learnMoreLink}
+          className="inline-block mt-4 text-sm font-medium underline underline-offset-4 text-blue-600"
+        >
+          Learn More
         </a>
       </CardContent>
     </Card>

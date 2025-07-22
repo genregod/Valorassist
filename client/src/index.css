@@ -108,6 +108,18 @@
     color: hsl(var(--secondary));
   }
 
+  .bg-royal-blue {
+    background-color: #1e40af;
+  }
+  
+  .bg-royal-blue-light {
+    background-color: #2563eb;
+  }
+  
+  .bg-royal-blue-dark {
+    background-color: #1d4ed8;
+  }
+
   .glass-card {
     @apply bg-white/10 backdrop-blur-md border border-white/20;
   }

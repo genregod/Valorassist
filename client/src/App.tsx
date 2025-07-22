@@ -4,6 +4,7 @@ import { Route, Switch } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { AuthProvider } from "@/hooks/use-auth";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { HomePage } from "./pages/home";
@@ -33,20 +34,22 @@ function App() {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">
-              <Switch>
-                <Route path="/" component={HomePage} />
-                <Route path="/azure-deployment" component={AzureDeploymentPage} />
-                <Route path="/health" component={HealthCheckPage} />
-                <Route component={NotFoundPage} />
-              </Switch>
-            </main>
-            <Footer />
-          </div>
-        </TooltipProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">
+                <Switch>
+                  <Route path="/" component={HomePage} />
+                  <Route path="/azure-deployment" component={AzureDeploymentPage} />
+                  <Route path="/health" component={HealthCheckPage} />
+                  <Route component={NotFoundPage} />
+                </Switch>
+              </main>
+              <Footer />
+            </div>
+          </TooltipProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );

@@ -270,7 +270,8 @@ export async function addChatParticipant(
     console.warn("Azure Communication Services not available - simulating add participant");
     
     // Add to the active threads map
-    for (const [userId, threads] of activeThreadsByUser.entries()) {
+    const entries = Array.from(activeThreadsByUser.entries());
+    for (const [userId, threads] of entries) {
       for (let i = 0; i < threads.length; i++) {
         if (threads[i].threadId === threadId) {
           threads[i].participants.push({
@@ -313,7 +314,8 @@ export async function addChatParticipant(
     await chatThreadClient.addParticipants(addParticipantsOptions);
     
     // Add to the active threads map
-    for (const [userId, threads] of activeThreadsByUser.entries()) {
+    const entries = Array.from(activeThreadsByUser.entries());
+    for (const [userId, threads] of entries) {
       for (let i = 0; i < threads.length; i++) {
         if (threads[i].threadId === threadId) {
           threads[i].participants.push(addParticipantsOptions.participants[0]);
@@ -339,11 +341,12 @@ export async function removeChatParticipant(
     console.warn("Azure Communication Services not available - simulating remove participant");
     
     // Remove from the active threads map
-    for (const [userId, threads] of activeThreadsByUser.entries()) {
+    const entriesArray = Array.from(activeThreadsByUser.entries());
+    for (const [userId, threads] of entriesArray) {
       for (let i = 0; i < threads.length; i++) {
         if (threads[i].threadId === threadId) {
           threads[i].participants = threads[i].participants.filter(
-            p => p.id.communicationUserId !== participantCommunicationId
+            (p: ChatParticipant) => p.id.communicationUserId !== participantCommunicationId
           );
           break;
         }
@@ -372,11 +375,12 @@ export async function removeChatParticipant(
     await chatThreadClient.removeParticipant({ communicationUserId: participantCommunicationId });
     
     // Remove from the active threads map
-    for (const [userId, threads] of activeThreadsByUser.entries()) {
+    const activeEntries = Array.from(activeThreadsByUser.entries());
+    for (const [userId, threads] of activeEntries) {
       for (let i = 0; i < threads.length; i++) {
         if (threads[i].threadId === threadId) {
           threads[i].participants = threads[i].participants.filter(
-            p => p.id.communicationUserId !== participantCommunicationId
+            (p: ChatParticipant) => p.id.communicationUserId !== participantCommunicationId
           );
           break;
         }

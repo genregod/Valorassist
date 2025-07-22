@@ -4,7 +4,7 @@ This directory contains GitHub Actions workflows for building and deploying Valo
 
 ## Workflows
 
-### 1. `azure-deploy.yml` - Build and Deploy to Azure
+### 1. `main_valor-assist-service.yml` - Build and Deploy to Azure
 - **Trigger**: Push to `main` branch or manual workflow dispatch
 - **Purpose**: Build the application and deploy to Azure Web App
 - **Steps**:
@@ -13,8 +13,9 @@ This directory contains GitHub Actions workflows for building and deploying Valo
   3. Install dependencies
   4. Build application
   5. Run tests (if available)
-  6. Upload build artifacts
-  7. Deploy to Azure Web App
+  6. Zip and upload artifacts
+  7. Login to Azure using service principal
+  8. Deploy to Azure Web App
 
 ### 2. `ci.yml` - Continuous Integration
 - **Trigger**: Pull requests to `main` or `develop`, pushes to `develop`
@@ -31,12 +32,20 @@ This directory contains GitHub Actions workflows for building and deploying Valo
 
 Configure these secrets in your GitHub repository settings:
 
-### For Azure Deployment (`azure-deploy.yml`):
-- `AZURE_WEBAPP_PUBLISH_PROFILE`: Download from Azure Portal
-  1. Go to your Azure Web App
-  2. Click "Download publish profile"
-  3. Copy the entire XML content
-  4. Add as GitHub secret
+### For Azure Deployment (`main_valor-assist-service.yml`):
+- `AZUREAPPSERVICE_CLIENTID_VALOR`: Azure Service Principal Client ID
+- `AZUREAPPSERVICE_TENANTID_VALOR`: Azure Tenant ID
+- `AZUREAPPSERVICE_SUBSCRIPTIONID_VALOR`: Azure Subscription ID
+
+To create these secrets:
+1. Create an Azure Service Principal:
+   ```bash
+   az ad sp create-for-rbac --name "valor-assist-github" --role contributor \
+     --scopes /subscriptions/{subscription-id}/resourceGroups/valor-assist-rg \
+     --sdk-auth
+   ```
+2. Extract the clientId, tenantId, and subscriptionId from the output
+3. Add them as GitHub secrets
 
 ### Optional Environment Variables:
 - `VITE_API_URL`: API URL for frontend (defaults to production URL)

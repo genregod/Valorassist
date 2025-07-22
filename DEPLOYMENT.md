@@ -90,11 +90,11 @@ git push origin main
 
 ## GitHub Actions Workflows
 
-### Build and Deploy (`azure-deploy.yml`)
+### Build and Deploy (`main_valor-assist-service.yml`)
 - Triggers on push to `main` branch
 - Builds the application
 - Runs tests
-- Deploys to Azure Web App
+- Deploys to Azure Web App using Azure login authentication
 
 ### Continuous Integration (`ci.yml`)
 - Triggers on pull requests

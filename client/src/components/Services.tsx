@@ -1,3 +1,4 @@
+
 import { MilitaryCard } from "@/components/ui/military-card";
 import { FileText, Gavel, GraduationCap, Home, ClipboardList, Stethoscope } from "lucide-react";
 
@@ -9,14 +10,14 @@ export function Services() {
       description: "Automate the preparation of Fully Developed Claims (FDCs) with AI-powered document analysis and generation.",
       features: [
         "Document analysis & organization",
-        "Evidence identification",
+        "Evidence identification", 
         "Forms completion & submission"
       ],
       learnMoreLink: "#claims-details"
     },
     {
       icon: Gavel,
-      title: "Appeals Assistance",
+      title: "Appeals Assistance", 
       description: "Navigate the complex appeals process with AI-guided support and strategic recommendations.",
       features: [
         "Appeal strategy development",
@@ -31,7 +32,7 @@ export function Services() {
       description: "Maximize your GI Bill and education benefits with personalized guidance and application support.",
       features: [
         "Benefit eligibility assessment",
-        "Application preparation",
+        "Application preparation", 
         "Education program matching"
       ],
       learnMoreLink: "#education-details"
@@ -39,7 +40,7 @@ export function Services() {
     {
       icon: Home,
       title: "Home Loan Support",
-      description: "Simplify the VA home loan process with guided application assistance and eligibility verification.",
+      description: "Simplify the VA home loan process with guided application assistance and eligibility verification.", 
       features: [
         "Certificate of Eligibility assistance",
         "Document preparation",
@@ -53,14 +54,14 @@ export function Services() {
       description: "Navigate the process of upgrading your discharge status with expert AI-powered guidance.",
       features: [
         "Case evaluation",
-        "Documentation preparation",
+        "Documentation preparation", 
         "Board submission guidance"
       ],
       learnMoreLink: "#discharge-details"
     },
     {
       icon: Stethoscope,
-      title: "Healthcare Navigation",
+      title: "Healthcare Navigation", 
       description: "Get assistance with VA healthcare enrollment, benefits, and appointment scheduling.",
       features: [
         "Healthcare eligibility assessment",
@@ -72,16 +73,23 @@ export function Services() {
   ];
 
   return (
-    <section id="services" className="py-16 bg-gradient-to-br from-blue-900 via-blue-800 to-navy">
+    <section id="services" className="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white mb-4">Our Services</h2>
-          <p className="text-lg text-blue-100 max-w-3xl mx-auto">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div className="inline-block mb-4">
+            <div className="w-16 h-1 bg-gold mx-auto mb-4"></div>
+          </div>
+          <h2 className="text-5xl sm:text-6xl font-black text-navy mb-6 tracking-tight">
+            Our Services
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto font-medium leading-relaxed">
             Valor Assist provides comprehensive AI-powered support for all your VA benefit needs.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
           {services.map((service, index) => (
             <MilitaryCard
               key={index}

@@ -10,6 +10,7 @@ import { HomePage } from "./pages/home";
 import { NotFoundPage } from "./pages/not-found";
 import { AzureDeploymentPage } from "./pages/azure-deployment";
 import { HealthCheckPage } from "./pages/HealthCheck";
+import { TestChatPage } from "./pages/test-chat";
 import { ErrorBoundary } from "react-error-boundary";
 
 function ErrorFallback({error}: {error: Error}) {
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/" component={HomePage} />
                 <Route path="/azure-deployment" component={AzureDeploymentPage} />
                 <Route path="/health" component={HealthCheckPage} />
+                <Route path="/test-chat" component={TestChatPage} />
                 <Route component={NotFoundPage} />
               </Switch>
             </main>

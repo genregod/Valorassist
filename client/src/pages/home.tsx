@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
@@ -15,6 +15,10 @@ import { MessageCircle } from "lucide-react";
 export function HomePage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  React.useEffect(() => {
+    console.log("HomePage mounted, chat open state:", isChatOpen);
+  }, [isChatOpen]);
+
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1">
@@ -26,15 +30,18 @@ export function HomePage() {
         <CTA />
       </main>
       
-      {/* Chat Support Button */}
+      {/* Chat Support Button - Always visible */}
       <div
-        onClick={() => setIsChatOpen(!isChatOpen)}
+        onClick={() => {
+          console.log("Chat button clicked!");
+          setIsChatOpen(!isChatOpen);
+        }}
         style={{
           position: "fixed",
-          bottom: "24px",
-          right: "24px",
-          width: "70px",
-          height: "70px",
+          bottom: "30px",
+          right: "30px",
+          width: "80px",
+          height: "80px",
           backgroundColor: "#001c3d",
           color: "white",
           borderRadius: "50%",
@@ -42,14 +49,12 @@ export function HomePage() {
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
-          zIndex: 9999,
-          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
-          transition: "transform 0.2s ease-in-out"
+          zIndex: 99999,
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5)",
         }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
-        onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+        className="hover:scale-110 transition-transform"
       >
-        <MessageCircle size={28} color="white" />
+        <MessageCircle size={32} color="white" strokeWidth={2} />
       </div>
       
       {/* Chat Window */}

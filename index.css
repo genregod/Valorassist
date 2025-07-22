@@ -80,19 +80,19 @@
   .navy {
     background-color: hsl(var(--primary));
   }
-
+  
   .navy-light {
     background-color: hsl(220, 60%, 30%);
   }
-
+  
   .navy-dark {
     background-color: hsl(220, 80%, 15%);
   }
-
+  
   .gold {
     background-color: hsl(var(--secondary));
   }
-
+  
   .gold-light {
     background-color: hsl(47, 100%, 75%);
   }
@@ -100,7 +100,7 @@
   .text-navy {
     color: hsl(var(--primary));
   }
-
+  
   .text-gold {
     color: hsl(var(--secondary));
   }

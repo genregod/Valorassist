@@ -61,6 +61,30 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Custom colors for Valor Assist
+        navy: {
+          DEFAULT: "#001c3d",
+          light: "#002d5e",
+          dark: "#001027"
+        },
+        gold: {
+          DEFAULT: "#FFC857",
+          light: "#FFD37A",
+          dark: "#E6B44C"
+        },
+        gray: {
+          50: "#f9fafb",
+          100: "#f3f4f6",
+          200: "#e5e7eb",
+          300: "#d1d5db",
+          400: "#9ca3af",
+          500: "#6b7280",
+          600: "#4b5563",
+          700: "#374151",
+          800: "#1f2937",
+          900: "#111827",
+          950: "#030712"
+        }
       },
       keyframes: {
         "accordion-down": {

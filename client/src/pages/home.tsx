@@ -27,21 +27,30 @@ export function HomePage() {
       </main>
       
       {/* Chat Support Button */}
-      <button
+      <div
         onClick={() => setIsChatOpen(!isChatOpen)}
-        className="fixed bottom-6 right-6 z-50 bg-navy hover:bg-navy-dark text-white shadow-2xl rounded-full transition-all hover:scale-110 p-4"
-        style={{ 
-          width: "70px", 
+        style={{
+          position: "fixed",
+          bottom: "24px",
+          right: "24px",
+          width: "70px",
           height: "70px",
+          backgroundColor: "#001c3d",
+          color: "white",
+          borderRadius: "50%",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
+          cursor: "pointer",
+          zIndex: 9999,
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
+          transition: "transform 0.2s ease-in-out"
         }}
-        type="button"
+        onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.1)"}
+        onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
       >
-        <MessageCircle size={28} />
-        <span className="sr-only">Open chat support</span>
-      </button>
+        <MessageCircle size={28} color="white" />
+      </div>
       
       {/* Chat Window */}
       {isChatOpen && <SimpleChatWindow isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />}

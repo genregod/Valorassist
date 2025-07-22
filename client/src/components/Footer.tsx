@@ -3,129 +3,131 @@ import { Shield, Phone, Mail, MapPin } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-navy-dark text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-gradient-to-br from-gray-900 to-gray-950 text-white relative overflow-hidden">
+      {/* Background pattern */}
+      <div className="absolute inset-0 hero-pattern opacity-5"></div>
+      
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="py-16 grid lg:grid-cols-4 md:grid-cols-2 gap-12">
           {/* Company Info */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-br from-gold to-yellow-400 p-3 rounded-lg shadow-lg">
-                <Shield className="h-8 w-8 text-navy" />
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <div className="bg-gradient-to-br from-gold to-yellow-400 p-3 rounded-xl shadow-lg transform hover:scale-105 transition-transform">
+                  <Shield className="h-10 w-10 text-navy" />
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-gold rounded-full animate-pulse"></div>
               </div>
               <div>
-                <h3 className="text-3xl font-bold">ValorAssist</h3>
-                <p className="text-gold font-semibold">Veteran Claims Support</p>
+                <h3 className="text-3xl font-black">ValorAssist</h3>
+                <p className="text-gold font-medium">Excellence in Veteran Claims</p>
               </div>
             </div>
-            <p className="text-gray-300 leading-relaxed max-w-md font-medium">
+            <p className="text-gray-400 leading-relaxed max-w-md">
               Dedicated to helping veterans secure the benefits they've earned through their service. 
-              Veteran-owned and operated with a mission to serve those who served.
+              We combine cutting-edge technology with compassionate, veteran-focused support.
             </p>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <div className="bg-gold/20 p-2 rounded-lg">
+              <a href="tel:1-800-838-3726" className="flex items-center space-x-3 hover:text-gold transition-colors group">
+                <div className="bg-gray-800 p-2.5 rounded-lg group-hover:bg-gold/20 transition-colors">
                   <Phone className="h-5 w-5 text-gold" />
                 </div>
-                <span className="font-semibold">1-800-VETERAN</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="bg-gold/20 p-2 rounded-lg">
+                <span className="font-medium">1-800-VETERAN</span>
+              </a>
+              <a href="mailto:info@valorassist.com" className="flex items-center space-x-3 hover:text-gold transition-colors group">
+                <div className="bg-gray-800 p-2.5 rounded-lg group-hover:bg-gold/20 transition-colors">
                   <Mail className="h-5 w-5 text-gold" />
                 </div>
-                <span className="font-semibold">info@valorassist.com</span>
-              </div>
+                <span className="font-medium">info@valorassist.com</span>
+              </a>
               <div className="flex items-center space-x-3">
-                <div className="bg-gold/20 p-2 rounded-lg">
+                <div className="bg-gray-800 p-2.5 rounded-lg">
                   <MapPin className="h-5 w-5 text-gold" />
                 </div>
-                <span className="font-semibold">Nationwide Service</span>
+                <span className="font-medium">Serving Veterans Nationwide</span>
               </div>
             </div>
           </div>
 
           {/* Services */}
           <div className="space-y-6">
-            <h4 className="text-xl font-bold text-gold">Our Services</h4>
-            <nav className="space-y-3">
-              <a href="#initial-claims" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                Initial Claims
-              </a>
-              <a href="#appeals" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                Appeals & Reviews
-              </a>
-              <a href="#medical-evidence" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                Medical Evidence
-              </a>
-              <a href="#increase-ratings" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                Rating Increases
-              </a>
-              <a href="#housing" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                Housing Benefits
-              </a>
-              <a href="#education" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                Education Benefits
-              </a>
+            <h4 className="text-xl font-bold gradient-text-gold">Our Services</h4>
+            <nav className="space-y-2">
+              {[
+                "Initial Claims",
+                "Appeals & Reviews",
+                "Medical Evidence",
+                "Rating Increases",
+                "Housing Benefits",
+                "Education Benefits"
+              ].map((service) => (
+                <a 
+                  key={service}
+                  href={`#${service.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`} 
+                  className="block text-gray-400 hover:text-gold transition-colors py-1"
+                >
+                  {service}
+                </a>
+              ))}
             </nav>
           </div>
 
           {/* Resources */}
           <div className="space-y-6">
-            <h4 className="text-xl font-bold text-gold">Resources</h4>
-            <nav className="space-y-3">
-              <a href="#" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                VA Benefits Guide
-              </a>
-              <a href="#" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                Disability Calculator
-              </a>
-              <a href="#" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                Claims Checklist
-              </a>
-              <a href="#" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                Success Stories
-              </a>
-              <a href="#" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                FAQ
-              </a>
-              <a href="#" className="block text-gray-300 hover:text-gold transition-colors font-medium">
-                Contact Support
-              </a>
+            <h4 className="text-xl font-bold gradient-text-gold">Resources</h4>
+            <nav className="space-y-2">
+              {[
+                "VA Benefits Guide",
+                "Disability Calculator",
+                "Claims Checklist",
+                "Success Stories",
+                "FAQ",
+                "Contact Support"
+              ].map((resource) => (
+                <a 
+                  key={resource}
+                  href="#" 
+                  className="block text-gray-400 hover:text-gold transition-colors py-1"
+                >
+                  {resource}
+                </a>
+              ))}
             </nav>
           </div>
         </div>
 
-        {/* Trust Indicators */}
-        <div className="py-8 border-t border-gold/20">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-gold">A+</div>
-              <div className="text-sm text-gray-400">BBB Accredited</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-gold">VA</div>
-              <div className="text-sm text-gray-400">Accredited Agents</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-gold">5★</div>
-              <div className="text-sm text-gray-400">Google Reviews</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold text-gold">100%</div>
-              <div className="text-sm text-gray-400">Veteran Owned</div>
-            </div>
+        {/* Trust Indicators with modern design */}
+        <div className="py-12 border-t border-gray-800">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { value: "A+", label: "BBB Rating", sublabel: "Accredited Business" },
+              { value: "VA", label: "Certified", sublabel: "Accredited Agents" },
+              { value: "5.0", label: "Stars", sublabel: "500+ Reviews" },
+              { value: "100%", label: "Veteran", sublabel: "Owned & Operated" }
+            ].map((item, index) => (
+              <div key={index} className="text-center group cursor-pointer">
+                <div className="bg-gray-800/50 rounded-xl p-6 hover:bg-gold/10 transition-all duration-300 hover:scale-105">
+                  <div className="text-3xl font-black gradient-text-gold mb-1">{item.value}</div>
+                  <div className="text-sm font-semibold text-white">{item.label}</div>
+                  <div className="text-xs text-gray-500">{item.sublabel}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="py-6 border-t border-gold/20 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="text-sm text-gray-400 font-medium">
-            © 2024 ValorAssist. All rights reserved. | Proudly serving veterans nationwide.
-          </div>
-          <div className="flex space-x-6 text-sm text-gray-400 font-medium">
-            <a href="#" className="hover:text-gold transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-gold transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-gold transition-colors">Disclaimer</a>
+        {/* Bottom Bar with modern styling */}
+        <div className="py-6 border-t border-gray-800">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="text-sm text-gray-500">
+              © 2024 ValorAssist. All rights reserved. Proudly serving those who served.
+            </div>
+            <div className="flex space-x-6 text-sm text-gray-500">
+              <a href="#" className="hover:text-gold transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-gold transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-gold transition-colors">Disclaimer</a>
+            </div>
           </div>
         </div>
       </div>

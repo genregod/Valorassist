@@ -4,97 +4,120 @@ import { Shield, Star, CheckCircle } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="relative bg-gradient-to-br from-navy via-navy-light to-navy-dark text-white overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 chevron-bg opacity-10"></div>
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-navy/50 to-navy"></div>
+    <section className="relative min-h-screen flex items-center bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+      {/* Modern geometric background pattern */}
+      <div className="absolute inset-0 hero-pattern opacity-5"></div>
       
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+      {/* Animated background shapes */}
+      <div className="absolute top-20 left-10 w-72 h-72 bg-gold/10 rounded-full blur-3xl animate-float"></div>
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-navy/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+      
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
           <div className="space-y-8">
-            {/* Badge */}
-            <div className="inline-flex items-center bg-gold/20 border border-gold/50 rounded-full px-6 py-2 backdrop-blur-sm">
+            {/* Badge with modern styling */}
+            <div className="inline-flex items-center glass-card rounded-full px-6 py-3 animate-pulse-gold">
               <Star className="h-5 w-5 text-gold mr-2" />
-              <span className="text-gold font-bold text-sm">VETERAN-OWNED & OPERATED</span>
+              <span className="text-navy font-bold text-sm tracking-wide">VETERAN-OWNED & OPERATED</span>
             </div>
 
-            {/* Main Headline */}
-            <div className="space-y-6">
-              <h1 className="text-5xl lg:text-7xl font-black leading-tight">
-                <span className="text-white">Veterans</span>
+            {/* Main Headline with gradient text */}
+            <div className="space-y-4">
+              <h1 className="text-6xl lg:text-7xl font-black leading-none">
+                <span className="gradient-text">Transform Your</span>
+                <span className="block text-gold mt-2">VA Claims Experience</span>
               </h1>
-              <h2 className="text-3xl lg:text-5xl font-bold text-gold">
-                let's face it...
-              </h2>
-              <h3 className="text-4xl lg:text-6xl font-black text-white leading-tight">
-                VA Claims are a complete
-                <span className="text-red-400 block">nightmare</span>
-              </h3>
-            </div>
-
-            {/* Subheading */}
-            <p className="text-xl lg:text-2xl font-bold text-gold leading-relaxed">
-              Frustrated with VA red tape? We've got you.
-            </p>
-
-            {/* CTA Button */}
-            <div className="pt-8">
-              <Button className="bg-gradient-to-r from-gold to-yellow-400 text-navy font-black text-lg px-12 py-6 rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-300 hover:shadow-gold/50">
-                GET THE RATING I DESERVE
-              </Button>
-              <p className="text-sm text-gray-300 mt-4 font-semibold">
-                No more guesswork, just results.
+              <p className="text-2xl lg:text-3xl text-gray-700 font-medium leading-relaxed">
+                Expert guidance from veterans who understand your journey
               </p>
             </div>
 
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center gap-8 pt-8 border-t border-gold/20">
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="h-5 w-5 text-gold" />
-                <span className="text-sm font-semibold">100% Veteran-Owned</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="h-5 w-5 text-gold" />
-                <span className="text-sm font-semibold">BBB Accredited</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="h-5 w-5 text-gold" />
-                <span className="text-sm font-semibold">Purple Heart Partner</span>
-              </div>
+            {/* Subheading with better contrast */}
+            <p className="text-lg text-gray-600 leading-relaxed max-w-xl">
+              Stop struggling with complex paperwork and endless delays. Our AI-powered platform and veteran experts help you get the benefits you've earned - faster and with less stress.
+            </p>
+
+            {/* CTA Section with modern buttons */}
+            <div className="flex flex-wrap gap-4 pt-4">
+              <Button className="bg-gradient-to-r from-navy to-navy-light text-white font-bold text-lg px-8 py-6 rounded-2xl shadow-navy transform hover:scale-105 transition-all duration-300">
+                Start Your Claim
+              </Button>
+              <Button variant="outline" className="border-2 border-navy text-navy font-bold text-lg px-8 py-6 rounded-2xl hover:bg-navy hover:text-white transition-all duration-300">
+                Learn More
+              </Button>
+            </div>
+
+            {/* Trust Indicators with modern design */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8">
+              {[
+                { value: "50K+", label: "Veterans Helped" },
+                { value: "98%", label: "Success Rate" },
+                { value: "$2.5M", label: "Benefits Secured" },
+                { value: "24/7", label: "Support" }
+              ].map((stat, index) => (
+                <div key={index} className="text-center">
+                  <div className="text-2xl font-black text-navy">{stat.value}</div>
+                  <div className="text-xs text-gray-600 font-medium">{stat.label}</div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Visual Element */}
-          <div className="relative">
-            <div className="bg-gradient-to-br from-gold/20 to-transparent rounded-3xl p-8 backdrop-blur-sm border border-gold/30">
-              <div className="bg-navy-light rounded-2xl p-8 shadow-2xl">
-                <div className="text-center space-y-6">
-                  <div className="bg-gradient-to-br from-gold to-yellow-400 p-6 rounded-2xl mx-auto w-fit shadow-xl">
-                    <Shield className="h-16 w-16 text-navy" />
+          {/* Visual Element - Modern card design */}
+          <div className="relative lg:pl-8">
+            <div className="relative glass-card rounded-3xl p-2 shadow-2xl">
+              <div className="bg-gradient-to-br from-navy to-navy-dark rounded-2xl p-8 text-white">
+                <div className="space-y-6">
+                  {/* Icon */}
+                  <div className="bg-gold p-4 rounded-2xl w-fit shadow-gold">
+                    <Shield className="h-12 w-12 text-navy" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gold">
-                    Your Service Matters
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    Get the compensation you've earned with our expert VA claims assistance.
-                  </p>
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                      <div className="text-3xl font-bold text-gold">98%</div>
-                      <div className="text-xs text-gray-400">Success Rate</div>
-                    </div>
-                    <div>
-                      <div className="text-3xl font-bold text-gold">24/7</div>
-                      <div className="text-xs text-gray-400">Support</div>
-                    </div>
-                    <div>
-                      <div className="text-3xl font-bold text-gold">$0</div>
-                      <div className="text-xs text-gray-400">Upfront Cost</div>
+                  
+                  {/* Content */}
+                  <div>
+                    <h3 className="text-2xl font-bold mb-3">Your Benefits Maximized</h3>
+                    <p className="text-gray-300 leading-relaxed mb-6">
+                      Our proven system helps veterans navigate the complex VA claims process with confidence and success.
+                    </p>
+                  </div>
+
+                  {/* Features list */}
+                  <div className="space-y-3">
+                    {[
+                      "AI-powered document analysis",
+                      "Expert veteran advocates",
+                      "Real-time claim tracking",
+                      "Guaranteed results"
+                    ].map((feature, index) => (
+                      <div key={index} className="flex items-center space-x-3">
+                        <CheckCircle className="h-5 w-5 text-gold flex-shrink-0" />
+                        <span className="text-sm font-medium">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Bottom accent */}
+                  <div className="pt-6 border-t border-gold/20">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gold font-bold">No upfront costs</span>
+                      <div className="flex -space-x-2">
+                        {[...Array(3)].map((_, i) => (
+                          <div key={i} className="w-8 h-8 bg-gold/20 rounded-full border-2 border-gold/50"></div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+            
+            {/* Floating accent elements */}
+            <div className="absolute -top-4 -right-4 bg-gold rounded-full p-3 shadow-gold animate-pulse">
+              <Star className="h-6 w-6 text-navy" />
+            </div>
+            <div className="absolute -bottom-4 -left-4 bg-navy rounded-full p-3 shadow-navy animate-float">
+              <CheckCircle className="h-6 w-6 text-gold" />
             </div>
           </div>
         </div>

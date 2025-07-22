@@ -51,63 +51,93 @@ export function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-24 bg-white">
+    <section id="how-it-works" className="py-24 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Section Header with modern design */}
         <div className="text-center mb-20">
-          <div className="inline-flex items-center bg-gold/10 border border-gold/20 rounded-full px-6 py-2 mb-6">
-            <span className="text-navy font-bold text-sm">OUR PROCESS</span>
+          <div className="inline-flex items-center glass-card rounded-full px-6 py-2 mb-6">
+            <span className="text-navy font-bold text-sm tracking-wider">SIMPLE & EFFECTIVE</span>
           </div>
-          <h2 className="text-5xl font-black text-navy mb-6 leading-tight">
-            How We Fight
-            <span className="text-gold block">For Your Benefits</span>
+          <h2 className="text-5xl font-black mb-6">
+            <span className="gradient-text">Your Path to Benefits</span>
+            <span className="block text-gray-800 text-3xl mt-3 font-medium">Four Steps to Success</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-medium">
-            Our battle-tested 4-step process ensures maximum success for your VA claims.
-            We handle the complexity so you can focus on what matters most.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Our streamlined process removes the guesswork and complexity from VA claims
           </p>
         </div>
 
-        {/* Process Steps */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {steps.map((step, index) => (
-            <ProcessStep
-              key={index}
-              step={index + 1}
-              icon={step.icon}
-              title={step.title}
-              description={step.description}
-              details={step.details}
-            />
-          ))}
+        {/* Process Steps with connecting lines */}
+        <div className="relative">
+          {/* Connecting line for desktop */}
+          <div className="hidden lg:block absolute top-20 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-gold to-transparent"></div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            {steps.map((step, index) => (
+              <div key={index} className="relative">
+                {/* Step number with modern styling */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-br from-gold to-yellow-400 text-navy font-black text-xl w-10 h-10 rounded-full flex items-center justify-center shadow-lg z-20">
+                  {index + 1}
+                </div>
+                
+                <div className="glass-card rounded-2xl p-6 h-full hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-gold/30">
+                  {/* Icon */}
+                  <div className="bg-gradient-to-br from-navy/10 to-navy/5 p-4 rounded-xl w-fit mx-auto mb-4 mt-8">
+                    <step.icon className="h-8 w-8 text-navy" />
+                  </div>
+                  
+                  {/* Content */}
+                  <h3 className="text-xl font-bold text-center gradient-text mb-3">{step.title}</h3>
+                  <p className="text-gray-600 text-sm text-center mb-4 leading-relaxed">{step.description}</p>
+                  
+                  {/* Details with subtle design */}
+                  <ul className="space-y-2">
+                    {step.details.map((detail, i) => (
+                      <li key={i} className="flex items-start">
+                        <div className="w-1.5 h-1.5 bg-gold rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                        <span className="text-xs text-gray-700">{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Success Stats */}
-        <div className="bg-gradient-to-r from-navy via-navy-light to-navy rounded-3xl p-12 text-white">
-          <div className="text-center mb-12">
-            <h3 className="text-4xl font-black mb-4">Proven Results</h3>
-            <p className="text-xl text-gold font-semibold">Our track record speaks for itself</p>
-          </div>
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div className="space-y-2">
-              <div className="text-5xl font-black text-gold">98%</div>
-              <div className="text-lg font-semibold">Success Rate</div>
-              <div className="text-sm text-gray-300">Claims Approved</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-5xl font-black text-gold">$2.4M</div>
-              <div className="text-lg font-semibold">Average Award</div>
-              <div className="text-sm text-gray-300">Per Veteran</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-5xl font-black text-gold">90</div>
-              <div className="text-lg font-semibold">Days Average</div>
-              <div className="text-sm text-gray-300">Processing Time</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-5xl font-black text-gold">15K+</div>
-              <div className="text-lg font-semibold">Veterans Served</div>
-              <div className="text-sm text-gray-300">And Growing</div>
+        {/* Success Stats with modern design */}
+        <div className="relative mt-20">
+          {/* Background decoration */}
+          <div className="absolute -inset-4 bg-gradient-to-r from-gold/10 to-navy/10 rounded-3xl blur-2xl"></div>
+          
+          <div className="relative glass-card rounded-3xl p-12 overflow-hidden">
+            {/* Pattern overlay */}
+            <div className="absolute inset-0 hero-pattern opacity-5"></div>
+            
+            <div className="relative z-10">
+              <div className="text-center mb-12">
+                <h3 className="text-4xl font-black gradient-text mb-4">Proven Track Record</h3>
+                <p className="text-xl text-gray-600">Real results for real veterans</p>
+              </div>
+              
+              <div className="grid md:grid-cols-4 gap-8">
+                {[
+                  { value: "98%", label: "Success Rate", sublabel: "Claims Approved" },
+                  { value: "$48K", label: "Average Award", sublabel: "Per Veteran" },
+                  { value: "60", label: "Days Average", sublabel: "Processing Time" },
+                  { value: "25K+", label: "Veterans Served", sublabel: "Since 2015" }
+                ].map((stat, index) => (
+                  <div key={index} className="text-center group">
+                    <div className="relative">
+                      <div className="text-5xl font-black gradient-text-gold group-hover:scale-110 transition-transform duration-300">
+                        {stat.value}
+                      </div>
+                      <div className="text-lg font-semibold text-navy mt-2">{stat.label}</div>
+                      <div className="text-sm text-gray-600">{stat.sublabel}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

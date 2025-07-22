@@ -1,87 +1,71 @@
-// client/src/components/Header.tsx
-import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
-
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/#services", label: "Features" },
-  { href: "/#how-it-works", label: "How It Works" },
-  { href: "/#testimonials", label: "Testimonials" },
-  { href: "/azure-deployment", label: "Deploy" },
-];
+import { Shield, Menu, X } from "lucide-react";
+import { useState } from "react";
 
 export function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-50 border-b">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link href="/" className="flex items-center gap-2">
-          <img
-            alt="Valor Assist Logo"
-            className="h-8 w-8"
-            src="https://placehold.co/32x32/navy/gold?text=VA"
-          />
-          <span className="font-bold text-lg">Valor Assist</span>
-        </Link>
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="hidden md:flex items-center gap-2">
-          <Button variant="outline">Sign In</Button>
-          <Button>Get Started</Button>
+    <header className="bg-navy border-b-4 border-gold sticky top-0 z-50 shadow-2xl">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-4">
+          {/* Logo */}
+          <div className="flex items-center space-x-3">
+            <div className="bg-gradient-to-br from-gold to-yellow-400 p-2 rounded-lg shadow-lg">
+              <Shield className="h-8 w-8 text-navy" />
+            </div>
+            <div className="text-white">
+              <h1 className="text-2xl font-bold tracking-tight">ValorAssist</h1>
+              <p className="text-xs text-gold font-medium">Veteran Claims Support</p>
+            </div>
+          </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <a href="#services" className="text-white hover:text-gold transition-colors font-semibold">
+              Services
+            </a>
+            <a href="#how-it-works" className="text-white hover:text-gold transition-colors font-semibold">
+              Process
+            </a>
+            <a href="#testimonials" className="text-white hover:text-gold transition-colors font-semibold">
+              Testimonials
+            </a>
+            <Button className="bg-gold text-navy hover:bg-yellow-400 font-bold px-6 py-2 shadow-lg transform hover:scale-105 transition-all">
+              GET STARTED
+            </Button>
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden text-white"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
-        <div className="md:hidden">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Toggle navigation menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <div className="grid gap-4 p-6">
-                <Link href="/" className="flex items-center gap-2 font-bold">
-                  <img
-                    alt="Valor Assist Logo"
-                    className="h-8 w-8"
-                    src="https://placehold.co/32x32/navy/gold?text=VA"
-                  />
-                  <span>Valor Assist</span>
-                </Link>
-                <nav className="grid gap-2">
-                  {navLinks.map((link) => (
-                    <SheetClose asChild key={link.href}>
-                      <Link
-                        href={link.href}
-                        className="flex w-full items-center py-2 text-lg font-semibold"
-                      >
-                        {link.label}
-                      </Link>
-                    </SheetClose>
-                  ))}
-                </nav>
-                <div className="flex flex-col gap-2">
-                  <Button variant="outline">Sign In</Button>
-                  <Button>Get Started</Button>
-                </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-navy-light border-t border-gold/30 py-4">
+            <nav className="flex flex-col space-y-4">
+              <a href="#services" className="text-white hover:text-gold transition-colors font-semibold px-4">
+                Services
+              </a>
+              <a href="#how-it-works" className="text-white hover:text-gold transition-colors font-semibold px-4">
+                Process
+              </a>
+              <a href="#testimonials" className="text-white hover:text-gold transition-colors font-semibold px-4">
+                Testimonials
+              </a>
+              <div className="px-4">
+                <Button className="bg-gold text-navy hover:bg-yellow-400 font-bold w-full shadow-lg">
+                  GET STARTED
+                </Button>
               </div>
-            </SheetContent>
-          </Sheet>
-        </div>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -1,0 +1,96 @@
+2025-07-23T05:03:18.435Z INFO  - Initiating warmup request to container valor-assist-service_0_ed250d24 for site valor-assist-service
+2025-07-23T05:03:18.209566908Z    _____                               
+2025-07-23T05:03:18.209633215Z   /  _  \ __________ _________   ____  
+2025-07-23T05:03:18.209640820Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-07-23T05:03:18.209647302Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-07-23T05:03:18.209653544Z \____|__  /_____ \____/ |__|    \___  >
+2025-07-23T05:03:18.209659776Z         \/      \/                  \/ 
+2025-07-23T05:03:18.209665908Z A P P   S E R V I C E   O N   L I N U X
+2025-07-23T05:03:18.209671960Z 
+2025-07-23T05:03:18.209677981Z Documentation: http://aka.ms/webapp-linux
+2025-07-23T05:03:18.209684083Z NodeJS quickstart: https://aka.ms/node-qs
+2025-07-23T05:03:18.209689894Z NodeJS Version : v22.15.0
+2025-07-23T05:03:18.209695525Z Note: Any data outside '/home' is not persisted
+2025-07-23T05:03:18.209701466Z 
+2025-07-23T05:03:19.756783573Z Starting OpenBSD Secure Shell server: sshd.
+2025-07-23T05:03:19.760912914Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-07-23T05:03:19.769875174Z Updating certificates in /etc/ssl/certs...
+2025-07-23T05:03:22.141653073Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-07-23T05:03:22.158477779Z 2 added, 0 removed; done.
+2025-07-23T05:03:22.158836500Z Running hooks in /etc/ca-certificates/update.d...
+2025-07-23T05:03:22.160991830Z done.
+2025-07-23T05:03:22.166051641Z CA certificates copied and updated successfully.
+2025-07-23T05:03:22.219160157Z Starting periodic command scheduler: cron.
+2025-07-23T05:03:22.237327751Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-07-23T05:03:22.237367296Z Could not find operation ID in manifest. Generating an operation id...
+2025-07-23T05:03:22.237373768Z Build Operation ID: 15a16fb1-cb15-4121-8ad9-77d9b0b3a716
+2025-07-23T05:03:22.298831397Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-07-23T05:03:22.305395403Z Writing output script to '/opt/startup/startup.sh'
+2025-07-23T05:03:22.318647219Z Running #!/bin/sh
+2025-07-23T05:03:22.318670022Z 
+2025-07-23T05:03:22.318676184Z # Enter the source directory to make sure the script runs where the user expects
+2025-07-23T05:03:22.318681714Z cd "/home/site/wwwroot"
+2025-07-23T05:03:22.318699779Z 
+2025-07-23T05:03:22.318704908Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-07-23T05:03:22.318710198Z if [ -z "$PORT" ]; then
+2025-07-23T05:03:22.318715699Z 		export PORT=8080
+2025-07-23T05:03:22.318721299Z fi
+2025-07-23T05:03:22.318726980Z 
+2025-07-23T05:03:22.318732060Z PATH="$PATH:/home/site/wwwroot" cd /home/site/wwwroot && npm install --production && PORT=8080 node dist/index.js
+2025-07-23T05:03:23.118633000Z npm info using npm@10.9.2
+2025-07-23T05:03:23.118713232Z npm info using node@v22.15.0
+2025-07-23T05:03:23.120896124Z npm warn config production Use `--omit=dev` instead.
+2025-07-23T05:03:24.551640009Z npm http fetch GET 200 https://registry.npmjs.org/npm 847ms
+2025-07-23T05:03:25.456360821Z npm http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 259ms
+2025-07-23T05:03:25.822510714Z npm http fetch GET 200 https://registry.npmjs.org/on-headers 362ms (cache miss)
+2025-07-23T05:03:25.826512746Z npm http fetch GET 200 https://registry.npmjs.org/brace-expansion 366ms (cache miss)
+2025-07-23T05:03:25.829275880Z npm http fetch GET 200 https://registry.npmjs.org/form-data 369ms (cache miss)
+2025-07-23T05:03:25.842805491Z npm http fetch GET 200 https://registry.npmjs.org/esbuild 383ms (cache miss)
+2025-07-23T05:03:25.936816516Z npm http fetch GET 200 https://registry.npmjs.org/vite 475ms (cache miss)
+2025-07-23T05:03:26.134940752Z npm http fetch GET 200 https://registry.npmjs.org/minimatch 36ms (cache miss)
+2025-07-23T05:03:26.184936232Z npm http fetch GET 200 https://registry.npmjs.org/@types%2fnode-fetch 42ms (cache miss)
+2025-07-23T05:03:26.187232603Z npm http fetch GET 200 https://registry.npmjs.org/axios 46ms (cache miss)
+2025-07-23T05:03:26.225932022Z npm http fetch GET 200 https://registry.npmjs.org/express-session 32ms (cache miss)
+2025-07-23T05:03:26.283881922Z npm http fetch GET 200 https://registry.npmjs.org/@tailwindcss%2fvite 51ms (cache miss)
+2025-07-23T05:03:26.349711879Z 
+2025-07-23T05:03:26.349742567Z up to date, audited 452 packages in 3s
+2025-07-23T05:03:26.349748449Z 
+2025-07-23T05:03:26.349753418Z 59 packages are looking for funding
+2025-07-23T05:03:26.349758408Z   run `npm fund` for details
+2025-07-23T05:03:26.370434344Z 
+2025-07-23T05:03:26.370470833Z 6 vulnerabilities (3 low, 2 moderate, 1 critical)
+2025-07-23T05:03:26.370477275Z 
+2025-07-23T05:03:26.370481944Z To address all issues, run:
+2025-07-23T05:03:26.370486824Z   npm audit fix
+2025-07-23T05:03:26.370491653Z 
+2025-07-23T05:03:26.370496663Z Run `npm audit` for details.
+2025-07-23T05:03:26.376357078Z npm notice
+2025-07-23T05:03:26.376371225Z npm notice New major version of npm available! 10.9.2 -> 11.4.2
+2025-07-23T05:03:26.376377257Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.4.2
+2025-07-23T05:03:26.376382647Z npm notice To update run: npm install -g npm@11.4.2
+2025-07-23T05:03:26.376387577Z npm notice
+2025-07-23T05:03:26.376392496Z npm info ok
+2025-07-23T05:03:26.906191315Z node:internal/modules/package_json_reader:268
+2025-07-23T05:03:26.906216293Z   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+2025-07-23T05:03:26.906239056Z         ^
+2025-07-23T05:03:26.906245519Z 
+2025-07-23T05:03:26.906250108Z Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@vitejs/plugin-react' imported from /home/site/wwwroot/dist/index.js
+2025-07-23T05:03:26.906254757Z     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:268:9)
+2025-07-23T05:03:26.906259375Z     at packageResolve (node:internal/modules/esm/resolve:768:81)
+2025-07-23T05:03:26.906264104Z     at moduleResolve (node:internal/modules/esm/resolve:854:18)
+2025-07-23T05:03:26.906268824Z     at defaultResolve (node:internal/modules/esm/resolve:984:11)
+2025-07-23T05:03:26.906273502Z     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:780:12)
+2025-07-23T05:03:26.906281397Z     at #cachedDefaultResolve (node:internal/modules/esm/loader:704:25)
+2025-07-23T05:03:26.906289563Z     at ModuleLoader.resolve (node:internal/modules/esm/loader:687:38)
+2025-07-23T05:03:26.906294913Z     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:305:38)
+2025-07-23T05:03:26.906299783Z     at ModuleJob._link (node:internal/modules/esm/module_job:137:49) {
+2025-07-23T05:03:26.906304562Z   code: 'ERR_MODULE_NOT_FOUND'
+2025-07-23T05:03:26.906309281Z }
+2025-07-23T05:03:26.906314060Z 
+2025-07-23T05:03:26.906318699Z Node.js v22.15.0
+
+2025-07-23T05:03:27.655Z ERROR - Container valor-assist-service_0_ed250d24 for site valor-assist-service has exited, failing site start
+2025-07-23T05:03:27.660Z ERROR - Container valor-assist-service_0_ed250d24 didn't respond to HTTP pings on port: 8080. Failing site start. See container logs for debugging.
+2025-07-23T05:03:27.665Z INFO  - Stopping site valor-assist-service because it failed during startup.
+2025-07-23T05:05:26  No new trace in the past 1 min(s).
+2025-07-23T05:06:26  No new trace in the past 2 min(s).

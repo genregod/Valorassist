@@ -1,0 +1,499 @@
+~/workspacechmod +x azure-logging-setup.shsh
+./azure-logging-setup.sh
+Setting up comprehensive logging and metrics for valor-assist-service...
+Creating Log Analytics Workspace...
+{
+  "createdDate": "2025-07-23T06:39:45.3389546Z",
+  "customerId": "8b4fa686-67e9-4d94-ba36-fd1702a0a8b4",
+  "etag": "\"05006cc2-0000-1900-0000-688083be0000\"",
+  "features": {
+    "enableLogAccessUsingOnlyResourcePermissions": true
+  },
+  "id": "/subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/Microsoft.OperationalInsights/workspaces/valor-logallmetrics",
+  "location": "eastasia",
+  "modifiedDate": "2025-07-23T06:39:58.5104438Z",
+  "name": "valor-logallmetrics",
+  "provisioningState": "Succeeded",
+  "publicNetworkAccessForIngestion": "Enabled",
+  "publicNetworkAccessForQuery": "Enabled",
+  "resourceGroup": "valor-assist-rg",
+  "retentionInDays": 30,
+  "sku": {
+    "lastSkuUpdate": "2025-07-23T06:39:45.3389546Z",
+    "name": "PerGB2018"
+  },
+  "type": "Microsoft.OperationalInsights/workspaces",
+  "workspaceCapping": {
+    "dailyQuotaGb": -1.0,
+    "dataIngestionStatus": "RespectQuota",
+    "quotaNextResetTime": "2025-07-23T23:00:00Z"
+  }
+}
+Creating Application Insights with Log Analytics integration...
+The command requires the extension application-insights. Do you want to install it now? The command will continue to run after the extension is installed. (Y/n): Y
+Run 'az config set extension.use_dynamic_install=yes_without_prompt' to allow installing extensions without prompt.
+Default enabled including preview versions for extension installation now. Disabled in May 2024. Use '--allow-preview true' to enable it specifically if needed. Use '--allow-preview false' to install stable version only. 
+An error occurred. Pip failed with status code 1. Use --debug for more information.
+App Insights may already exist
+
+WARNING: Run 'az config set extension.use_dynamic_install=yes_without_prompt' to allow installing extensions without prompt.
+WARNING: Default enabled including preview versions for extension installation now. Disabled in May 2024. Use '--allow-preview true' to enable it specifically if needed. Use '--allow-preview false' to install stable version only. 
+ERROR: An error occurred. Pip failed with status code 1. Use --debug for more information.
+
+WARNING: Run 'az config set extension.use_dynamic_install=yes_without_prompt' to allow installing extensions without prompt.
+WARNING: Default enabled including preview versions for extension installation now. Disabled in May 2024. Use '--allow-preview true' to enable it specifically if needed. Use '--allow-preview false' to install stable version only. 
+ERROR: An error occurred. Pip failed with status code 1. Use --debug for more information.
+Configuring App Service with Application Insights...
+
+App settings have been redacted. Use `az webapp/logicapp/functionapp config appsettings list` to view.
+[
+  {
+    "name": "AZURE_COMMUNICATION_CONNECTION_STRING",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "DATABASE_URL",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "NODE_ENV",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "OPENAI_API_KEY",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "SESSION_SECRET",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "VITE_API_URL",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "WEBSITE_HEALTHCHECK_MAXPINGFAILURES",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "WEBSITE_NODE_DEFAULT_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "XDT_MicrosoftApplicationInsights_Mode",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "DiagnosticServices_EXTENSION_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "APPINSIGHTS_SNAPSHOTFEATURE_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "SnapshotDebugger_EXTENSION_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "InstrumentationEngine_EXTENSION_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "XDT_MicrosoftApplicationInsights_BaseExtensions",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "XDT_MicrosoftApplicationInsights_PreemptSdk",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "WEBSITE_NPM_DEFAULT_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "WEBSITE_RUN_FROM_PACKAGE",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "NODE_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "PORT",
+    "slotSetting": false,
+    "value": null
+  }
+]
+Configuring diagnostic settings...
+(BadRequest) Diagnostic settings does not support retention for new diagnostic settings.
+Code: BadRequest
+Message: Diagnostic settings does not support retention for new diagnostic settings.
+Enabling verbose application logging...
+{
+  "applicationLogs": {
+    "azureBlobStorage": {
+      "level": "Off",
+      "retentionInDays": null,
+      "sasUrl": null
+    },
+    "azureTableStorage": {
+      "level": "Off",
+      "sasUrl": null
+    },
+    "fileSystem": {
+      "level": "Verbose"
+    }
+  },
+  "detailedErrorMessages": {
+    "enabled": true
+  },
+  "failedRequestsTracing": {
+    "enabled": true
+  },
+  "httpLogs": {
+    "azureBlobStorage": {
+      "enabled": false,
+      "retentionInDays": 3,
+      "sasUrl": null
+    },
+    "fileSystem": {
+      "enabled": true,
+      "retentionInDays": 3,
+      "retentionInMb": 100
+    }
+  },
+  "id": "/subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/Microsoft.Web/sites/valor-assist-service/config/logs",
+  "kind": null,
+  "location": "East US 2",
+  "name": "logs",
+  "resourceGroup": "valor-assist-rg",
+  "tags": {
+    "hidden-link: /app-insights-resource-id": "/subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/microsoft.insights/components/valor-assist-service"
+  },
+  "type": "Microsoft.Web/sites/config"
+}
+Setting verbose logging environment variables...
+App settings have been redacted. Use `az webapp/logicapp/functionapp config appsettings list` to view.
+[
+  {
+    "name": "AZURE_COMMUNICATION_CONNECTION_STRING",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "DATABASE_URL",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "NODE_ENV",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "OPENAI_API_KEY",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "SESSION_SECRET",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "VITE_API_URL",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "WEBSITE_HEALTHCHECK_MAXPINGFAILURES",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "WEBSITE_NODE_DEFAULT_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "XDT_MicrosoftApplicationInsights_Mode",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "DiagnosticServices_EXTENSION_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "APPINSIGHTS_SNAPSHOTFEATURE_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "SnapshotDebugger_EXTENSION_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "InstrumentationEngine_EXTENSION_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "XDT_MicrosoftApplicationInsights_BaseExtensions",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "XDT_MicrosoftApplicationInsights_PreemptSdk",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "WEBSITE_NPM_DEFAULT_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "WEBSITE_RUN_FROM_PACKAGE",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "NODE_VERSION",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "PORT",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "WEBSITE_DETAILED_ERROR_LOGGING",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "WEBSITE_FAILED_REQUEST_TRACING",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "DEBUG",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "NODE_OPTIONS",
+    "slotSetting": false,
+    "value": null
+  },
+  {
+    "name": "VERBOSE_LOGGING",
+    "slotSetting": false,
+    "value": null
+  }
+]
+✅ Logging setup complete!
+
+📊 Access your logs and metrics:
+1. Application Insights: https://portal.azure.com/#@/resource/subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/microsoft.insights/components/valor-assist-insights/overview
+2. Log Analytics: https://portal.azure.com/#@/resource/subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/Microsoft.OperationalInsights/workspaces/valor-logallmetrics/overview
+3. Live Metrics: https://portal.azure.com/#@/resource/subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/microsoft.insights/components/valor-assist-insights/quickPulse
+
+🔍 Query logs using KQL:
+az monitor log-analytics query --workspace /subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/Microsoft.OperationalInsights/workspaces/valor-logallmetrics --analytics-query 'AppServiceConsoleLogs | take 100'
+~/workspace$ 
+~/workspace$ az monitor log-analytics query --workspace /subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/Microsoft.OperationalInsights/workspaces/valor-logallmetrics --analytics-query 'AppServiceConsoleLogs | take 100'
+The command requires the extension log-analytics. Do you want to install it now? The command will continue to run after the extension is installed. (Y/n): Y
+Run 'az config set extension.use_dynamic_install=yes_without_prompt' to allow installing extensions without prompt.
+Default enabled including preview versions for extension installation now. Disabled in May 2024. Use '--allow-preview true' to enable it specifically if needed. Use '--allow-preview false' to install stable version only. 
+An error occurred. Pip failed with status code 1. Use --debug for more information.
+~/workspace$ az config set extension.use_dynamic_install=yes_without_prompt --debug
+cli.knack.cli: Command arguments: ['config', 'set', 'extension.use_dynamic_install=yes_without_prompt', '--debug']
+cli.knack.cli: __init__ debug log:
+Enable color in terminal.
+cli.knack.cli: Event: Cli.PreExecute []
+cli.knack.cli: Event: CommandParser.OnGlobalArgumentsCreate [<function CLILogging.on_global_arguments at 0x7fa6ef07a480>, <function OutputProducer.on_global_arguments at 0x7fa6eedf1120>, <function CLIQuery.on_global_arguments at 0x7fa6eee1ed40>]
+cli.knack.cli: Event: CommandInvoker.OnPreCommandTableCreate []
+cli.azure.cli.core: Command index version or cloud profile is invalid or doesn't match the current command.
+cli.azure.cli.core._session: Skipping update of file /nix/store/620cpakh22v42jd7177xhapirf3a0mkg-python3.11-azure-cli-2.60.0/etc/azure/commandIndex.json due to immutable directory.
+cli.azure.cli.core._session: Skipping update of file /nix/store/620cpakh22v42jd7177xhapirf3a0mkg-python3.11-azure-cli-2.60.0/etc/azure/commandIndex.json due to immutable directory.
+cli.azure.cli.core._session: Skipping update of file /nix/store/620cpakh22v42jd7177xhapirf3a0mkg-python3.11-azure-cli-2.60.0/etc/azure/commandIndex.json due to immutable directory.
+cli.azure.cli.core: Command index has been invalidated.
+cli.azure.cli.core: No module found from index for '['config', 'set', 'extension.use_dynamic_install=yes_without_prompt', '--debug']'
+cli.azure.cli.core: Loading all modules and extensions
+cli.azure.cli.core: Discovered command modules: ['acr', 'acs', 'advisor', 'ams', 'apim', 'appconfig', 'appservice', 'aro', 'backup', 'batch', 'batchai', 'billing', 'botservice', 'cdn', 'cloud', 'cognitiveservices', 'config', 'configure', 'consumption', 'container', 'containerapp', 'cosmosdb', 'databoxedge', 'dla', 'dls', 'dms', 'eventgrid', 'eventhubs', 'extension', 'feedback', 'find', 'hdinsight', 'identity', 'interactive', 'iot', 'keyvault', 'kusto', 'lab', 'managedservices', 'maps', 'marketplaceordering', 'monitor', 'mysql', 'netappfiles', 'network', 'policyinsights', 'privatedns', 'profile', 'rdbms', 'redis', 'relay', 'resource', 'role', 'search', 'security', 'servicebus', 'serviceconnector', 'servicefabric', 'signalr', 'sql', 'sqlvm', 'storage', 'synapse', 'util', 'vm']
+cli.azure.cli.core: Loading command modules:
+cli.azure.cli.core: Name                  Load Time    Groups  Commands
+cli.azure.cli.core: acr                       0.259        36       149
+cli.azure.cli.core: acs                       0.045        14        76
+cli.azure.cli.core: advisor                   0.004         3         6
+cli.azure.cli.core: ams                       0.006        22       100
+cli.azure.cli.core: apim                      0.009        14        69
+cli.azure.cli.core: appconfig                 0.006         9        47
+cli.azure.cli.core: appservice                0.116        79       270
+cli.azure.cli.core: aro                       0.018         1        10
+cli.azure.cli.core: backup                    0.006        16        60
+cli.azure.cli.core: batch                     0.039        34       102
+cli.azure.cli.core: batchai                   0.005        10        30
+cli.azure.cli.core: billing                   0.020        19        53
+cli.azure.cli.core: botservice                0.005        12        42
+cli.azure.cli.core: cdn                       0.343         8        49
+cli.azure.cli.core: cloud                     0.003         1         7
+cli.azure.cli.core: cognitiveservices         0.003        10        33
+cli.azure.cli.core: config                    0.003         2         7
+cli.azure.cli.core: configure                 0.002         2         5
+cli.azure.cli.core: consumption               0.030         8         9
+cli.azure.cli.core: container                 0.015         1        11
+cli.azure.cli.core: containerapp              0.235        36       115
+cli.azure.cli.core: cosmosdb                  0.018        58       199
+cli.azure.cli.core: databoxedge               0.012         5        28
+cli.azure.cli.core: dla                       0.005        23        62
+cli.azure.cli.core: dls                       0.004         7        41
+cli.azure.cli.core: dms                       0.003         3        22
+cli.azure.cli.core: eventgrid                 0.006        25        96
+cli.azure.cli.core: eventhubs                 0.019        13        19
+cli.azure.cli.core: extension                 0.002         1         7
+cli.azure.cli.core: feedback                  0.001         1         2
+cli.azure.cli.core: find                      0.002         1         1
+cli.azure.cli.core: hdinsight                 0.010         8        39
+cli.azure.cli.core: identity                  0.003         2        11
+cli.azure.cli.core: interactive               0.001         1         1
+cli.azure.cli.core: iot                       0.109        19        82
+cli.azure.cli.core: keyvault                  0.011        20       113
+cli.azure.cli.core: kusto                     0.004         3        14
+cli.azure.cli.core: lab                       0.005        11        34
+cli.azure.cli.core: managedservices           0.002         3         8
+cli.azure.cli.core: maps                      0.002         5        13
+cli.azure.cli.core: marketplaceordering       0.004         1         2
+cli.azure.cli.core: monitor                   0.737        18        61
+cli.azure.cli.core: mysql                     0.154        15        51
+cli.azure.cli.core: netappfiles               0.065         8        17
+cli.azure.cli.core: network                   0.283       103       338
+cli.azure.cli.core: policyinsights            0.019         9        17
+cli.azure.cli.core: privatedns                0.030        14        60
+cli.azure.cli.core: profile                   0.003         2         8
+cli.azure.cli.core: rdbms                     0.030        49       202
+cli.azure.cli.core: redis                     0.004         7        38
+cli.azure.cli.core: relay                     0.036         7         8
+cli.azure.cli.core: resource                  0.014        51       228
+cli.azure.cli.core: role                      0.003        17        61
+cli.azure.cli.core: search                    0.012         7        19
+cli.azure.cli.core: security                  0.015        50       105
+cli.azure.cli.core: servicebus                0.013        12        15
+cli.azure.cli.core: serviceconnector          0.024        20       299
+cli.azure.cli.core: servicefabric             0.021        27        80
+cli.azure.cli.core: signalr                   0.003         9        34
+cli.azure.cli.core: sql                       0.017        56       215
+cli.azure.cli.core: sqlvm                     0.042         4        20
+cli.azure.cli.core: storage                   0.055        59       273
+cli.azure.cli.core: synapse                   0.016        54       246
+cli.azure.cli.core: util                      0.002         3         7
+cli.azure.cli.core: vm                        0.193        58       233
+cli.azure.cli.core: Total (65)                3.185      1206      4679
+cli.azure.cli.core: Loaded 1192 groups, 4679 commands.
+cli.azure.cli.core._session: Skipping update of file /nix/store/620cpakh22v42jd7177xhapirf3a0mkg-python3.11-azure-cli-2.60.0/etc/azure/commandIndex.json due to immutable directory.
+cli.azure.cli.core._session: Skipping update of file /nix/store/620cpakh22v42jd7177xhapirf3a0mkg-python3.11-azure-cli-2.60.0/etc/azure/commandIndex.json due to immutable directory.
+cli.azure.cli.core._session: Skipping update of file /nix/store/620cpakh22v42jd7177xhapirf3a0mkg-python3.11-azure-cli-2.60.0/etc/azure/commandIndex.json due to immutable directory.
+cli.azure.cli.core: Updated command index in 0.002 seconds.
+cli.knack.cli: Event: CommandInvoker.OnPreCommandTableTruncate [<function AzCliLogging.init_command_file_logging at 0x7fa6edcb5a80>]
+cli.azure.cli.core.azlogging: metadata file logging enabled - writing logs to '/home/runner/.azure/commands/2025-07-23.06-47-48.config_set.20046.log'.
+az_command_data_logger: command args: config set {} --debug
+cli.knack.cli: Event: CommandInvoker.OnPreArgumentLoad [<function register_global_subscription_argument.<locals>.add_subscription_parameter at 0x7fa6edd0bc40>]
+cli.knack.cli: Event: CommandInvoker.OnPostArgumentLoad []
+cli.knack.cli: Event: CommandInvoker.OnPostCommandTableCreate [<function register_ids_argument.<locals>.add_ids_arguments at 0x7fa6eda39e40>, <function register_cache_arguments.<locals>.add_cache_arguments at 0x7fa6eda39f80>]
+cli.knack.cli: Event: CommandInvoker.OnCommandTableLoaded []
+cli.knack.cli: Event: CommandInvoker.OnPreParseArgs [<function _documentdb_deprecate at 0x7fa6ebcfac00>]
+cli.knack.cli: Event: CommandInvoker.OnPostParseArgs [<function OutputProducer.handle_output_argument at 0x7fa6eedf11c0>, <function CLIQuery.handle_query_parameter at 0x7fa6eee1ede0>, <function register_ids_argument.<locals>.parse_ids_arguments at 0x7fa6eda39ee0>]
+Command group 'config' is experimental and under development. Reference and support levels: https://aka.ms/CLI_refstatus
+cli.knack.cli: Event: CommandInvoker.OnTransformResult [<function _resource_group_transform at 0x7fa6edd0ad40>, <function _x509_from_base64_to_hex_transform at 0x7fa6edd0ade0>]
+cli.knack.cli: Event: CommandInvoker.OnFilterResult []
+cli.knack.cli: Event: Cli.SuccessfulExecute []
+cli.knack.cli: Event: Cli.PostExecute [<function AzCliLogging.deinit_cmd_metadata_logging at 0x7fa6edcb5d00>]
+az_command_data_logger: exit code: 0
+cli.__main__: Command ran in 3.923 seconds (init: 0.701, invoke: 3.221)
+telemetry.main: Begin splitting cli events and extra events, total events: 1
+telemetry.client: Accumulated 0 events. Flush the clients.
+telemetry.main: Finish splitting cli events and extra events, cli events: 1
+telemetry.save: Save telemetry record of length 3605 in cache
+telemetry.main: Begin creating telemetry upload process.
+telemetry.process: Creating upload process: "/nix/store/7hnr99nxrd2aw6lghybqdmkckq60j6l9-python3-3.11.9/bin/python3.11 /nix/store/p8vi13l1q9ndc8mq7g1crkbxlsm2gxgd-python3.11-azure-cli-telemetry-1.1.0/lib/python3.11/site-packages/azure/cli/telemetry/__init__.py /home/runner/.azure"
+telemetry.process: Return from creating process
+telemetry.main: Finish creating telemetry upload process.

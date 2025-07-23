@@ -8,3 +8,8 @@ vite.config.ts.*
 github-secrets-setup.md
 valor-assist-credentials.txt
 *-credentials.txt
+
+# Files containing secrets
+github-secrets-setup.md
+valor-assist-credentials.txt
+*-credentials.txt

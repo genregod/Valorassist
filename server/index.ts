@@ -77,7 +77,7 @@ app.use((req, res, next) => {
   }
 
   // --- Start the Server ---
-  const port = process.env.PORT || '5001'; // Fix: Use string fallback for PORT
+  const port = process.env.PORT || '8080'; // Azure App Service uses port 8080
   server.listen(
     {
       port: Number(port),

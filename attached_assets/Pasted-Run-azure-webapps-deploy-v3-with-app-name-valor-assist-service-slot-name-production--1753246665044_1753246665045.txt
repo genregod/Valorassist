@@ -1,0 +1,69 @@
+Run azure/webapps-deploy@v3
+  with:
+    app-name: valor-assist-service
+    slot-name: production
+    publish-profile: ***
+    package: .
+  env:
+    AZURE_WEBAPP_NAME: valor-assist-service
+    NODE_VERSION: 20.x
+Package deployment using OneDeploy initiated.
+{
+  id: '441f64a6-ae75-4983-b49c-b6679d1e7c92',
+  status: 3,
+  status_text: '',
+  author_email: 'N/A',
+  author: 'N/A',
+  deployer: 'OneDeploy',
+  message: 'OneDeploy',
+  progress: '',
+  received_time: '2025-07-23T04:55:37.1221486Z',
+  start_time: '2025-07-23T04:55:38.3424343Z',
+  end_time: '2025-07-23T04:55:40.9572561Z',
+  last_success_end_time: null,
+  complete: true,
+  active: false,
+  is_temp: false,
+  is_readonly: true,
+  url: 'https://valor-assist-service.scm.azurewebsites.net/api/deployments/441f64a6-ae75-4983-b49c-b6679d1e7c92',
+  log_url: 'https://valor-assist-service.scm.azurewebsites.net/api/deployments/441f64a6-ae75-4983-b49c-b6679d1e7c92/log',
+  site_name: 'valor-assist-service',
+  build_summary: { errors: [], warnings: [] }
+}
+Updating submodules.
+Preparing deployment for commit id '441f64a6-a'.
+PreDeployment: context.CleanOutputPath False
+PreDeployment: context.OutputPath /home/site/wwwroot
+Repository path is /tmp/zipdeploy/extracted
+Running oryx build...
+Command: oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform nodejs --platform-version 22 -p virtualenv_name= --log-file /tmp/build-debug.log  -i /tmp/8ddc9a52af5d635 -p compress_node_modules=tar-gz | tee /tmp/oryx-build.log
+Operation performed by Microsoft Oryx, https://github.com/Microsoft/Oryx
+You can report issues at https://github.com/Microsoft/Oryx/issues
+
+Oryx Version: 0.2.20250611.1+0649de32f1279969c9023dd41b389cce4bb94493, Commit: 0649de32f1279969c9023dd41b389cce4bb94493, ReleaseTagName: 20250611.1
+
+Build Operation ID: bd87a488386a47d7
+Repository Commit : 441f64a6-ae75-4983-b49c-b6679d1e7c92
+OS Type           : bookworm
+Image Type        : githubactions
+
+Primary SDK Storage URL: https://oryx-cdn.microsoft.io
+Backup SDK Storage URL: https://oryxsdks-cdn.azureedge.net
+Detecting platforms...
+Could not detect any platform in the source directory.
+Error: Couldn't detect a version for the platform 'nodejs' in the repo.
+Error: Couldn't detect a version for the platform 'nodejs' in the repo.\n/bin/bash -c "oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform nodejs --platform-version 22 -p virtualenv_name= --log-file /tmp/build-debug.log  -i /tmp/8ddc9a52af5d635 -p compress_node_modules=tar-gz | tee /tmp/oryx-build.log ; exit $PIPESTATUS "
+
+Generating summary of Oryx build
+Parsing the build logs
+Found 0 issue(s)
+
+Build Summary :
+===============
+Errors (0)
+Warnings (0)
+
+Deployment Failed. deployer = OneDeploy deploymentPath = OneDeploy
+Error: Failed to deploy web package to App Service.
+Error: Deployment Failed, Package deployment using ZIP Deploy failed. Refer logs for more details.
+App Service Application URL: http://valor-assist-service.azurewebsites.net

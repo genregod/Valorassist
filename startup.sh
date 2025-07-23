@@ -1,32 +1,12 @@
 #!/bin/bash
 
-# Azure App Service startup script
-echo "=== Valor Assist Startup Script ==="
-echo "Node.js version: $(node --version)"
-echo "Working directory: $(pwd)"
+echo "Starting Valor Assist application..."
 
-# Change to app directory
-cd /home/site/wwwroot || exit 1
-
-# Always install dependencies on Azure
-echo "Installing production dependencies..."
-npm ci --production --legacy-peer-deps
-
-# Verify installation
-if [ ! -d "node_modules/express" ]; then
-    echo "ERROR: Express module not found after installation!"
-    echo "Attempting alternative installation..."
-    npm install --production --legacy-peer-deps
-fi
-
-# Check dist directory
-if [ ! -d "dist" ]; then
-    echo "ERROR: dist directory not found!"
-    ls -la
-    exit 1
-fi
+# Always install dependencies first
+cd /home/site/wwwroot
+echo "Installing dependencies..."
+npm install --production
 
 # Start the application
-echo "Starting application..."
-export NODE_ENV=production
+echo "Starting Node.js application from dist/index.js..."
 node dist/index.js

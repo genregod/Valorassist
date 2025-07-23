@@ -1,0 +1,68 @@
+2025-07-23T04:13:32.3655916Z Site: valor-assist-service stopped.Ending Log Tail of existing logs ---Starting Live Log Stream ---
+2025-07-23T04:36:53.455595817Z    _____
+2025-07-23T04:36:53.455639841Z   /  _  \ __________ _________   ____
+2025-07-23T04:36:53.455645381Z  /  /_\  \\___   /  |  \_  __ \_/ __ \
+2025-07-23T04:36:53.455650320Z /    |    \/    /|  |  /|  | \/\  ___/
+2025-07-23T04:36:53.455655230Z \____|__  /_____ \____/ |__|    \___  >
+2025-07-23T04:36:53.455660339Z         \/      \/                  \/
+2025-07-23T04:36:53.455665158Z A P P   S E R V I C E   O N   L I N U X
+2025-07-23T04:36:53.455669837Z
+2025-07-23T04:36:53.455674416Z Documentation: http://aka.ms/webapp-linux
+2025-07-23T04:36:53.455679005Z NodeJS quickstart: https://aka.ms/node-qs
+2025-07-23T04:36:53.455683613Z NodeJS Version : v22.15.0
+2025-07-23T04:36:53.455688212Z Note: Any data outside '/home' is not persisted
+2025-07-23T04:36:53.455692931Z
+2025-07-23T04:36:54.718364861Z Starting OpenBSD Secure Shell server: sshd.
+2025-07-23T04:36:54.730108837Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-07-23T04:36:54.746960021Z Updating certificates in /etc/ssl/certs...
+2025-07-23T04:36:57.476862133Z rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2025-07-23T04:36:57.486506880Z 2 added, 0 removed; done.
+2025-07-23T04:36:57.486530976Z Running hooks in /etc/ca-certificates/update.d...
+2025-07-23T04:36:57.487896324Z done.
+2025-07-23T04:36:57.497274636Z CA certificates copied and updated successfully.
+2025-07-23T04:36:57.587114397Z Starting periodic command scheduler: cron.
+2025-07-23T04:36:57.597481774Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-07-23T04:36:57.597513063Z Could not find operation ID in manifest. Generating an operation id...
+2025-07-23T04:36:57.600555028Z Build Operation ID: 4ad9d7c2-6da5-446f-974a-4bdb5af47ab2
+2025-07-23T04:36:57.705625232Z Environment Variables for Application Insight's IPA Codeless Configuration exists..
+2025-07-23T04:36:57.714067751Z Writing output script to '/opt/startup/startup.sh'
+2025-07-23T04:36:57.964075780Z Running #!/bin/sh
+2025-07-23T04:36:57.964112921Z
+2025-07-23T04:36:57.964118421Z # Enter the source directory to make sure the script runs where the user expects
+2025-07-23T04:36:57.964136064Z cd "/home/site/wwwroot"
+2025-07-23T04:36:57.964141405Z
+2025-07-23T04:36:57.964146034Z export NODE_PATH=/usr/local/lib/node_modules:$NODE_PATH
+2025-07-23T04:36:57.964151243Z if [ -z "$PORT" ]; then
+2025-07-23T04:36:57.964156133Z 		export PORT=8080
+2025-07-23T04:36:57.964161262Z fi
+2025-07-23T04:36:57.964165921Z
+2025-07-23T04:36:57.967408446Z PATH="$PATH:/home/site/wwwroot" ./startup.sh
+2025-07-23T04:36:57.985198239Z Starting Valor Assist application...
+2025-07-23T04:36:57.986263117Z Starting Node.js application from dist/index.js...
+2025-07-23T04:36:58.468678528Z node:internal/modules/package_json_reader:268
+2025-07-23T04:36:58.468715187Z   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+2025-07-23T04:36:58.468721720Z         ^
+2025-07-23T04:36:58.468726769Z
+2025-07-23T04:36:58.468732049Z Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /home/site/wwwroot/dist/index.js
+2025-07-23T04:36:58.468737249Z     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:268:9)
+2025-07-23T04:36:58.468742219Z     at packageResolve (node:internal/modules/esm/resolve:768:81)
+2025-07-23T04:36:58.468747188Z     at moduleResolve (node:internal/modules/esm/resolve:854:18)
+2025-07-23T04:36:58.468752378Z     at defaultResolve (node:internal/modules/esm/resolve:984:11)
+2025-07-23T04:36:58.468757357Z     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:780:12)
+2025-07-23T04:36:58.468762497Z     at #cachedDefaultResolve (node:internal/modules/esm/loader:704:25)
+2025-07-23T04:36:58.468767516Z     at ModuleLoader.resolve (node:internal/modules/esm/loader:687:38)
+2025-07-23T04:36:58.468772546Z     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:305:38)
+2025-07-23T04:36:58.468777505Z     at ModuleJob._link (node:internal/modules/esm/module_job:137:49) {
+2025-07-23T04:36:58.468782715Z   code: 'ERR_MODULE_NOT_FOUND'
+2025-07-23T04:36:58.468787705Z }
+2025-07-23T04:36:58.468792774Z
+2025-07-23T04:36:58.468797604Z Node.js v22.15.0
+2025-07-23T04:36:53.099Z INFO  - Starting container for site
+2025-07-23T04:36:53.100Z INFO  - docker run -d --expose=8080 --name valor-assist-service_0_f7a21c33 -e WEBSITE_USE_DIAGNOSTIC_SERVER=true -e WEBSITES_ENABLE_APP_SERVICE_STORAGE=true -e WEBSITE_SITE_NAME=valor-assist-service -e WEBSITE_AUTH_ENABLED=False -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=valor-assist-service.azurewebsites.net -e WEBSITE_INSTANCE_ID=74b7963c2231fc9181263c18d12b2387429a52cfc6b03fb112f3304619705892 -e NODE_OPTIONS=--require /agents/nodejs/build/src/Loader.js appsvc/node:22-lts_20250506.5.tuxprod REDACTED
+2025-07-23T04:36:53.100Z INFO  - Logging is not enabled for this container.Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-07-23T04:36:53.779Z INFO  - Initiating warmup request to container valor-assist-service_0_f7a21c33_msiProxy for site valor-assist-service
+2025-07-23T04:36:53.816Z INFO  - Container valor-assist-service_0_f7a21c33_msiProxy for site valor-assist-service initialized successfully and is ready to serve requests.
+2025-07-23T04:36:53.816Z INFO  - Initiating warmup request to container valor-assist-service_0_f7a21c33 for site valor-assist-service
+2025-07-23T04:37:01.001Z ERROR - Container valor-assist-service_0_f7a21c33 for site valor-assist-service has exited, failing site start
+2025-07-23T04:37:01.008Z ERROR - Container valor-assist-service_0_f7a21c33 didn't respond to HTTP pings on port: 8080. Failing site start. See container logs for debugging.
+2025-07-23T04:37:01.017Z INFO  - Stopping site valor-assist-service because it failed during startup.

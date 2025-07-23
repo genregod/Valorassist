@@ -36,44 +36,48 @@ jobs:
 
     - name: Prepare deployment package
       run: |
-        # Copy package.json to the dist directory
-        cp package.json dist/
-        # If you have a server.js or similar entry file, copy that too
-        if [ -f "server.js" ]; then
-          cp server.js dist/
-        fi
-        # If you need other files for production
-        if [ -f ".env.production" ]; then
-          cp .env.production dist/
-        fi
-        # Create basic web.config for Azure
-        echo '<?xml version="1.0" encoding="utf-8"?>
-        <configuration>
-          <system.webServer>
-            <handlers>
-              <add name="iisnode" path="server.js" verb="*" modules="iisnode"/>
-            </handlers>
-            <rewrite>
-              <rules>
-                <rule name="StaticContent">
-                  <action type="Rewrite" url="dist{REQUEST_URI}"/>
-                </rule>
-                <rule name="DynamicContent">
-                  <conditions>
-                    <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="True"/>
-                  </conditions>
-                  <action type="Rewrite" url="server.js"/>
-                </rule>
-              </rules>
-            </rewrite>
-          </system.webServer>
-        </configuration>' > dist/web.config
+        # Create deployment directory
+        mkdir -p deploy
+        
+        # Copy built app to deployment
+        cp -r dist/* deploy/
+        
+        # Create a simplified package.json without build scripts
+        node -e "const pkg = require('./package.json'); 
+          delete pkg.scripts.build; 
+          pkg.scripts.start = 'node server.js'; 
+          require('fs').writeFileSync('./deploy/package.json', JSON.stringify(pkg, null, 2));"
+        
+        # Create a simple express server for static content
+        echo 'const express = require("express");
+        const path = require("path");
+        const app = express();
+        
+        app.use(express.static(__dirname));
+        
+        app.get("*", (req, res) => {
+          res.sendFile(path.resolve(__dirname, "index.html"));
+        });
+        
+        const PORT = process.env.PORT || 8080;
+        app.listen(PORT, () => {
+          console.log(`Server running on port ${PORT}`);
+        });' > deploy/server.js
+        
+        # Create .deployment file to skip build step in Azure
+        echo '[config]
+        SCM_DO_BUILD_DURING_DEPLOYMENT=false' > deploy/.deployment
+        
+        # Add express dependency if not already present
+        cd deploy
+        npm i express --save
+        cd ..
 
     - name: Upload artifact for deployment
       uses: actions/upload-artifact@v4
       with:
         name: node-app
-        path: dist/
+        path: deploy/
 
   deploy:
     runs-on: ubuntu-latest

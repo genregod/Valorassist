@@ -32,6 +32,9 @@ jobs:
 
       - name: Prepare deployment package
         run: |
+          # Copy index.html to root for Vite
+          cp client/index.html ./index.html
+          
           # Remove source files but keep built files and dependencies
           rm -rf client/src
           rm -rf server/*.ts

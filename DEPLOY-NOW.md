@@ -4,9 +4,16 @@
 
 ### 1. Push Changes to GitHub
 
-Run these commands in your terminal:
+First, fix the git lock issue and pull latest changes:
 
 ```bash
+# Remove git lock file if exists
+rm -f .git/index.lock
+
+# Pull latest changes from remote
+git pull origin main
+
+# Add your changes
 git add .
 git commit -m "Fix: Azure deployment - port 8080, Node.js 22, and proper entry point"
 git push origin main

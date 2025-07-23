@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: valor-assist-service    # Replace with your Azure Web App name
+  AZURE_WEBAPP_NAME: valor-assist-service
   NODE_VERSION: '20.x'
   
 jobs:
@@ -34,6 +34,41 @@ jobs:
     - name: Run tests
       run: npm test --if-present
 
+    - name: Prepare deployment package
+      run: |
+        # Copy package.json to the dist directory
+        cp package.json dist/
+        # If you have a server.js or similar entry file, copy that too
+        if [ -f "server.js" ]; then
+          cp server.js dist/
+        fi
+        # If you need other files for production
+        if [ -f ".env.production" ]; then
+          cp .env.production dist/
+        fi
+        # Create basic web.config for Azure
+        echo '<?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <system.webServer>
+            <handlers>
+              <add name="iisnode" path="server.js" verb="*" modules="iisnode"/>
+            </handlers>
+            <rewrite>
+              <rules>
+                <rule name="StaticContent">
+                  <action type="Rewrite" url="dist{REQUEST_URI}"/>
+                </rule>
+                <rule name="DynamicContent">
+                  <conditions>
+                    <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="True"/>
+                  </conditions>
+                  <action type="Rewrite" url="server.js"/>
+                </rule>
+              </rules>
+            </rewrite>
+          </system.webServer>
+        </configuration>' > dist/web.config
+
     - name: Upload artifact for deployment
       uses: actions/upload-artifact@v4
       with:
@@ -52,13 +87,12 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: node-app
-        path: dist/
+        path: ./
 
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v3
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        slot-name: 'production'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: dist/
+        package: .

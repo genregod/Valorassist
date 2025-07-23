@@ -1,0 +1,94 @@
+{
+    "authorization": {
+        "action": "Microsoft.Web/sites/config/write",
+        "scope": "/subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/Microsoft.Web/sites/valor-assist-service/config/appsettings"
+    },
+    "caller": "Bookmywhip@outlook.com",
+    "channels": "Operation",
+    "claims": {
+        "aud": "https://management.core.windows.net/",
+        "iss": "https://sts.windows.net/03cba76b-de04-494b-9b97-7cac1712c02e/",
+        "iat": "1753249208",
+        "nbf": "1753249208",
+        "exp": "1753254865",
+        "http://schemas.microsoft.com/claims/authnclassreference": "1",
+        "acrs": "p1",
+        "aio": "AZQAa/8ZAAAAioWRxqGidqk8mlpaYZM+Uyuws4WH0L51Sh14SVcIxK5yerH6o5pD9yRCb8QWyukkQtFYxCOIO2eogd56K5ElVKEKeI4tavjO4m5/Y0aJos1WDfZskhqzZUW+uZQn5v/Z+Uz8kpxNzk4OWSu0YtAtk8x0zQWe446FjGKHxTU2YATNHuHDKIC5mIFcL2bQ4WJQ",
+        "altsecid": "1:live.com:00037FFF96726C9C",
+        "http://schemas.microsoft.com/claims/authnmethodsreferences": "pwd,mfa",
+        "appid": "04b07795-8ddb-461a-bbee-02f9e1bf7b46",
+        "appidacr": "0",
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress": "Bookmywhip@outlook.com",
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname": "Navarro",
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname": "Anthony",
+        "groups": "9558947b-17c1-4351-8a62-d915dc3ddfe5",
+        "http://schemas.microsoft.com/identity/claims/identityprovider": "live.com",
+        "idtyp": "user",
+        "ipaddr": "34.139.217.216",
+        "name": "Anthony Navarro",
+        "http://schemas.microsoft.com/identity/claims/objectidentifier": "a0bb6b17-5ddb-4c78-a2dd-af62024433b8",
+        "puid": "100320048E9D4555",
+        "rh": "1.AWEBa6fLAwTeS0mbl3ysFxLALkZIf3kAutdPukPawfj2MBPKAcVhAQ.",
+        "http://schemas.microsoft.com/identity/claims/scope": "user_impersonation",
+        "sid": "006e3309-29e9-8b22-3cc1-b1f66890fccc",
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": "MVOZUWfOWLY6s24uihPTTz5uAZNTt6wveI8f7XHpDg8",
+        "http://schemas.microsoft.com/identity/claims/tenantid": "03cba76b-de04-494b-9b97-7cac1712c02e",
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": "live.com#Bookmywhip@outlook.com",
+        "uti": "mfkPDP6j-kGIjGw6EzEYAA",
+        "ver": "1.0",
+        "wids": "62e90394-69f5-4237-9190-012177145e10,b79fbf4d-3ef9-4689-8143-76b194e85509",
+        "xms_edov": "true",
+        "xms_ftd": "zT8rjW_7TQpIJkwPKt7_nU_r-DAoR8azjLUE-rW40HUBdXNlYXN0LWRzbXM",
+        "xms_idrel": "1 10",
+        "xms_tcdt": "1745754759"
+    },
+    "correlationId": "c6c2a99b-1a44-469f-94ff-b3328582a347",
+    "description": "",
+    "eventDataId": "24571f7a-2d8c-4a90-8514-aa0fd03cad80",
+    "eventName": {
+        "value": "EndRequest",
+        "localizedValue": "End request"
+    },
+    "category": {
+        "value": "Administrative",
+        "localizedValue": "Administrative"
+    },
+    "eventTimestamp": "2025-07-23T05:58:26.7105155Z",
+    "id": "/subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/Microsoft.Web/sites/valor-assist-service/config/appsettings/events/24571f7a-2d8c-4a90-8514-aa0fd03cad80/ticks/638888471067105155",
+    "level": "Informational",
+    "operationId": "c6c2a99b-1a44-469f-94ff-b3328582a347",
+    "operationName": {
+        "value": "Microsoft.Web/sites/config/write",
+        "localizedValue": "Update web sites config"
+    },
+    "resourceGroupName": "valor-assist-rg",
+    "resourceProviderName": {
+        "value": "Microsoft.Web",
+        "localizedValue": "Azure Web Sites"
+    },
+    "resourceType": {
+        "value": "Microsoft.Web/sites/config",
+        "localizedValue": "Microsoft.Web/sites/config"
+    },
+    "resourceId": "/subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/Microsoft.Web/sites/valor-assist-service/config/appsettings",
+    "status": {
+        "value": "Succeeded",
+        "localizedValue": "Succeeded"
+    },
+    "subStatus": {
+        "value": "OK",
+        "localizedValue": "OK (HTTP Status Code: 200)"
+    },
+    "submissionTimestamp": "2025-07-23T05:59:58Z",
+    "subscriptionId": "655055f1-8cf2-4581-b183-d68aaa588626",
+    "tenantId": "03cba76b-de04-494b-9b97-7cac1712c02e",
+    "properties": {
+        "statusCode": "OK",
+        "serviceRequestId": null,
+        "eventCategory": "Administrative",
+        "entity": "/subscriptions/655055f1-8cf2-4581-b183-d68aaa588626/resourceGroups/valor-assist-rg/providers/Microsoft.Web/sites/valor-assist-service/config/appsettings",
+        "message": "Microsoft.Web/sites/config/write",
+        "hierarchy": "03cba76b-de04-494b-9b97-7cac1712c02e/655055f1-8cf2-4581-b183-d68aaa588626"
+    },
+    "relatedEvents": []
+}

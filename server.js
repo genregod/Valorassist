@@ -1,6 +1,11 @@
-// Azure entry point with comprehensive debugging
-const express = require('express');
-const path = require('path');
+// Azure entry point with comprehensive debugging - ES module version
+import express from 'express';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 
 // Debugging logs
@@ -12,7 +17,6 @@ console.log('Port:', process.env.PORT || 8080);
 console.log('Node version:', process.version);
 
 // List directory contents
-const fs = require('fs');
 try {
   console.log('\nDirectory contents:');
   fs.readdirSync(__dirname).forEach(file => {

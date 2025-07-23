@@ -1,4 +1,4 @@
-// Azure entry point with comprehensive debugging - ES module version
+// Azure entry point with comprehensive debugging and Application Insights
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
@@ -7,6 +7,28 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
+
+// Initialize Application Insights if available
+let appInsights = null;
+if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING || process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
+  try {
+    const { default: applicationInsights } = await import('applicationinsights');
+    applicationInsights.setup()
+      .setAutoCollectRequests(true)
+      .setAutoCollectPerformance(true, true)
+      .setAutoCollectExceptions(true)
+      .setAutoCollectDependencies(true)
+      .setAutoCollectConsole(true, true)
+      .setUseDiskRetryCaching(true)
+      .setSendLiveMetrics(true)
+      .setDistributedTracingMode(applicationInsights.DistributedTracingModes.AI_AND_W3C)
+      .start();
+    appInsights = applicationInsights;
+    console.log('✅ Application Insights initialized successfully');
+  } catch (err) {
+    console.log('⚠️  Application Insights not available:', err.message);
+  }
+}
 
 // Debugging logs
 console.log('=== SERVER.JS STARTUP DEBUG ===');

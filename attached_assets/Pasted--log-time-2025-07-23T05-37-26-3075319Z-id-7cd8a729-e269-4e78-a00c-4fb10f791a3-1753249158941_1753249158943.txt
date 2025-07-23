@@ -1,0 +1,135 @@
+[
+  {
+    "log_time": "2025-07-23T05:37:26.3075319Z",
+    "id": "7cd8a729-e269-4e78-a00c-4fb10f791a31",
+    "message": "Updating submodules.",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:37:27.3961151Z",
+    "id": "e118ea6b-86bc-460a-abce-270ea501a400",
+    "message": "Preparing deployment for commit id 'a2454466-3'.",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:37:27.5720867Z",
+    "id": "7d378182-1775-4100-b39e-8109faf12e48",
+    "message": "PreDeployment: context.CleanOutputPath False",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:37:27.6494541Z",
+    "id": "c50314d8-ea75-4c3e-bca1-f6fa446a4e84",
+    "message": "PreDeployment: context.OutputPath /home/site/wwwroot",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:37:27.7231646Z",
+    "id": "8938ceda-8596-4c6e-9d1c-3c67a9a37f38",
+    "message": "Repository path is /tmp/zipdeploy/extracted",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:37:27.791873Z",
+    "id": "ac456ec7-99ae-4273-86a1-b41ce2027e69",
+    "message": "Running oryx build...",
+    "type": 1,
+    "details_url": "https://valor-assist-service.scm.azurewebsites.net/api/deployments/a2454466-38c9-4d22-8b1a-69893b943a84/log/ac456ec7-99ae-4273-86a1-b41ce2027e69"
+  },
+  {
+    "log_time": "2025-07-23T05:38:05.3623952Z",
+    "id": "22c89189-c46d-41ab-b0a4-e798acaf4c41",
+    "message": "Running post deployment command(s)...",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:05.4264869Z",
+    "id": "c3b32822-7b27-4911-a29f-ca3fee2543af",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:05.4866456Z",
+    "id": "137f73fa-8b45-45e2-ba4f-be965e62b7dd",
+    "message": "Generating summary of Oryx build",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:05.5911661Z",
+    "id": "54e77268-ef34-4acb-8c84-09c3bd150a05",
+    "message": "Parsing the build logs",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:05.6519798Z",
+    "id": "5033fc17-ad13-4a42-85c7-92c47f84872c",
+    "message": "Found 0 issue(s)",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:05.719113Z",
+    "id": "5b119c43-36cb-41f0-8696-881dabaac516",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:05.7836996Z",
+    "id": "7afe6240-dbdc-4b3e-a910-ebcd714a2e87",
+    "message": "Build Summary :",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:05.9243425Z",
+    "id": "ea5ef16d-af79-441e-a383-fedbbaee2f8d",
+    "message": "===============",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:05.9886417Z",
+    "id": "53c60869-b10a-45d0-9438-298be7214620",
+    "message": "Errors (0)",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:06.0480188Z",
+    "id": "2fd581bc-a5f3-477d-972e-f0aa3e69c8cf",
+    "message": "Warnings (0)",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:06.1238765Z",
+    "id": "68e619c1-d04e-4b99-bdde-2141ec9fefa5",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:06.2387076Z",
+    "id": "b10ba7fb-e075-488f-b60c-a52bbd4440b9",
+    "message": "Triggering container recycle for OneDeploy by adding/updating restartTrigger.txt to the site root path",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T05:38:06.3573576Z",
+    "id": "5ad3bb45-2958-4871-a59b-95c487491b98",
+    "message": "Deployment successful. deployer = OneDeploy deploymentPath = OneDeploy",
+    "type": 0,
+    "details_url": null
+  }
+]

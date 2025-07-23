@@ -1,0 +1,79 @@
+	
+Container valor-assist-service_0_ed250d24 couldn't be started: Logs = _____
+/ _ \ _________* _________ ____
+/ /_\ \\___ / | \_ __ \_/ __ \
+/ | \/ /| | /| | \/\ ___/
+\____|__ /_____ \____/ |__| \___ >
+\/ \/ \/
+A P P S E R V I C E O N L I N U X
+Documenta* http://ak*
+NodeJS quickstar* https://a*
+NodeJS Version : v22.15.0
+Note: Any data outside '/home' is not persisted
+Starting OpenBSD Secure Shell server: sshd.
+WEBSITES_* is not set to true.
+Updating certifica* in /etc/ssl/*
+rehash: warning: skipping ca-certif* does not contain exactly one certifica* or CRL
+2 added, 0 removed; done.
+Running hooks in /etc/ca-c*
+done.
+CA certifica* copied and updated successfu*
+Starting periodic command scheduler* cron.
+Could not find build manifest file at '/home/si*
+Could not find operation ID in manifest. Generatin* an operation id...
+Build Operation ID: 15a16fb1-*
+Environme* Variables for Applicati* Insight's IPA Codeless Configura* exists..
+Writing output script to '/opt/sta*
+Running #!/bin/sh
+# Enter the source directory to make sure the script runs where the user expects
+cd "/home/si*
+export NODE_PATH*
+if [ -z "$PORT" ]; then
+		export PORT=8080
+fi
+PATH="$PA* cd /home/sit* && npm install --product* && PORT=8080 node dist/inde*
+npm info using n******@10.9.*
+npm info using n******@v22.*
+npm warn config productio* Use `--omit=d* instead.
+npm http fetch GET 200 https://r* 847ms
+npm http fetch POST 200 https://r* 259ms
+npm http fetch GET 200 https://r* 362ms (cache miss)
+npm http fetch GET 200 https://r* 366ms (cache miss)
+npm http fetch GET 200 https://r* 369ms (cache miss)
+npm http fetch GET 200 https://r* 383ms (cache miss)
+npm http fetch GET 200 https://r* 475ms (cache miss)
+npm http fetch GET 200 https://r* 36ms (cache miss)
+npm http fetch GET 200 https://r* 42ms (cache miss)
+npm http fetch GET 200 https://r* 46ms (cache miss)
+npm http fetch GET 200 https://r* 32ms (cache miss)
+npm http fetch GET 200 https://r* 51ms (cache miss)
+up to date, audited 452 packages in 3s
+59 packages are looking for funding
+run `npm fund` for details
+6 vulnerabi* (3 low, 2 moderate, 1 critical)
+To address all issues, run:
+npm audit fix
+Run `npm audit` for details.
+npm notice
+npm notice New major version of npm available* 10.9.2 -> 11.4.2
+npm notice Changelog* https://g*
+npm notice To update run: npm install -g n******@11.4.*
+npm notice
+npm info ok
+node:inte*
+throw new ERR_MODUL* fileURLTo* null);
+^
+Error [ERR_MODU* Cannot find package '@vitejs/* imported from /home/sit*
+at Object.ge* (node:int*
+at packageRe* (node:int*
+at moduleRes* (node:int*
+at defaultRe* (node:int*
+at ModuleLoa* (node:int*
+at #cachedDe* (node:int*
+at ModuleLoa* (node:int*
+at ModuleLoa* (node:int*
+at ModuleJob* (node:int* {
+code: 'ERR_MODU*
+}
+Node.js v22.15.0
+Container valor-assist-service_0_ed250d24 didn't respond to HTTP pings on port: 8080. Failing site start. See container logs for debugging.

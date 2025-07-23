@@ -1,2 +1,2 @@
-// Azure entry point - redirects to dist/index.js
-require('./dist/index.js');
+// Azure entry point - imports the ESM module
+import('./dist/index.js');

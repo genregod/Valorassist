@@ -1,0 +1,90 @@
+Run azure/webapps-deploy@v3
+Package deployment using OneDeploy initiated.
+{
+  id: 'f965992f-e586-4ded-a45b-3eb7d6e8ed44',
+  status: 3,
+  status_text: '',
+  author_email: 'N/A',
+  author: 'N/A',
+  deployer: 'OneDeploy',
+  message: 'OneDeploy',
+  progress: '',
+  received_time: '2025-07-23T05:29:55.2145595Z',
+  start_time: '2025-07-23T05:29:56.4403407Z',
+  end_time: '2025-07-23T05:30:10.5375679Z',
+  last_success_end_time: null,
+  complete: true,
+  active: false,
+  is_temp: false,
+  is_readonly: true,
+  url: 'https://valor-assist-service.scm.azurewebsites.net/api/deployments/f965992f-e586-4ded-a45b-3eb7d6e8ed44',
+  log_url: 'https://valor-assist-service.scm.azurewebsites.net/api/deployments/f965992f-e586-4ded-a45b-3eb7d6e8ed44/log',
+  site_name: 'valor-assist-service',
+  build_summary: { errors: [], warnings: [] }
+}
+Updating submodules.
+Preparing deployment for commit id 'f965992f-e'.
+PreDeployment: context.CleanOutputPath False
+PreDeployment: context.OutputPath /home/site/wwwroot
+Repository path is /tmp/zipdeploy/extracted
+Running oryx build...
+Command: oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform nodejs --platform-version 22 -p virtualenv_name= --log-file /tmp/build-debug.log  -i /tmp/8ddc9a9f5ae16c7 -p compress_node_modules=tar-gz | tee /tmp/oryx-build.log
+Operation performed by Microsoft Oryx, https://github.com/Microsoft/Oryx
+You can report issues at https://github.com/Microsoft/Oryx/issues
+Oryx Version: 0.2.20250611.1+0649de32f1279969c9023dd41b389cce4bb94493, Commit: 0649de32f1279969c9023dd41b389cce4bb94493, ReleaseTagName: 20250611.1
+Build Operation ID: 1a76b02599f1999a
+Repository Commit : f965992f-e586-4ded-a45b-3eb7d6e8ed44
+OS Type           : bookworm
+Image Type        : githubactions
+Primary SDK Storage URL: https://oryx-cdn.microsoft.io
+Backup SDK Storage URL: https://oryxsdks-cdn.azureedge.net
+Detecting platforms...
+Detected following platforms:
+  nodejs: 22.17.0
+Detected the following frameworks: Typescript,Express,React
+Using intermediate directory '/tmp/8ddc9a9f5ae16c7'.
+Copying files to the intermediate directory...
+Done in 0 sec(s).
+Source directory     : /tmp/8ddc9a9f5ae16c7
+Destination directory: /home/site/wwwroot
+Removing existing manifest file
+Creating directory for command manifest file if it does not exist
+Creating a manifest file...
+Node Build Command Manifest file created.
+Using Node version:
+v22.17.0
+Using Npm version:
+10.9.2
+Running 'npm install'...
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+added 451 packages, and audited 452 packages in 10s
+59 packages are looking for funding
+  run `npm fund` for details
+6 vulnerabilities (3 low, 2 moderate, 1 critical)
+To address all issues, run:
+  npm audit fix
+Run `npm audit` for details.
+Running 'npm run build'...
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+vite v5.4.14 building for production...
+✓ 0 modules transformed.
+x Build failed in 17ms
+error during build:
+Could not resolve entry module "index.html".
+    at getRollupError (file:///tmp/8ddc9a9f5ae16c7/node_modules/rollup/dist/es/shared/parseAst.js:396:41)
+    at error (file:///tmp/8ddc9a9f5ae16c7/node_modules/rollup/dist/es/shared/parseAst.js:392:42)
+    at ModuleLoader.loadEntryModule (file:///tmp/8ddc9a9f5ae16c7/node_modules/rollup/dist/es/shared/node-entry.js:20086:20)
+    at async Promise.all (index 0)
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead\nx Build failed in 17ms\nerror during build:\nCould not resolve entry module "index.html".\n    at getRollupError (file:///tmp/8ddc9a9f5ae16c7/node_modules/rollup/dist/es/shared/parseAst.js:396:41)\n    at error (file:///tmp/8ddc9a9f5ae16c7/node_modules/rollup/dist/es/shared/parseAst.js:392:42)\n    at ModuleLoader.loadEntryModule (file:///tmp/8ddc9a9f5ae16c7/node_modules/rollup/dist/es/shared/node-entry.js:20086:20)\n    at async Promise.all (index 0)\n/bin/bash -c "oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform nodejs --platform-version 22 -p virtualenv_name= --log-file /tmp/build-debug.log  -i /tmp/8ddc9a9f5ae16c7 -p compress_node_modules=tar-gz | tee /tmp/oryx-build.log ; exit $PIPESTATUS "
+Generating summary of Oryx build
+Parsing the build logs
+Found 0 issue(s)
+Build Summary :
+===============
+Errors (0)
+Warnings (0)
+Deployment Failed. deployer = OneDeploy deploymentPath = OneDeploy
+Error: Failed to deploy web package to App Service.
+Error: Deployment Failed, Package deployment using ZIP Deploy failed. Refer logs for more details.
+App Service Application URL: http://valor-assist-service.azurewebsites.net

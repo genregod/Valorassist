@@ -118,7 +118,7 @@ The application is configured for Azure deployment with:
 
 The application prioritizes veteran user experience while maintaining enterprise-grade security and scalability. The modular architecture allows for easy feature additions and integrations with additional VA systems as they become available.
 
-## Recent Changes (July 22, 2025)
+## Recent Changes (July 22-23, 2025)
 
 ### Node.js Runtime Update
 - Updated from Node.js 20.x to 22.x LTS to address deprecation warnings
@@ -135,3 +135,10 @@ The application prioritizes veteran user experience while maintaining enterprise
 - Fixed bot message sending to prevent 404 errors on demo threads
 - Bot continues to process messages and generate responses correctly
 - Azure Communication Services integration ready for production threads
+
+### Azure Deployment Port Fix (July 23, 2025)
+- Fixed critical port mismatch: Changed application port from 5001 to 8080 for Azure compatibility
+- Created `server.js` entry point to handle ESM module imports for Azure
+- Removed `dist` from `.gitignore` to include built files in deployment
+- Added deployment scripts (`.deployment`, `deploy.sh`) for custom build process
+- Configured Azure App Service to use Node.js 22 LTS with proper startup command

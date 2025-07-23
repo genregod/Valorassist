@@ -1,41 +1,32 @@
 #!/bin/bash
 
 # Azure App Service startup script
-echo "Starting Valor Assist application..."
-echo "Current Node.js version: $(node --version)"
-echo "Current directory: $(pwd)"
-echo "Directory contents:"
-ls -la
+echo "=== Valor Assist Startup Script ==="
+echo "Node.js version: $(node --version)"
+echo "Working directory: $(pwd)"
 
-# Ensure we're in the correct directory
-cd /home/site/wwwroot
+# Change to app directory
+cd /home/site/wwwroot || exit 1
 
-# Install production dependencies if node_modules is missing
-if [ ! -d "node_modules" ]; then
-    echo "node_modules not found. Installing production dependencies..."
-    npm ci --production
-    echo "Dependencies installed."
+# Always install dependencies on Azure
+echo "Installing production dependencies..."
+npm ci --production --legacy-peer-deps
+
+# Verify installation
+if [ ! -d "node_modules/express" ]; then
+    echo "ERROR: Express module not found after installation!"
+    echo "Attempting alternative installation..."
+    npm install --production --legacy-peer-deps
 fi
 
-# Check if dist directory exists
+# Check dist directory
 if [ ! -d "dist" ]; then
-    echo "Error: dist directory not found. Build may have failed."
-    echo "Full directory listing:"
-    find . -type f -name "*.js" | head -20
+    echo "ERROR: dist directory not found!"
+    ls -la
     exit 1
 fi
-
-# Check if index.js exists
-if [ ! -f "dist/index.js" ]; then
-    echo "Error: dist/index.js not found. Build may have failed."
-    exit 1
-fi
-
-# Set Node.js options for production
-export NODE_ENV=production
-export NODE_OPTIONS="--max-old-space-size=2048"
 
 # Start the application
-echo "Starting Node.js application from dist/index.js..."
-echo "Using Node.js: $(which node)"
+echo "Starting application..."
+export NODE_ENV=production
 node dist/index.js

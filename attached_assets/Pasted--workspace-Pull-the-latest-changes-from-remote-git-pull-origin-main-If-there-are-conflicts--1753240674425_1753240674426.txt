@@ -1,0 +1,51 @@
+~/workspace$ # Pull the latest changes from remote 
+git pull origin main
+
+# If there are conflicts, resolve them in your editor
+# Then commit the merge
+git add .
+git commit -m "Merge remote changes and update workflow configuration"
+git push origin main
+From https://github.com/genregod/Valorassist
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+On branch main
+Your branch is ahead of 'origin/main' by 7 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+Enumerating objects: 34, done.
+Counting objects: 100% (34/34), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (25/25), done.
+Writing objects: 100% (27/27), 214.95 KiB | 26.87 MiB/s, done.
+Total 27 (delta 16), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (16/16), completed with 5 local objects.
+remote: error: GH013: Repository rule violations found for refs/heads/main.
+remote: 
+remote: - GITHUB PUSH PROTECTION
+remote:   —————————————————————————————————————————
+remote:     Resolve the following violations before pushing again
+remote: 
+remote:     - Push cannot contain secrets
+remote: 
+remote:     
+remote:      (?) Learn how to resolve a blocked push
+remote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push
+remote:     
+remote:     
+remote:       —— Azure Active Directory Application Secret —————————
+remote:        locations:
+remote:          - commit: 11f3712ed39000bd3017a172320473d6397f6d85
+remote:            path: github-secrets-setup.md:19
+remote:          - commit: 98772ece61236b996a171f994f749ea5224c6599
+remote:            path: valor-assist-credentials.txt:10
+remote:     
+remote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.
+remote:        https://github.com/genregod/Valorassist/security/secret-scanning/unblock-secret/30G4LUE7Y4xhqP7X0UpwykGQKuS
+remote:     
+remote: 
+remote: 
+To https://github.com/genregod/Valorassist
+ ! [remote rejected] main -> main (push declined due to repository rule violations)
+error: failed to push some refs to 'https://github.com/genregod/Valorassist'

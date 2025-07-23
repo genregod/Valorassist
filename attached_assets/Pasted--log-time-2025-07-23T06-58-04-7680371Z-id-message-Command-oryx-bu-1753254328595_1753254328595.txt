@@ -1,0 +1,484 @@
+[
+  {
+    "log_time": "2025-07-23T06:58:04.7680371Z",
+    "id": "",
+    "message": "Command: oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform nodejs --platform-version 22 -p virtualenv_name= --log-file /tmp/build-debug.log  -i /tmp/8ddc9b6457f186b -p compress_node_modules=tar-gz | tee /tmp/oryx-build.log",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.3348245Z",
+    "id": "",
+    "message": "Operation performed by Microsoft Oryx, https://github.com/Microsoft/Oryx",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.3591643Z",
+    "id": "",
+    "message": "You can report issues at https://github.com/Microsoft/Oryx/issues",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.3702987Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.3762175Z",
+    "id": "",
+    "message": "Oryx Version: 0.2.20250611.1+0649de32f1279969c9023dd41b389cce4bb94493, Commit: 0649de32f1279969c9023dd41b389cce4bb94493, ReleaseTagName: 20250611.1",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.3844914Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.3910681Z",
+    "id": "",
+    "message": "Build Operation ID: da218dc430c45571",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.393594Z",
+    "id": "",
+    "message": "Repository Commit : 6d5a1f0c-b558-4f71-aa97-7a3c973473d9",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.4001444Z",
+    "id": "",
+    "message": "OS Type           : bookworm",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.4076449Z",
+    "id": "",
+    "message": "Image Type        : githubactions",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.4118315Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.4155861Z",
+    "id": "",
+    "message": "Primary SDK Storage URL: https://oryx-cdn.microsoft.io",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.4185886Z",
+    "id": "",
+    "message": "Backup SDK Storage URL: https://oryxsdks-cdn.azureedge.net",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:05.4218905Z",
+    "id": "",
+    "message": "Detecting platforms...",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.0303893Z",
+    "id": "",
+    "message": "Detected following platforms:",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.0533029Z",
+    "id": "",
+    "message": "  nodejs: 22.17.0",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.0597752Z",
+    "id": "",
+    "message": "  python: 3.8.18",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.1142309Z",
+    "id": "",
+    "message": "Detected the following frameworks: Typescript,Express,React",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.2059727Z",
+    "id": "",
+    "message": "Warning: An outdated version of python was detected (3.8.18). Consider updating.\\nVersions supported by Oryx: https://github.com/microsoft/Oryx",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.2126699Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.2170153Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.2384393Z",
+    "id": "",
+    "message": "Using intermediate directory '/tmp/8ddc9b6457f186b'.",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.247139Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.2528641Z",
+    "id": "",
+    "message": "Copying files to the intermediate directory...",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.2993484Z",
+    "id": "",
+    "message": "Done in 0 sec(s).",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.3028279Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.3051274Z",
+    "id": "",
+    "message": "Source directory     : /tmp/8ddc9b6457f186b",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.3077695Z",
+    "id": "",
+    "message": "Destination directory: /home/site/wwwroot",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.3102694Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.4310441Z",
+    "id": "",
+    "message": "Removing existing manifest file",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.4442725Z",
+    "id": "",
+    "message": "Creating directory for command manifest file if it does not exist",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.4581772Z",
+    "id": "",
+    "message": "Creating a manifest file...",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.4624151Z",
+    "id": "",
+    "message": "Node Build Command Manifest file created.",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.4657012Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.4703575Z",
+    "id": "",
+    "message": "Using Node version:",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.4971834Z",
+    "id": "",
+    "message": "v22.17.0",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.5072136Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.5105966Z",
+    "id": "",
+    "message": "Using Npm version:",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.8834894Z",
+    "id": "",
+    "message": "10.9.2",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.9228522Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.9262347Z",
+    "id": "",
+    "message": "Running 'npm install'...",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:10.9299717Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:18.8404957Z",
+    "id": "",
+    "message": "npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead",
+    "type": 1,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.1303871Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.1398717Z",
+    "id": "",
+    "message": "added 720 packages, and audited 721 packages in 21s",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.148908Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.1543746Z",
+    "id": "",
+    "message": "72 packages are looking for funding",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.1601522Z",
+    "id": "",
+    "message": "  run `npm fund` for details",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.1695905Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.1857077Z",
+    "id": "",
+    "message": "2 moderate severity vulnerabilities",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.1953197Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.2005163Z",
+    "id": "",
+    "message": "To address all issues (including breaking changes), run:",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.2094739Z",
+    "id": "",
+    "message": "  npm audit fix --force",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.2307437Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.2379123Z",
+    "id": "",
+    "message": "Run `npm audit` for details.",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.3454669Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:32.3517443Z",
+    "id": "",
+    "message": "Zipping existing node_modules folder...",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:57.2870604Z",
+    "id": "",
+    "message": "Done in 25 sec(s).",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:57.2996487Z",
+    "id": "",
+    "message": "Preparing output...",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:57.3034924Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:57.305842Z",
+    "id": "",
+    "message": "Copying files to destination directory '/home/site/wwwroot'...",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:57.9782729Z",
+    "id": "",
+    "message": "Done in 0 sec(s).",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:58.146049Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:58.1600342Z",
+    "id": "",
+    "message": "Removing existing manifest file",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:58.1648118Z",
+    "id": "",
+    "message": "Creating a manifest file...",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:58.1750356Z",
+    "id": "",
+    "message": "Manifest file created.",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:58.1802109Z",
+    "id": "",
+    "message": "Copying .ostype to manifest output directory.",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:58.2115116Z",
+    "id": "",
+    "message": "",
+    "type": 0,
+    "details_url": null
+  },
+  {
+    "log_time": "2025-07-23T06:58:58.2145396Z",
+    "id": "",
+    "message": "Done in 48 sec(s).",
+    "type": 0,
+    "details_url": null
+  }

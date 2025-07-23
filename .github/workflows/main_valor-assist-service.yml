@@ -30,8 +30,9 @@ jobs:
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
-      - name: Clean up unnecessary files
+      - name: Prepare deployment package
         run: |
+          # Remove source files but keep built files and dependencies
           rm -rf client/src
           rm -rf server/*.ts
           rm -rf scripts
@@ -40,17 +41,24 @@ jobs:
           rm -f .env
           rm -f github-secrets-setup.md
           rm -f valor-assist-credentials.txt
+          
+          # Ensure package.json includes Node.js 22 requirement
+          echo "Checking package.json..."
+          cat package.json | grep -A 5 '"name"'
 
       - name: Zip artifact for deployment
         run: |
+          # Create deployment package including node_modules
           zip -r release.zip . \
             -x "*.git*" \
             -x "*.log" \
             -x ".env" \
             -x "attached_assets/*" \
             -x "client/src/*" \
+            -x "server/*.ts" \
             -x "*.md" \
-            -x "fix-git-secrets.sh"
+            -x "fix-git-secrets.sh" \
+            -x ".github/*"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4

@@ -1,0 +1,102 @@
+2025-07-23T04:17:23  Welcome, you are now connected to log-streaming service.Starting Log Tail -n 10 of existing logs ----/home/LogFiles/__lastCheckTime.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/__lastCheckTime.txt)07/23/2025 04:16:48/home/LogFiles/kudu/deployment/valor-assi-kudu-bc5d9393-660bd25e-05f1-4360-8f10-965aff762a33.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/deployment/valor-assi-kudu-bc5d9393-660bd25e-05f1-4360-8f10-965aff762a33.txt)
+2025-07-22T19:24:10    total size is 137.75M  speedup is 1.00
+2025-07-22T19:24:10    Attempt 1: Rsync for filelist /tmp//splits/split.ab completed with exit code 0
+2025-07-22T19:24:10    Completed successfully in 12 seconds
+2025-07-22T19:24:10  Rsync completed to /home/site/wwwroot
+2025-07-22T19:24:10  Manifest created at /home/site/wwwroot
+2025-07-22T19:24:10  Optimized build done with success: True
+2025-07-22T19:24:10  Build completed succesfully.
+2025-07-22T19:24:10  Running post deployment command(s)...
+2025-07-22T19:24:11  Triggering container recycle for OneDeploy by adding/updating restartTrigger.txt to the site root path
+2025-07-22T19:24:11  Deployment successful. deployer = OneDeploy deploymentPath = OneDeploy/home/LogFiles/kudu/trace/8391b68d27fc-795d60a8-415a-41b3-a5b5-eee1bacc2a24.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/8391b68d27fc-795d60a8-415a-41b3-a5b5-eee1bacc2a24.txt)
+2025-07-23T04:16:50  Startup Request, url: /api/logs/docker, method: POST, type: request, pid: 821,1,14, ScmType: GitHubAction/home/LogFiles/kudu/trace/valor-assi-kudu-014e1fdc-7f142f54-0bab-48ef-abef-6a17af0241a8.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-014e1fdc-7f142f54-0bab-48ef-abef-6a17af0241a8.txt)
+2025-07-22T19:38:13  Startup Request, url: /api/deployments/?$orderby=ReceivedTime%20desc&$top=20&api-version=2022-03-01, method: GET, type: request, pid: 768,1,5, ScmType: None/home/LogFiles/kudu/trace/valor-assi-kudu-14b911aa-eac21863-b817-4b65-9431-d37ccf56ef00.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-14b911aa-eac21863-b817-4b65-9431-d37ccf56ef00.txt)
+2025-07-22T22:16:04  Startup Request, url: /api/logs/docker, method: POST, type: request, pid: 820,1,15, ScmType: None/home/LogFiles/kudu/trace/valor-assi-kudu-197aa874-6117d5c6-0889-44e9-85bb-7346b3ee6fb5.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-197aa874-6117d5c6-0889-44e9-85bb-7346b3ee6fb5.txt)
+2025-07-20T06:38:20  Startup Request, url: /api/deployments/?$orderby=ReceivedTime%20desc&$top=20&api-version=2022-03-01, method: GET, type: request, pid: 768,1,5, ScmType: None/home/LogFiles/kudu/trace/valor-assi-kudu-1ee25e93-c247f99e-5a85-4eb4-beee-530c1b8a19d1.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-1ee25e93-c247f99e-5a85-4eb4-beee-530c1b8a19d1.txt)
+2025-07-22T22:27:51  Startup Request, url: /api/deployments/?$orderby=ReceivedTime%20desc&$top=20&api-version=2022-03-01, method: GET, type: request, pid: 768,1,26, ScmType: None/home/LogFiles/kudu/trace/valor-assi-kudu-39c18e7e-52dc3170-e5ca-4ecc-929c-3aec637ccabe.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-39c18e7e-52dc3170-e5ca-4ecc-929c-3aec637ccabe.txt)
+2025-07-23T04:06:50  Startup Request, url: /api/deployments/?$orderby=ReceivedTime%20desc&$top=20&api-version=2022-03-01, method: GET, type: request, pid: 821,1,25, ScmType: GitHubAction/home/LogFiles/kudu/trace/valor-assi-kudu-3c015ee9-62c4deaf-d2a7-4f20-8ac7-659b74d5451c.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-3c015ee9-62c4deaf-d2a7-4f20-8ac7-659b74d5451c.txt)
+2025-07-22T22:35:28  Startup Request, url: /api/deployments/?$orderby=ReceivedTime%20desc&$top=20&api-version=2022-03-01, method: GET, type: request, pid: 768,1,21, ScmType: GitHubAction/home/LogFiles/kudu/trace/valor-assi-kudu-67f55294-e9fc054b-678c-4a2b-a717-3aadb0ef425f.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-67f55294-e9fc054b-678c-4a2b-a717-3aadb0ef425f.txt)
+2025-07-22T10:10:16  Startup Request, url: /api/deployments/?$orderby=ReceivedTime%20desc&$top=20&api-version=2022-03-01, method: GET, type: request, pid: 771,1,86, ScmType: None/home/LogFiles/kudu/trace/valor-assi-kudu-80883d41-d57d0a96-ead7-4b7a-af39-f4b1daf9ea6a.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-80883d41-d57d0a96-ead7-4b7a-af39-f4b1daf9ea6a.txt)
+2025-07-23T02:55:49  Startup Request, url: /api/deployments/?$orderby=ReceivedTime%20desc&$top=20&api-version=2022-03-01, method: GET, type: request, pid: 823,1,38, ScmType: GitHubAction/home/LogFiles/kudu/trace/valor-assi-kudu-80e1446f-6b0d9099-e1b7-4528-b28d-fa2e4c2e86f3.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-80e1446f-6b0d9099-e1b7-4528-b28d-fa2e4c2e86f3.txt)
+2025-07-23T03:19:55  Startup Request, url: /diagnostics/runtime, method: GET, type: request, pid: 823,1,37, ScmType: GitHubAction/home/LogFiles/kudu/trace/valor-assi-kudu-997b3c4c-0651d023-e490-4f40-9862-8be71f22eeed.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-997b3c4c-0651d023-e490-4f40-9862-8be71f22eeed.txt)
+2025-07-22T22:01:13  Startup Request, url: /api/deployments/?$orderby=ReceivedTime%20desc&$top=20&api-version=2022-03-01, method: GET, type: request, pid: 822,1,5, ScmType: None/home/LogFiles/kudu/trace/valor-assi-kudu-a66f1302-a8c41602-7a04-4ea0-b45d-eab96103d864.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-a66f1302-a8c41602-7a04-4ea0-b45d-eab96103d864.txt)
+2025-07-23T03:35:08  Startup Request, url: /api/deployments/?$orderby=ReceivedTime%20desc&$top=20&api-version=2022-03-01, method: GET, type: request, pid: 823,1,15, ScmType: GitHubAction/home/LogFiles/kudu/trace/valor-assi-kudu-bc5d9393-2ec60594-bbfa-4c7e-b6a7-bd857dd8ad07.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-bc5d9393-2ec60594-bbfa-4c7e-b6a7-bd857dd8ad07.txt)
+2025-07-22T18:57:38  Startup Request, url: /api/deployments/?$orderby=ReceivedTime%20desc&$top=20&api-version=2022-03-01, method: GET, type: request, pid: 772,1,50, ScmType: None/home/LogFiles/kudu/trace/valor-assi-kudu-df0a0a93-4d88bd4a-4b68-492d-a731-1486bdebaac9.txt  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/kudu/trace/valor-assi-kudu-df0a0a93-4d88bd4a-4b68-492d-a731-1486bdebaac9.txt)
+2025-07-23T00:29:52  Startup Request, url: /detectors, method: GET, type: request, pid: 767,1,5, ScmType: GitHubAction/home/LogFiles/2025_07_19_lw0sdlwk00009C_docker.log  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/2025_07_19_lw0sdlwk00009C_docker.log)
+2025-07-19T12:45:50.5097885Z Successfully opened named pipe: /podr/container/pipe/7a7eb161bc40_valor-assist-service/stderr_c0352798edf742d0a3f15f58f6335f77.
+2025-07-19T12:45:50.5105856Z Successfully removed non-blocking flag from /podr/container/pipe/7a7eb161bc40_valor-assist-service/stderr_c0352798edf742d0a3f15f58f6335f77.
+2025-07-19T12:45:50.5220525Z Creating container with image: appsvc/node:18-lts_20250506.5.tuxprod from registry: 10.1.0.5:13209 and fully qualified image name: 10.1.0.5:13209/appsvc/node:18-lts_20250506.5.tuxprod
+2025-07-19T12:45:51.3249510Z Starting container: 7a7eb161bc40_valor-assist-service.
+2025-07-19T12:45:51.4006543Z Starting watchers and probes.
+2025-07-19T12:45:51.4366937Z Starting metrics collection.
+2025-07-19T12:45:51.4375756Z Container is running.
+2025-07-19T12:45:51.6496232Z Container start method finished after 49504 ms.
+2025-07-19T12:46:10.7310560Z Site startup probe succeeded after 18.9531768 seconds.
+2025-07-19T12:46:11.4134292Z Site started./home/LogFiles/2025_07_20_lw0sdlwk00009C_docker.log  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/2025_07_20_lw0sdlwk00009C_docker.log)
+2025-07-20T06:45:14.9043491Z Container start method finished after 142420 ms.
+2025-07-20T06:45:45.8010707Z Site startup probe succeeded after 30.8197399 seconds.
+2025-07-20T06:45:47.6337169Z Site started.
+2025-07-20T06:46:09.6718658Z Container is terminating. Grace period: 5 seconds.
+2025-07-20T06:46:09.8383660Z Stop and delete container. Retry count = 0
+2025-07-20T06:46:09.8409980Z Stopping container: 7a7eb161bc40_valor-assist-service.
+2025-07-20T06:46:15.9453151Z Deleting container: 7a7eb161bc40_valor-assist-service. Retry count = 0
+2025-07-20T06:46:18.2527790Z Container spec TerminationMessagePolicy  path
+2025-07-20T06:46:18.3645599Z Container is terminated. Total time elapsed: 8640 ms.
+2025-07-20T06:46:18.6122093Z Site: valor-assist-service stopped./home/LogFiles/2025_07_21_lw0sdlwk00009C_docker.log  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/2025_07_21_lw0sdlwk00009C_docker.log)
+2025-07-21T04:10:47.4440259Z Container start method finished after 6296 ms.
+2025-07-21T04:11:13.0651711Z Site startup probe succeeded after 25.4704102 seconds.
+2025-07-21T04:11:14.4677784Z Site started.
+2025-07-21T04:11:34.6367174Z Container is terminating. Grace period: 5 seconds.
+2025-07-21T04:11:34.7208599Z Stop and delete container. Retry count = 0
+2025-07-21T04:11:34.7281663Z Stopping container: 8bb7c7e1d1d1_valor-assist-service.
+2025-07-21T04:11:35.4022289Z Deleting container: 8bb7c7e1d1d1_valor-assist-service. Retry count = 0
+2025-07-21T04:11:36.2218378Z Container spec TerminationMessagePolicy  path
+2025-07-21T04:11:36.2285302Z Container is terminated. Total time elapsed: 1584 ms.
+2025-07-21T04:11:36.2361867Z Site: valor-assist-service stopped./home/LogFiles/2025_07_22_lw0sdlwk00009C_default_docker.log  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/2025_07_22_lw0sdlwk00009C_default_docker.log)
+2025-07-22T19:58:52.652843254Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)
+2025-07-22T19:58:52.652846854Z
+2025-07-22T19:58:52.652854854Z Node.js v22.15.0
+2025-07-22T19:58:52.681782364Z npm http fetch GET 200 https://registry.npmjs.org/npm 658ms
+2025-07-22T19:58:52.699332291Z npm notice
+2025-07-22T19:58:52.699346691Z npm notice New major version of npm available! 10.9.2 -> 11.4.2
+2025-07-22T19:58:52.699351391Z npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.4.2
+2025-07-22T19:58:52.699354791Z npm notice To update run: npm install -g npm@11.4.2
+2025-07-22T19:58:52.699358291Z npm notice/home/LogFiles/2025_07_22_lw0sdlwk00009C_docker.log  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/2025_07_22_lw0sdlwk00009C_docker.log)
+2025-07-22T23:58:24.2294022Z Container is terminating. Grace period: 5 seconds.
+2025-07-22T23:58:24.2494879Z Stop and delete container. Retry count = 0
+2025-07-22T23:58:24.2596376Z Stopping container: 95e2f3a9c7a4_valor-assist-service.
+2025-07-22T23:58:24.3664167Z Deleting container: 95e2f3a9c7a4_valor-assist-service. Retry count = 0
+2025-07-22T23:58:25.2928131Z Container spec TerminationMessagePolicy  path
+2025-07-22T23:58:25.3006398Z Container is terminated. Total time elapsed: 1067 ms.
+2025-07-22T23:58:25.3066123Z Site container: valor-assist-service terminated during site startup.
+2025-07-22T23:58:25.3150765Z Site startup probe failed after 16.6977393 seconds.
+2025-07-22T23:58:25.3839874Z Failed to start site. Revert by stopping site.
+2025-07-22T23:58:25.3912837Z Site: valor-assist-service stopped./home/LogFiles/2025_07_23_ln0xsdlwk0000E4_default_docker.log  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/2025_07_23_ln0xsdlwk0000E4_default_docker.log)
+2025-07-23T04:16:59.875023449Z     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:780:12)
+2025-07-23T04:16:59.875028479Z     at #cachedDefaultResolve (node:internal/modules/esm/loader:704:25)
+2025-07-23T04:16:59.875033418Z     at ModuleLoader.resolve (node:internal/modules/esm/loader:687:38)
+2025-07-23T04:16:59.875038298Z     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:305:38)
+2025-07-23T04:16:59.875043317Z     at ModuleJob._link (node:internal/modules/esm/module_job:137:49) {
+2025-07-23T04:16:59.875048417Z   code: 'ERR_MODULE_NOT_FOUND'
+2025-07-23T04:16:59.875053497Z }
+2025-07-23T04:16:59.875058417Z
+2025-07-23T04:16:59.875063246Z Node.js v22.15.0/home/LogFiles/2025_07_23_ln0xsdlwk0000E4_docker.log  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/2025_07_23_ln0xsdlwk0000E4_docker.log)
+2025-07-23T04:16:54.529Z INFO  - Starting container for site
+2025-07-23T04:16:54.530Z INFO  - docker run -d --expose=8080 --name valor-assist-service_0_2343bd28 -e WEBSITE_USE_DIAGNOSTIC_SERVER=true -e WEBSITE_SITE_NAME=valor-assist-service -e WEBSITE_AUTH_ENABLED=False -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=valor-assist-service.azurewebsites.net -e WEBSITE_INSTANCE_ID=74b7963c2231fc9181263c18d12b2387429a52cfc6b03fb112f3304619705892 -e NODE_OPTIONS=--require /agents/nodejs/build/src/Loader.js appsvc/node:22-lts_20250506.5.tuxprod REDACTED
+2025-07-23T04:16:54.530Z INFO  - Logging is not enabled for this container.Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-07-23T04:16:55.703Z INFO  - Initiating warmup request to container valor-assist-service_0_2343bd28_msiProxy for site valor-assist-service
+2025-07-23T04:16:55.713Z INFO  - Container valor-assist-service_0_2343bd28_msiProxy for site valor-assist-service initialized successfully and is ready to serve requests.
+2025-07-23T04:16:55.715Z INFO  - Initiating warmup request to container valor-assist-service_0_2343bd28 for site valor-assist-service
+2025-07-23T04:17:01.801Z ERROR - Container valor-assist-service_0_2343bd28 for site valor-assist-service has exited, failing site start
+2025-07-23T04:17:01.805Z ERROR - Container valor-assist-service_0_2343bd28 didn't respond to HTTP pings on port: 8080. Failing site start. See container logs for debugging.
+2025-07-23T04:17:02.082Z INFO  - Stopping site valor-assist-service because it failed during startup./home/LogFiles/2025_07_23_lw0sdlwk00009C_docker.log  (https://valor-assist-service.scm.azurewebsites.net/api/vfs/LogFiles/2025_07_23_lw0sdlwk00009C_docker.log)
+2025-07-23T04:13:31.9164014Z Container is terminating. Grace period: 5 seconds.
+2025-07-23T04:13:31.9226213Z Stop and delete container. Retry count = 0
+2025-07-23T04:13:31.9235792Z Stopping container: 7010f18b65ce_valor-assist-service.
+2025-07-23T04:13:31.9682891Z Deleting container: 7010f18b65ce_valor-assist-service. Retry count = 0
+2025-07-23T04:13:32.3076475Z Container spec TerminationMessagePolicy  path
+2025-07-23T04:13:32.3172478Z Container is terminated. Total time elapsed: 396 ms.
+2025-07-23T04:13:32.3173976Z Site container: valor-assist-service terminated during site startup.
+2025-07-23T04:13:32.3176995Z Site startup probe failed after 22.6194049 seconds.
+2025-07-23T04:13:32.3601263Z Failed to start site. Revert by stopping site.
+2025-07-23T04:13:32.3655916Z Site: valor-assist-service stopped.Ending Log Tail of existing logs ---Starting Live Log Stream ---

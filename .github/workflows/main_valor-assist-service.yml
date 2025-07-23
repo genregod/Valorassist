@@ -30,8 +30,27 @@ jobs:
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
+      - name: Clean up unnecessary files
+        run: |
+          rm -rf client/src
+          rm -rf server/*.ts
+          rm -rf scripts
+          rm -rf attached_assets
+          rm -f *.log
+          rm -f .env
+          rm -f github-secrets-setup.md
+          rm -f valor-assist-credentials.txt
+
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: |
+          zip -r release.zip . \
+            -x "*.git*" \
+            -x "*.log" \
+            -x ".env" \
+            -x "attached_assets/*" \
+            -x "client/src/*" \
+            -x "*.md" \
+            -x "fix-git-secrets.sh"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -70,3 +89,23 @@ jobs:
           slot-name: 'Production'
           package: .
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+      
+      - name: 'Configure Azure App Settings'
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: 'valor-assist-service'
+          app-settings-json: |
+            [
+              {
+                "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                "value": "~22"
+              },
+              {
+                "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+                "value": "false"
+              },
+              {
+                "name": "WEBSITE_RUN_FROM_PACKAGE",
+                "value": "0"
+              }
+            ]

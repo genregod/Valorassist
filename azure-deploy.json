@@ -1,36 +1,19 @@
 {
-  "resourceGroupName": "valor-assist-rg",
-  "location": "eastus2",
-  "appName": "valor-assist-app",
-  "keyVaultName": "valor-assist-kv-",
-  "apiManagement": {
-    "name": "valor-assist-apim",
-    "publisherEmail": "admin@valorassist.com",
-    "publisherName": "Valor Assist",
-    "sku": {
-      "name": "Developer",
-      "capacity": 1
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
     }
-  },
-  "database": {
-    "name": "valor-assist-db",
-    "location": "eastus2",
-    "adminLogin": "valoradmin",
-    "version": "14"
-  },
-  "appService": {
-    "name": "valor-assist-service",
-    "planName": "valor-assist-plan",
-    "sku": {
-      "name": "B1",
-      "tier": "Basic",
-      "size": "B1",
-      "family": "B",
-      "capacity": 1
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/dist/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/public/$1"
     }
-  },
-  "aiServices": {
-    "name": "valor-assist-ai",
-    "sku": "S0"
-  }
+  ]
 }

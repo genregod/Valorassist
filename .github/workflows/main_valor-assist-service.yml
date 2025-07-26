@@ -47,6 +47,7 @@ jobs:
         cp package-lock.json deploy/ || echo "No package-lock.json found"
         # Use the compiled TypeScript server instead of server.cjs
         cp dist/index.js deploy/server.js
+        cp web.config deploy/ || echo "No web.config found"
         cp .deployment deploy/ || echo "No .deployment file found"
         
         # Add express to dependencies if not present

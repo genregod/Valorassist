@@ -8,11 +8,13 @@ A comprehensive platform to help veterans navigate the VA claims process with AI
 - Fixed Azure deployment with correct server file handling
 - Resolved ES module compatibility issues
 - Build and deployment pipeline working correctly
+- **CRITICAL FIX**: Now deploying the correct compiled server with API routes
 
 **CHATBOT IMPROVEMENTS** 🤖
 - Implemented fallback bot functionality for when Azure Communication Services is unavailable
 - Bot now works without requiring external API keys for basic functionality
 - Enhanced error handling and graceful degradation
+- **FIXED 404 ERROR**: Corrected server deployment to include all API endpoints
 
 ## Features
 

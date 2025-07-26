@@ -45,7 +45,8 @@ jobs:
         # Copy key Node.js files to deployment directory root
         cp package.json deploy/
         cp package-lock.json deploy/ || echo "No package-lock.json found"
-        cp server.cjs deploy/
+        # Use the compiled TypeScript server instead of server.cjs
+        cp dist/index.js deploy/server.js
         cp .deployment deploy/ || echo "No .deployment file found"
         
         # Add express to dependencies if not present

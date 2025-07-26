@@ -1,66 +1,15 @@
-// Azure entry point with comprehensive debugging and Application Insights
-import express from 'express';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const app = express();
+const PORT = process.env.PORT || 8080;
 
-// Initialize Application Insights if available
-let appInsights = null;
-if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING || process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
-  try {
-    const { default: applicationInsights } = await import('applicationinsights');
-    applicationInsights.setup()
-      .setAutoCollectRequests(true)
-      .setAutoCollectPerformance(true, true)
-      .setAutoCollectExceptions(true)
-      .setAutoCollectDependencies(true)
-      .setAutoCollectConsole(true, true)
-      .setUseDiskRetryCaching(true)
-      .setSendLiveMetrics(true)
-      .setDistributedTracingMode(applicationInsights.DistributedTracingModes.AI_AND_W3C)
-      .start();
-    appInsights = applicationInsights;
-    console.log('✅ Application Insights initialized successfully');
-  } catch (err) {
-    console.log('⚠️  Application Insights not available:', err.message);
-  }
-}
-
-// Debugging logs
-console.log('=== SERVER.JS STARTUP DEBUG ===');
-console.log('Current directory:', __dirname);
-console.log('Process directory:', process.cwd());
-console.log('Environment:', process.env.NODE_ENV);
-console.log('Port:', process.env.PORT || 8080);
-console.log('Node version:', process.version);
-
-// List directory contents
-try {
-  console.log('\nDirectory contents:');
-  fs.readdirSync(__dirname).forEach(file => {
-    console.log(' -', file);
-  });
-  
-  if (fs.existsSync(path.join(__dirname, 'dist'))) {
-    console.log('\nDist directory contents:');
-    fs.readdirSync(path.join(__dirname, 'dist')).forEach(file => {
-      console.log(' -', file);
-    });
-  }
-  
-  if (fs.existsSync(path.join(__dirname, 'dist/public'))) {
-    console.log('\nDist/public directory contents:');
-    fs.readdirSync(path.join(__dirname, 'dist/public')).forEach(file => {
-      console.log(' -', file);
-    });
-  }
-} catch (err) {
-  console.error('Error reading directory:', err);
-}
+console.log('=== Valor Assist Server Starting ===');
+console.log('Node.js version:', process.version);
+console.log('Working directory:', process.cwd());
+console.log('PORT:', PORT);
+console.log('NODE_ENV:', process.env.NODE_ENV);
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -74,33 +23,86 @@ app.get('/health', (req, res) => {
     status: 'healthy', 
     timestamp: new Date().toISOString(),
     nodeVersion: process.version,
+    environment: process.env.NODE_ENV,
+    port: PORT
+  });
+});
+
+// API health endpoint for Azure monitoring
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'healthy', 
+    service: 'valor-assist',
+    timestamp: new Date().toISOString(),
+    nodeVersion: process.version,
     environment: process.env.NODE_ENV
   });
 });
 
 // Serve static files from dist/public
 const staticPath = path.join(__dirname, 'dist/public');
-console.log('\nServing static files from:', staticPath);
-app.use(express.static(staticPath));
+console.log('Serving static files from:', staticPath);
 
-// API routes would go here
-// For now, just serve the React app for all routes
+// Check if the static directory exists
+if (!fs.existsSync(staticPath)) {
+  console.error('ERROR: Static files directory not found at:', staticPath);
+  console.log('Available directories:');
+  try {
+    const dirs = fs.readdirSync(__dirname);
+    dirs.forEach(dir => {
+      const fullPath = path.join(__dirname, dir);
+      if (fs.statSync(fullPath).isDirectory()) {
+        console.log(`  - ${dir}/`);
+      }
+    });
+  } catch (err) {
+    console.error('Error reading directory:', err);
+  }
+} else {
+  console.log('✓ Static files directory found');
+  app.use(express.static(staticPath));
+}
+
+// Fallback route - serve index.html for all routes (SPA support)
 app.get('*', (req, res) => {
-  const indexPath = path.join(__dirname, 'dist/public', 'index.html');
+  const indexPath = path.join(staticPath, 'index.html');
   console.log('Serving index.html from:', indexPath);
   
   if (!fs.existsSync(indexPath)) {
     console.error('ERROR: index.html not found at:', indexPath);
-    res.status(404).send('index.html not found. Build may have failed.');
-    return;
+    return res.status(500).send(`
+      <h1>Server Error</h1>
+      <p>index.html not found at: ${indexPath}</p>
+      <p>Please ensure the application was built correctly.</p>
+    `);
   }
   
   res.sendFile(indexPath);
 });
 
-const PORT = process.env.PORT || 8080;
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: err.message,
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n=== SERVER STARTED SUCCESSFULLY ===`);
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Health check available at: http://0.0.0.0:${PORT}/health`);
+  console.log(`✓ Valor Assist server is running on port ${PORT}`);
+  console.log(`✓ Server URL: http://localhost:${PORT}`);
+  console.log('=== Server Started Successfully ===');
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  process.exit(0);
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  process.exit(0);
 });

@@ -1,12 +1,9 @@
 #!/bin/bash
 
 echo "Starting Valor Assist application..."
-
-# Always install dependencies first
-cd /home/site/wwwroot
-echo "Installing dependencies..."
-npm install --production
+echo "Node.js version: $(node --version)"
+echo "Environment: $NODE_ENV"
+echo "Port: $PORT"
 
 # Start the application
-echo "Starting Node.js application from dist/index.js..."
-node dist/index.js
+exec node server.js

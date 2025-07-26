@@ -1,13 +1,9 @@
 #!/bin/bash
 
-# Azure custom deployment script
-echo "Starting Azure deployment..."
-
-# Copy index.html to root for Vite build
-if [ -f "client/index.html" ]; then
-    echo "Copying index.html to root..."
-    cp client/index.html ./index.html
-fi
+echo "=== Azure Deployment Script ==="
+echo "Current directory: $(pwd)"
+echo "Node.js version: $(node --version)"
+echo "NPM version: $(npm --version)"
 
 # Install dependencies
 echo "Installing dependencies..."
@@ -17,8 +13,14 @@ npm install
 echo "Building application..."
 npm run build
 
-# Clean up
-rm -f index.html
+echo "Build complete. Contents of dist directory:"
+ls -la dist/ || echo "dist directory not found"
 
-# The application will run from dist/index.js
-echo "Deployment complete!"
+if [ -d "dist/public" ]; then
+  echo "Contents of dist/public:"
+  ls -la dist/public/
+else
+  echo "dist/public directory not found"
+fi
+
+echo "=== Deployment Script Complete ==="

@@ -1,2 +1,5 @@
 [config]
-command = bash deploy.sh
+SCM_DO_BUILD_DURING_DEPLOYMENT=true
+
+[www_logs]
+logs.level=verbose

@@ -4,6 +4,12 @@ A comprehensive platform to help veterans navigate the VA claims process with AI
 
 ## 🚀 Recent Updates
 
+**ROUTING FIXED** ✅ (Latest)
+- Fixed Azure IIS routing configuration for API endpoints
+- Updated web.config to properly direct `/api/*` requests to Node.js server
+- Chatbot endpoints should now return JSON responses instead of HTML
+- **STATUS**: Ready for testing
+
 **DEPLOYMENT FIXED** ✅
 - Fixed Azure deployment with correct server file handling
 - Resolved ES module compatibility issues
@@ -31,6 +37,13 @@ A comprehensive platform to help veterans navigate the VA claims process with AI
 - **Deployment**: Azure App Service with GitHub Actions
 - **AI**: OpenAI GPT-4o (optional) with fallback functionality
 - **Chat**: Azure Communication Services (optional) with local fallback
+
+## Testing the Chatbot
+
+The chatbot should now be fully functional:
+- **Endpoint**: `POST /api/chat/bot/thread-001/process`
+- **Test Payload**: `{"message": "Hello, I need help with my VA claim"}`
+- **Expected**: JSON response with bot assistance, not HTML
 
 ## Environment Setup
 

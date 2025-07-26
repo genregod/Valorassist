@@ -16,12 +16,24 @@ export class VeteranAssistantBot {
   constructor(botUserId: string, botToken: string, endpoint: string) {
     this.botUserId = botUserId;
     this.botToken = botToken;
-    this.initializeChatClient(endpoint);
+    
+    // Only initialize chat client if endpoint is provided (for Azure Communication Services)
+    if (endpoint && endpoint.trim()) {
+      this.initializeChatClient(endpoint);
+    } else {
+      console.log("VeteranAssistantBot running in fallback mode (no Azure Communication Services)");
+    }
   }
 
   private initializeChatClient(endpoint: string) {
-    const tokenCredential = new AzureCommunicationTokenCredential(this.botToken);
-    this.chatClient = new ChatClient(endpoint, tokenCredential);
+    try {
+      const tokenCredential = new AzureCommunicationTokenCredential(this.botToken);
+      this.chatClient = new ChatClient(endpoint, tokenCredential);
+      console.log("VeteranAssistantBot chat client initialized");
+    } catch (error) {
+      console.error("Failed to initialize chat client:", error);
+      this.chatClient = null;
+    }
   }
 
   // Analyze user message and determine intent
@@ -144,7 +156,9 @@ export class VeteranAssistantBot {
   // Send message to chat thread
   public async sendMessage(threadId: string, message: string): Promise<void> {
     if (!this.chatClient) {
-      throw new Error("Chat client not initialized");
+      // In fallback mode, we can't send messages to Azure chat threads
+      console.log("Bot running in fallback mode - cannot send message to chat thread");
+      return;
     }
 
     try {

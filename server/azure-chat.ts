@@ -433,12 +433,25 @@ export async function removeChatParticipant(
 
 // Process message with bot
 export async function processBotMessage(threadId: string, message: string) {
+  // If Azure Communication Services chatBot is not available, create a fallback bot
   if (!chatBot) {
-    return {
-      response: "I'm sorry, but the AI assistant is currently unavailable. Please try again later or contact support.",
-      suggestions: ["Contact Support", "Try Again Later"],
-      intent: "unavailable"
-    };
+    console.log("Azure Communication Services not available, using fallback bot");
+    
+    // Create a simple fallback bot that doesn't require Azure services
+    const fallbackBot = new VeteranAssistantBot("fallback-bot", "fallback-token", "");
+    
+    try {
+      const botResponse = await fallbackBot.processMessage(message, threadId);
+      console.log("Fallback bot processed message successfully:", botResponse);
+      return botResponse;
+    } catch (error: any) {
+      console.error("Error with fallback bot:", error.message);
+      return {
+        response: "I'm sorry, but the AI assistant is currently unavailable. However, I can help you with basic VA claims information. Please try asking about claims status, filing new claims, or appeals process.",
+        suggestions: ["Check claim status", "File new claim", "Appeals help", "Contact Support"],
+        intent: "unavailable"
+      };
+    }
   }
 
   try {

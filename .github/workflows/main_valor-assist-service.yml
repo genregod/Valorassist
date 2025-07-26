@@ -7,7 +7,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: valor-assist-service
-  NODE_VERSION: '20.x'
+  NODE_VERSION: '22.x'
   
 jobs:
   build:
@@ -26,31 +26,10 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-<<<<<<< HEAD
-      - name: Prepare deployment package
-        run: |
-          # Copy index.html to root for Vite
-          cp client/index.html ./index.html
-          
-          # Remove source files but keep built files and dependencies
-          rm -rf client/src
-          rm -rf server/*.ts
-          rm -rf scripts
-          rm -rf attached_assets
-          rm -f *.log
-          rm -f .env
-          rm -f github-secrets-setup.md
-          rm -f valor-assist-credentials.txt
-          
-          # Ensure package.json includes Node.js 22 requirement
-          echo "Checking package.json..."
-          cat package.json | grep -A 5 '"name"'
-=======
     - name: Build application
       run: npm run build
       env:
         VITE_API_URL: ${{ secrets.VITE_API_URL }}
->>>>>>> 03a1cae462e1c70a0eeb047a3ac0e6832333c814
 
     - name: Run tests
       run: npm test --if-present
@@ -66,24 +45,10 @@ jobs:
         # Copy key Node.js files to deployment directory root
         cp package.json deploy/
         cp package-lock.json deploy/ || echo "No package-lock.json found"
+        cp server.js deploy/
+        cp .deployment deploy/ || echo "No .deployment file found"
         
-        # Create a simple server.js for static content
-        echo 'const express = require("express");
-        const path = require("path");
-        const app = express();
-        
-        app.use(express.static("./"));
-        
-        app.get("*", (req, res) => {
-          res.sendFile(path.resolve(__dirname, "index.html"));
-        });
-        
-        const PORT = process.env.PORT || 8080;
-        app.listen(PORT, () => {
-          console.log(`Server running on port ${PORT}`);
-        });' > deploy/server.js
-        
-        # Add express to dependencies
+        # Add express to dependencies if not present
         cd deploy
         npm pkg set dependencies.express="^4.18.2"
         cd ..

@@ -1,0 +1,97 @@
+{
+  "entities": [
+    {
+      "name": "Anthony_Navarro",
+      "entityType": "person",
+      "observations": [
+        "Developer working on ValorAssist project",
+        "Uses Azure cloud services for deployment",
+        "Works with Node.js, TypeScript, and React",
+        "Has experience with Azure App Service, SQL Database, and Communication Services",
+        "Prefers direct solutions and gets frustrated with hanging processes",
+        "Active GitHub user with username genregod"
+      ]
+    },
+    {
+      "name": "ValorAssist",
+      "entityType": "project",
+      "observations": [
+        "VA claims support platform",
+        "Built with React frontend and Node.js backend",
+        "Deployed on Azure App Service",
+        "Uses Azure SQL Database for data storage",
+        "Integrates with Azure Communication Services for chat",
+        "Has chatbot functionality with OpenAI integration",
+        "Located in GitHub repository genregod/Valorassist",
+        "Uses TypeScript and modern web technologies",
+        "Includes fallback bot functionality when APIs are unavailable"
+      ]
+    },
+    {
+      "name": "Azure_Infrastructure",
+      "entityType": "cloud_platform",
+      "observations": [
+        "Resource group: valor-assist-rg",
+        "App Service: valor-assist-service",
+        "SQL Server: valor-assist-db",
+        "AI Services: valor-assist-ai",
+        "Communication Services: VA-Comm-Sev",
+        "Multiple Key Vaults for secrets management",
+        "Application Insights for monitoring",
+        "Located in East US 2 region primarily"
+      ]
+    },
+    {
+      "name": "OpenAI_Integration",
+      "entityType": "api_service",
+      "observations": [
+        "Uses GPT-4o model for AI responses",
+        "API key configured for enhanced chatbot responses",
+        "Integrated with ValorAssist chatbot functionality",
+        "Provides VA-specific responses for veterans"
+      ]
+    },
+    {
+      "name": "GitHub_Actions",
+      "entityType": "ci_cd_pipeline",
+      "observations": [
+        "Automated deployment pipeline",
+        "Deploys to Azure App Service on push to main branch",
+        "Uses publish profile for authentication",
+        "Builds TypeScript and React components"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": "Anthony_Navarro",
+      "to": "ValorAssist",
+      "relationType": "develops"
+    },
+    {
+      "from": "Anthony_Navarro",
+      "to": "Azure_Infrastructure",
+      "relationType": "manages"
+    },
+    {
+      "from": "ValorAssist",
+      "to": "Azure_Infrastructure",
+      "relationType": "deployed_on"
+    },
+    {
+      "from": "ValorAssist",
+      "to": "OpenAI_Integration",
+      "relationType": "uses"
+    },
+    {
+      "from": "ValorAssist",
+      "to": "GitHub_Actions",
+      "relationType": "deployed_by"
+    },
+    {
+      "from": "Azure_Infrastructure",
+      "to": "OpenAI_Integration",
+      "relationType": "integrates_with"
+    }
+  ]
+}

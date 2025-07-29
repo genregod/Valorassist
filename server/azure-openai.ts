@@ -2,9 +2,9 @@ import { AzureOpenAI } from 'openai';
 
 // Azure OpenAI configuration for fine-tuned model
 const azureConfig = {
-  endpoint: process.env.AZURE_OPENAI_ENDPOINT || "https://eastus2.api.cognitive.microsoft.com/",
-  apiKey: process.env.AZURE_OPENAI_API_KEY || "47a44a5797fb404dafa206a8329b520e",
-  deployment: process.env.AZURE_OPENAI_DEPLOYMENT_ID || "1-nano-2025-04-14-qa_frstrun",
+  endpoint: process.env.AZURE_OPENAI_ENDPOINT || "",
+  apiKey: process.env.AZURE_OPENAI_API_KEY || "",
+  deployment: process.env.AZURE_OPENAI_DEPLOYMENT_ID || "",
   apiVersion: process.env.AZURE_OPENAI_API_VERSION || "2024-04-01-preview"
 };
 

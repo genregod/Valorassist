@@ -81,7 +81,7 @@ export function SimpleChatWindow({ isOpen, onClose }: SimpleChatWindowProps) {
         const response = await apiRequest("POST", "/api/chat/bot/thread-001/process", {
           message: userMessage.content
         });
-        const botResponse = response as unknown as BotResponse;
+        const botResponse = (await response.json()) as BotResponse;
         
         // Update loading message with bot response
         setMessages((prev) => 
@@ -198,8 +198,8 @@ export function SimpleChatWindow({ isOpen, onClose }: SimpleChatWindowProps) {
                       key={index}
                       variant="outline"
                       size="sm"
+                      className="text-xs"
                       onClick={() => handleSuggestionClick(suggestion)}
-                      className="text-xs hover:bg-navy-100 hover:text-navy-700 hover:border-navy-700"
                     >
                       {suggestion}
                     </Button>
@@ -211,19 +211,16 @@ export function SimpleChatWindow({ isOpen, onClose }: SimpleChatWindowProps) {
         </CardContent>
         
         <CardFooter className="p-4 border-t">
-          <form onSubmit={handleSendMessage} className="flex gap-2 w-full">
+          <form onSubmit={handleSendMessage} className="flex w-full gap-2">
             <Input
               type="text"
               placeholder="Type your message..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              disabled={isProcessing}
               className="flex-1"
             />
-            <Button
-              type="submit"
-              disabled={!message.trim() || isProcessing}
-              className="bg-navy-700 hover:bg-navy-800 text-white"
-            >
+            <Button type="submit" disabled={isProcessing}>
               {isProcessing ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (

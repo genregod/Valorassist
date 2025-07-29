@@ -8,3 +8,44 @@ github-secrets-setup.md
 # Files containing secrets
 # Files containing secrets
 *-credentials.txt
+
+# Archived and Unnecessary Files
+AZURE_DEPLOYMENT.md
+azure-debug-setup.sh
+azure-deploy.json
+AZURE-DEPLOYMENT-FINAL.md
+azure-deployment-fix.sh
+azure-final-fix.sh
+AZURE-FIX-COMPLETE.md
+azure-fix-node22.sh
+azure-logging-fix.sh
+azure-logging-setup.sh
+azure-quick-fix.sh
+check-azure-runtime.sh
+check-deployment-status.sh
+code_deployment_log_*.txt
+configure-azure-apis.sh
+cookies.txt
+copypaste_logfile.txt
+deploy-code.sh
+DEPLOY-NOW.md
+deploy-to-azure-now.sh
+deploy-to-azure.sh
+deploy.cmd
+deploy.sh
+deploy.zip
+DEPLOYMENT.md
+FINAL-DEPLOYMENT-FIX.md
+fix-azure-deployment-complete.sh
+fix-azure-deployment.sh
+fix-git-secrets.sh
+generated-icon.png
+iisnode.yml
+postinstall.sh
+replit.md
+server.cjs
+server.js
+startup.sh
+valor-logs.zip
+archived_files.tar.gz
+unnecessary_files.zip

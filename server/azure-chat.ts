@@ -7,6 +7,7 @@ import {
 import { AzureCommunicationTokenCredential } from "@azure/communication-common";
 import { CommunicationIdentityClient } from "@azure/communication-identity";
 import { VeteranAssistantBot, createBotUser } from "./chat-bot";
+import { azureOpenAIService } from "./azure-openai";
 
 // Check if Azure Communication Services credentials exist
 const hasConnectionString = !!process.env.AZURE_COMMUNICATION_CONNECTION_STRING;
@@ -48,433 +49,352 @@ async function initializeBot() {
     const botUser = await createBotUser(connectionString);
     const endpoint = connectionString.match(/endpoint=https:\/\/([^;]+)/)?.[1];
     
-    if (!endpoint) {
-      console.error("Failed to extract endpoint from connection string");
-      return;
+    if (endpoint && botUser) {
+      chatBot = new VeteranAssistantBot(
+        botUser.communicationUserId, 
+        botUser.token, 
+        `https://${endpoint}`
+      );
+      console.log("VeteranAssistantBot initialized successfully");
     }
-    
-    chatBot = new VeteranAssistantBot(
-      botUser.userId,
-      botUser.token,
-      `https://${endpoint}`
-    );
-    
-    console.log("Chat bot initialized successfully");
   } catch (error: any) {
-    console.error("Failed to initialize chat bot:", error.message);
+    console.error("Failed to initialize bot:", error.message);
   }
 }
 
-// Create a user identity for Azure Communication Services
-export async function createChatUser(userId: string) {
+// Create a new chat user
+export async function createChatUser(displayName: string) {
   if (!communicationIdentityClient) {
-    console.warn("Azure Communication Services not available - returning simulated user");
-    return {
-      communicationUserId: `simulated-${userId}`,
-      token: "simulated-token",
-      expiresOn: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      message: "Azure Communication Services connection string required for actual chat functionality"
-    };
+    throw new Error("Azure Communication Services not initialized");
   }
 
   try {
     // Create a user
-    const communicationUser = await communicationIdentityClient.createUser();
-    
-    // Issue a token for the user
+    const userResponse = await communicationIdentityClient.createUser();
+    console.log(`User created with id: ${userResponse.communicationUserId}`);
+
+    // Get a token for the user
     const tokenResponse = await communicationIdentityClient.getToken(
-      communicationUser,
-      ["chat", "voip"]
+      userResponse,
+      ["chat"]
     );
-    
+    console.log(`Token created for user: expires on ${tokenResponse.expiresOn}`);
+
     return {
-      communicationUserId: communicationUser.communicationUserId,
+      communicationUserId: userResponse.communicationUserId,
       token: tokenResponse.token,
-      expiresOn: tokenResponse.expiresOn
+      displayName,
     };
   } catch (error: any) {
-    console.error("Failed to create chat user:", error.message);
     throw new Error(`Failed to create chat user: ${error.message}`);
   }
 }
 
-// Create a chat thread for a user to connect with support
+// Create a support chat thread
 export async function createSupportChatThread(
-  userDisplayName: string,
-  userCommunicationId: string,
-  supportDisplayName: string = "VA Support Agent",
-  supportCommunicationId: string
+  topic: string,
+  participantIds: string[]
 ) {
   if (!hasConnectionString) {
-    console.warn("Azure Communication Services not available - returning simulated chat thread");
-    const simulatedThreadId = `simulated-thread-${Date.now()}`;
-    
-    // Store in the active threads
-    const userThreads = activeThreadsByUser.get(userCommunicationId) || [];
-    userThreads.push({
-      threadId: simulatedThreadId,
-      participants: [
-        { id: { communicationUserId: userCommunicationId }, displayName: userDisplayName },
-        { id: { communicationUserId: supportCommunicationId }, displayName: supportDisplayName }
-      ]
-    });
-    activeThreadsByUser.set(userCommunicationId, userThreads);
-    
-    return {
-      threadId: simulatedThreadId,
-      message: "Azure Communication Services connection string required for actual chat functionality"
-    };
+    throw new Error("Azure Communication Services not configured");
   }
 
   try {
-    // Get user token
-    const userCredential = new AzureCommunicationTokenCredential(
+    // Create a chat client for the first participant (support agent)
+    const tokenCredential = new AzureCommunicationTokenCredential(
       process.env.AZURE_COMMUNICATION_USER_TOKEN as string
     );
-    
-    // Create chat client
+
     const chatClient = new ChatClient(
       process.env.AZURE_COMMUNICATION_ENDPOINT as string,
-      userCredential
+      tokenCredential
     );
-    
-    // Create a chat thread
-    const createChatThreadOptions = {
-      topic: `Support Chat for ${userDisplayName}`,
-      participants: [
-        {
-          id: { communicationUserId: userCommunicationId },
-          displayName: userDisplayName
-        },
-        {
-          id: { communicationUserId: supportCommunicationId },
-          displayName: supportDisplayName
-        }
-      ]
+
+    // Create participants array
+    const participants = participantIds.map((id) => ({
+      id: { communicationUserId: id },
+      displayName: "Participant",
+    }));
+
+    // Create the chat thread
+    const createChatThreadRequest = {
+      topic,
     };
-    
-    const createChatThreadResult = await chatClient.createChatThread(createChatThreadOptions);
+
+    const createChatThreadOptions = {
+      participants,
+    };
+
+    const createChatThreadResult = await chatClient.createChatThread(
+      createChatThreadRequest,
+      createChatThreadOptions
+    );
+
     const threadId = createChatThreadResult.chatThread?.id;
-    
     if (!threadId) {
-      throw new Error("Failed to create chat thread - thread ID is undefined");
+      throw new Error("Failed to get thread ID from chat thread creation");
     }
-    
-    // Store in the active threads
-    const userThreads = activeThreadsByUser.get(userCommunicationId) || [];
-    userThreads.push({
+
+    console.log(`Chat thread created with id: ${threadId}`);
+
+    // Store the thread information
+    const activeThread: ActiveThread = {
       threadId,
-      participants: createChatThreadOptions.participants
+      participants: participants.map((p) => ({
+        id: p.id,
+        displayName: p.displayName || "Unknown",
+        shareHistoryTime: new Date(),
+      })),
+    };
+
+    // Add to active threads for each participant
+    participantIds.forEach((participantId) => {
+      const userThreads = activeThreadsByUser.get(participantId) || [];
+      userThreads.push(activeThread);
+      activeThreadsByUser.set(participantId, userThreads);
     });
-    activeThreadsByUser.set(userCommunicationId, userThreads);
-    
-    return { threadId };
+
+    return {
+      threadId,
+      topic,
+      participants: activeThread.participants,
+    };
   } catch (error: any) {
-    console.error("Failed to create support chat thread:", error.message);
     throw new Error(`Failed to create support chat thread: ${error.message}`);
   }
-}
-
-// Get all active chat threads for a user
-export async function getUserChatThreads(userCommunicationId: string) {
-  const userThreads = activeThreadsByUser.get(userCommunicationId) || [];
-  return userThreads;
 }
 
 // Send a message to a chat thread
 export async function sendChatMessage(
   threadId: string,
-  senderCommunicationId: string,
-  senderToken: string,
+  senderId: string,
   content: string
 ) {
   if (!hasConnectionString) {
-    console.warn("Azure Communication Services not available - simulating message send");
-    return {
-      id: `simulated-message-${Date.now()}`,
-      type: "text",
-      version: "1.0",
-      content: {
-        message: content,
-        metadata: {
-          senderId: senderCommunicationId,
-          timestamp: new Date().toISOString()
-        }
-      },
-      senderDisplayName: "Simulated User",
-      createdOn: new Date(),
-      message: "Azure Communication Services connection string required for actual chat functionality"
-    };
+    throw new Error("Azure Communication Services not configured");
   }
 
   try {
-    // Create token credential
-    const senderCredential = new AzureCommunicationTokenCredential(senderToken);
-    
-    // Create chat client
+    const tokenCredential = new AzureCommunicationTokenCredential(
+      process.env.AZURE_COMMUNICATION_USER_TOKEN as string
+    );
+
     const chatClient = new ChatClient(
       process.env.AZURE_COMMUNICATION_ENDPOINT as string,
-      senderCredential
+      tokenCredential
     );
-    
-    // Get the thread client
+
     const chatThreadClient = chatClient.getChatThreadClient(threadId);
-    
-    // Send the message
-    const sendMessageOptions = {
+
+    const sendMessageRequest = {
+      content,
+      senderDisplayName: "Support Agent", // This should be dynamic based on the sender
       type: "text" as ChatMessageType,
-      content: content
     };
-    
-    const sendMessageResult = await chatThreadClient.sendMessage(sendMessageOptions);
-    return { messageId: sendMessageResult.id };
+
+    const sendMessageOptions = {
+      senderDisplayName: "Support Agent",
+      type: "text" as ChatMessageType,
+    };
+
+    const sendChatMessageResult = await chatThreadClient.sendMessage(
+      sendMessageRequest,
+      sendMessageOptions
+    );
+
+    const messageId = sendChatMessageResult.id;
+    console.log(`Message sent with id: ${messageId}`);
+
+    return {
+      messageId,
+      content,
+      senderId,
+      threadId,
+      timestamp: new Date(),
+    };
   } catch (error: any) {
-    console.error("Failed to send chat message:", error.message);
     throw new Error(`Failed to send chat message: ${error.message}`);
   }
 }
 
-// Get chat messages from a thread
-export async function getChatMessages(
-  threadId: string,
-  userToken: string,
-  maxPageSize: number = 100
-) {
+// Get messages from a chat thread
+export async function getChatMessages(threadId: string) {
   if (!hasConnectionString) {
-    console.warn("Azure Communication Services not available - returning simulated messages");
-    return {
-      messages: [
-        {
-          id: "simulated-message-1",
-          type: "text",
-          sequenceId: "1",
-          version: "1.0",
-          content: {
-            message: "Welcome to Valor Assist! How can we help you today?",
-            metadata: {}
-          },
-          senderDisplayName: "VA Support Agent",
-          createdOn: new Date(Date.now() - 5 * 60 * 1000),
-          metadata: {}
-        }
-      ],
-      message: "Azure Communication Services connection string required for actual chat functionality"
-    };
+    throw new Error("Azure Communication Services not configured");
   }
 
   try {
-    // Create token credential
-    const userCredential = new AzureCommunicationTokenCredential(userToken);
-    
-    // Create chat client
+    const tokenCredential = new AzureCommunicationTokenCredential(
+      process.env.AZURE_COMMUNICATION_USER_TOKEN as string
+    );
+
     const chatClient = new ChatClient(
       process.env.AZURE_COMMUNICATION_ENDPOINT as string,
-      userCredential
+      tokenCredential
     );
-    
-    // Get the thread client
+
     const chatThreadClient = chatClient.getChatThreadClient(threadId);
-    
-    // Get messages
+
     const messages = [];
-    const getMessagesOptions = { maxPageSize };
-    
-    for await (const message of chatThreadClient.listMessages(getMessagesOptions)) {
-      messages.push(message);
+    const listMessagesOptions = {
+      maxPageSize: 20,
+    };
+
+    for await (const message of chatThreadClient.listMessages(
+      listMessagesOptions
+    )) {
+      messages.push({
+        id: message.id,
+        content: message.content?.message || "",
+        senderId: message.sender?.communicationUserId || "unknown",
+        senderDisplayName: message.senderDisplayName || "Unknown",
+        createdOn: message.createdOn,
+        type: message.type,
+      });
     }
-    
-    return { messages };
+
+    console.log(`Retrieved ${messages.length} messages from thread ${threadId}`);
+    return messages.reverse(); // Return in chronological order
   } catch (error: any) {
-    console.error("Failed to get chat messages:", error.message);
     throw new Error(`Failed to get chat messages: ${error.message}`);
   }
 }
 
-// Add a participant to a chat thread
+// Add participant to a chat thread
 export async function addChatParticipant(
   threadId: string,
-  adminToken: string,
-  participantCommunicationId: string,
-  participantDisplayName: string
+  participantId: string,
+  displayName: string
 ) {
   if (!hasConnectionString) {
-    console.warn("Azure Communication Services not available - simulating add participant");
-    
-    // Add to the active threads map
-    const entries = Array.from(activeThreadsByUser.entries());
-    for (const [userId, threads] of entries) {
-      for (let i = 0; i < threads.length; i++) {
-        if (threads[i].threadId === threadId) {
-          threads[i].participants.push({
-            id: { communicationUserId: participantCommunicationId },
-            displayName: participantDisplayName
-          });
-          break;
-        }
-      }
-    }
-    
-    return {
-      message: "Azure Communication Services connection string required for actual chat functionality"
-    };
+    throw new Error("Azure Communication Services not configured");
   }
 
   try {
-    // Create token credential for admin
-    const adminCredential = new AzureCommunicationTokenCredential(adminToken);
-    
-    // Create chat client
+    const tokenCredential = new AzureCommunicationTokenCredential(
+      process.env.AZURE_COMMUNICATION_USER_TOKEN as string
+    );
+
     const chatClient = new ChatClient(
       process.env.AZURE_COMMUNICATION_ENDPOINT as string,
-      adminCredential
+      tokenCredential
     );
-    
-    // Get the thread client
+
     const chatThreadClient = chatClient.getChatThreadClient(threadId);
-    
-    // Add the participant
-    const addParticipantsOptions = {
+
+    const addParticipantsRequest = {
       participants: [
         {
-          id: { communicationUserId: participantCommunicationId },
-          displayName: participantDisplayName
-        }
-      ]
+          id: { communicationUserId: participantId },
+          displayName,
+        },
+      ],
     };
-    
-    await chatThreadClient.addParticipants(addParticipantsOptions);
-    
-    // Add to the active threads map
-    const entries = Array.from(activeThreadsByUser.entries());
-    for (const [userId, threads] of entries) {
-      for (let i = 0; i < threads.length; i++) {
-        if (threads[i].threadId === threadId) {
-          threads[i].participants.push(addParticipantsOptions.participants[0]);
-          break;
-        }
-      }
-    }
-    
-    return { success: true };
+
+    await chatThreadClient.addParticipants(addParticipantsRequest);
+    console.log(`Participant ${participantId} added to thread ${threadId}`);
+
+    return {
+      participantId,
+      displayName,
+      threadId,
+      addedAt: new Date(),
+    };
   } catch (error: any) {
-    console.error("Failed to add chat participant:", error.message);
     throw new Error(`Failed to add chat participant: ${error.message}`);
   }
 }
 
-// Remove a participant from a chat thread
+// Remove participant from a chat thread
 export async function removeChatParticipant(
   threadId: string,
-  adminToken: string,
-  participantCommunicationId: string
+  participantId: string
 ) {
   if (!hasConnectionString) {
-    console.warn("Azure Communication Services not available - simulating remove participant");
-    
-    // Remove from the active threads map
-    const entriesArray = Array.from(activeThreadsByUser.entries());
-    for (const [userId, threads] of entriesArray) {
-      for (let i = 0; i < threads.length; i++) {
-        if (threads[i].threadId === threadId) {
-          threads[i].participants = threads[i].participants.filter(
-            (p: ChatParticipant) => {
-              const userId = (p.id as any).communicationUserId;
-              return userId !== participantCommunicationId;
-            }
-          );
-          break;
-        }
-      }
-    }
-    
-    return {
-      message: "Azure Communication Services connection string required for actual chat functionality"
-    };
+    throw new Error("Azure Communication Services not configured");
   }
 
   try {
-    // Create token credential for admin
-    const adminCredential = new AzureCommunicationTokenCredential(adminToken);
-    
-    // Create chat client
+    const tokenCredential = new AzureCommunicationTokenCredential(
+      process.env.AZURE_COMMUNICATION_USER_TOKEN as string
+    );
+
     const chatClient = new ChatClient(
       process.env.AZURE_COMMUNICATION_ENDPOINT as string,
-      adminCredential
+      tokenCredential
     );
-    
-    // Get the thread client
+
     const chatThreadClient = chatClient.getChatThreadClient(threadId);
-    
-    // Remove the participant
-    await chatThreadClient.removeParticipant({ communicationUserId: participantCommunicationId });
-    
-    // Remove from the active threads map
-    const activeEntries = Array.from(activeThreadsByUser.entries());
-    for (const [userId, threads] of activeEntries) {
-      for (let i = 0; i < threads.length; i++) {
-        if (threads[i].threadId === threadId) {
-          threads[i].participants = threads[i].participants.filter(
-            (p: ChatParticipant) => {
-              const userId = (p.id as any).communicationUserId;
-              return userId !== participantCommunicationId;
-            }
-          );
-          break;
-        }
-      }
-    }
-    
-    return { success: true };
+
+    await chatThreadClient.removeParticipant({
+      communicationUserId: participantId,
+    });
+
+    console.log(`Participant ${participantId} removed from thread ${threadId}`);
+
+    return {
+      participantId,
+      threadId,
+      removedAt: new Date(),
+    };
   } catch (error: any) {
-    console.error("Failed to remove chat participant:", error.message);
     throw new Error(`Failed to remove chat participant: ${error.message}`);
   }
 }
 
 // Process message with bot
 export async function processBotMessage(threadId: string, message: string) {
-  // If Azure Communication Services chatBot is not available, create a fallback bot
-  if (!chatBot) {
-    console.log("Azure Communication Services not available, using fallback bot");
-    
-    // Create a simple fallback bot that doesn't require Azure services
-    const fallbackBot = new VeteranAssistantBot("fallback-bot", "fallback-token", "");
-    
-    try {
-      const botResponse = await fallbackBot.processMessage(message, threadId);
-      console.log("Fallback bot processed message successfully:", botResponse);
-      return botResponse;
-    } catch (error: any) {
-      console.error("Error with fallback bot:", error.message);
+  console.log(`🤖 Processing bot message for thread: ${threadId}`);
+  
+  try {
+    // First try to use Azure OpenAI fine-tuned model
+    if (azureOpenAIService.isAvailable()) {
+      console.log("✅ Using Azure OpenAI fine-tuned model");
+      const response = await azureOpenAIService.generateResponse(message, threadId);
+      
       return {
-        response: "I'm sorry, but the AI assistant is currently unavailable. However, I can help you with basic VA claims information. Please try asking about claims status, filing new claims, or appeals process.",
-        suggestions: ["Check claim status", "File new claim", "Appeals help", "Contact Support"],
-        intent: "unavailable"
+        response,
+        suggestions: ["File a claim", "Check status", "Appeals help", "Contact VSO"],
+        intent: "va_assistance",
+        source: "azure_openai_fine_tuned"
       };
     }
-  }
-
-  try {
-    // Process the message with the bot
-    const botResponse = await chatBot.processMessage(message, threadId);
     
-    // Only send bot response back to the chat thread if it's a real thread (not hardcoded)
-    // Skip sending for demo/test threads to avoid 404 errors
-    if (hasConnectionString && chatBot && !threadId.startsWith('thread-')) {
-      try {
-        await chatBot.sendMessage(threadId, botResponse.response);
-      } catch (error) {
-        console.error("Failed to send bot message to thread:", error);
+    // Fallback to Azure Communication Services bot if available
+    if (chatBot) {
+      console.log("Using Azure Communication Services bot as fallback");
+      const botResponse = await chatBot.processMessage(message, threadId);
+      
+      // Only send bot response back to the chat thread if it's a real thread (not hardcoded)
+      // Skip sending for demo/test threads to avoid 404 errors
+      if (hasConnectionString && chatBot && !threadId.startsWith('thread-')) {
+        try {
+          await chatBot.sendMessage(threadId, botResponse.response);
+        } catch (error) {
+          console.error("Failed to send bot message to thread:", error);
+        }
       }
+      
+      return botResponse;
     }
     
+    // Last resort: use the fallback bot
+    console.log("Using fallback bot (no Azure services available)");
+    const fallbackBot = new VeteranAssistantBot("fallback-bot", "fallback-token", "");
+    
+    const botResponse = await fallbackBot.processMessage(message, threadId);
+    console.log("Fallback bot processed message successfully:", botResponse);
     return botResponse;
+    
   } catch (error: any) {
-    console.error("Error processing bot message:", error.message);
+    console.error("❌ Error processing bot message:", error.message);
+    
+    // Return a helpful error response
     return {
-      response: "I apologize, but I encountered an error processing your message. Please try again or contact support if the issue persists.",
-      suggestions: ["Contact Support", "Try Again"],
-      intent: "error"
+      response: "I apologize, but I'm having trouble processing your request right now. However, I can still help you with VA benefits questions! For immediate assistance, you can call the VA at 1-800-827-1000, or try asking me about specific topics like disability claims, appeals, or education benefits.",
+      suggestions: ["Disability claims help", "Appeals process", "Education benefits", "Contact VA: 1-800-827-1000"],
+      intent: "error",
+      source: "fallback"
     };
   }
 }

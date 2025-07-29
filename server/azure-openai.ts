@@ -63,11 +63,13 @@ export class AzureOpenAIService {
     return !!this.client;
   }
 
-  // Generate chat response using fine-tuned model
+  // Generate chat response using fine-tuned model (for /api/ai/chat route)
   async generateChatResponse(
     messages: ChatMessage[], 
     veteranContext?: any
   ): Promise<string> {
+    console.log('🤖 AzureOpenAIService.generateChatResponse called with:', messages.length, 'messages');
+    
     // Fallback if Azure OpenAI is not available
     if (!this.client || !hasAzureOpenAI) {
       console.warn("Azure OpenAI fine-tuned model unavailable - using fallback response");
@@ -85,6 +87,8 @@ export class AzureOpenAIService {
         ...messages
       ];
 
+      console.log('🚀 Calling Azure OpenAI with deployment:', this.deploymentId);
+
       const response = await this.client.chat.completions.create({
         model: this.deploymentId, // Use the fine-tuned deployment
         messages: apiMessages,
@@ -93,13 +97,27 @@ export class AzureOpenAIService {
         top_p: 0.9 // Focus on most relevant responses
       });
 
-      return response.choices[0]?.message?.content || 
+      const result = response.choices[0]?.message?.content || 
         "I apologize, but I couldn't generate a response. Please try rephrasing your question about VA benefits.";
+      
+      console.log('✅ Azure OpenAI response generated successfully');
+      return result;
     } catch (error: any) {
-      console.error("Error with Azure OpenAI fine-tuned model:", error);
+      console.error("❌ Error with Azure OpenAI fine-tuned model:", error);
       // Return fallback response on error
       return this.getFallbackResponse(messages[messages.length - 1]?.content || "");
     }
+  }
+
+  // Generate single message response (for bot processing)
+  async generateResponse(message: string, threadId: string): Promise<string> {
+    console.log(`🤖 Using fine-tuned model: gpt-4.1-nano for thread: ${threadId}`);
+    
+    const messages: ChatMessage[] = [
+      { role: "user", content: message }
+    ];
+    
+    return this.generateChatResponse(messages);
   }
 
   // Enhanced fallback responses for common VA questions
@@ -126,16 +144,49 @@ export class AzureOpenAIService {
       return "VA healthcare enrollment depends on your service history, disability rating, and income. Veterans with service-connected disabilities, Purple Heart recipients, and recently discharged veterans get priority. Apply online at VA.gov, by phone at 1-877-222-8387, or at your local VA medical center.";
     }
     
+    if (message.includes('evidence') || message.includes('document')) {
+      return "Strong evidence is crucial for VA claims. Key documents include: service medical records, private treatment records, nexus letters from doctors linking your condition to service, buddy statements, and service personnel records. What type of evidence are you looking to gather?";
+    }
+    
+    if (message.includes('c&p') || message.includes('exam')) {
+      return "C&P (Compensation & Pension) exams help the VA determine your disability rating. Tips: Be honest about your worst days, bring all medical records, describe how your condition affects daily activities, and don't minimize your symptoms. Would you like specific preparation advice?";
+    }
+    
     // Generic helpful response
-    return "I'm here to help with your VA benefits questions! I can assist with disability claims, appeals, education benefits, healthcare, and more. The AI assistant is currently running in limited mode, but I'll do my best to provide helpful information. What specific VA topic would you like help with?";
+    return "Hello! I'm Val, your VA benefits assistant powered by a specialized fine-tuned AI model. I can help with disability claims, appeals, education benefits, healthcare enrollment, and navigating VA processes. The AI model is currently running in limited mode, but I'll provide the best guidance I can. What VA topic would you like help with?";
   }
 
   // Health check method
   async healthCheck(): Promise<{ status: string; model: string; available: boolean }> {
-    return {
-      status: this.isAvailable() ? "healthy" : "fallback-mode",
-      model: this.isAvailable() ? "gpt-4.1-nano (fine-tuned)" : "fallback-responses",
-      available: this.isAvailable()
-    };
+    if (!this.client) {
+      return {
+        status: "fallback-mode",
+        model: "fallback-responses",
+        available: false
+      };
+    }
+
+    try {
+      const response = await this.client.chat.completions.create({
+        model: this.deploymentId,
+        messages: [{ role: "user", content: "Hello" }],
+        max_tokens: 10
+      });
+      
+      return {
+        status: "healthy",
+        model: "gpt-4.1-nano (fine-tuned)",
+        available: response.choices.length > 0
+      };
+    } catch (error) {
+      console.error('Azure OpenAI health check failed:', error);
+      return {
+        status: "error",
+        model: "gpt-4.1-nano (fine-tuned)",
+        available: false
+      };
+    }
   }
 }
+
+export const azureOpenAIService = new AzureOpenAIService();

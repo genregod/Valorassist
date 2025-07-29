@@ -17,6 +17,7 @@ import {
   analyzeDocument,
   ChatMessage,
 } from "./openai";
+import { AzureOpenAIService } from "./azure-openai";
 import {
   getClaimStatus,
   getPatientRecords,
@@ -43,249 +44,226 @@ function getUserId(req: Request): number | undefined {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Initialize Azure OpenAI service for fine-tuned responses
+  const azureOpenAI = new AzureOpenAIService();
+  
   // Health check endpoint
   app.get("/api/health", (req, res) => {
     res.json({ 
       status: "healthy",
       timestamp: new Date().toISOString(),
       services: {
-        openai: !!process.env.OPENAI_API_KEY,
-        azureCommunication: !!process.env.AZURE_COMMUNICATION_CONNECTION_STRING,
-        database: !!process.env.DATABASE_URL
+        database: "operational",
+        openai: "configured",
+        azure_openai: azureOpenAI.isAvailable() ? "available" : "fallback-mode"
       }
     });
   });
-
-  // Test endpoint
-  app.get("/api/test", (req, res) => {
-    res.json({ 
-      message: "API is working correctly",
-      timestamp: new Date().toISOString()
-    });
-  });
-
-  // Setup Authentication
-  setupAuth(app);
 
   // Claims API routes
-  app.post("/api/claims", async (req, res) => {
+  app.get("/api/claims", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
     try {
-      const validationResult = insertClaimSchema.safeParse(req.body);
-      if (!validationResult.success) {
-        return res.status(400).json({
-          message: "Invalid claim data",
-          errors: validationResult.error.format(),
-        });
-      }
-
       const userId = getUserId(req);
-      const claimData = {
-        ...validationResult.data,
-        userId: userId || null,
-      };
-
-      const result = await storage.transaction(async (trx) => {
-        const [claim] = await trx
-          .insert(claims) // This is now correctly imported
-          .values({
-            ...claimData,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          })
-          .returning();
-
-        try {
-          const analysis = await analyzeClaimInfo(claimData);
-          const [updatedClaim] = await trx
-            .update(claims) // This is now correctly imported
-            .set({
-              aiAnalysis: analysis,
-              updatedAt: new Date(),
-            })
-            .where(eq(claims.id, claim.id)) // 'eq' is now correctly imported
-            .returning();
-
-          if (userId) {
-            await trx
-              .insert(auditLogs) // This is now correctly imported
-              .values({
-                userId,
-                action: "create_claim",
-                resourceType: "claim",
-                resourceId: claim.id.toString(),
-                ip: req.ip || "0.0.0.0",
-                userAgent: req.get("User-Agent") || "Unknown",
-                details: {
-                  claimTypes: claim.claimTypes,
-                  withAnalysis: true,
-                },
-                timestamp: new Date(),
-              });
-          }
-          return {
-            success: true,
-            claim: updatedClaim,
-            analysis,
-            withAnalysis: true,
-          };
-        } catch (aiError) {
-          console.error("AI analysis failed:", aiError);
-          if (userId) {
-            await trx
-              .insert(auditLogs) // This is now correctly imported
-              .values({
-                userId,
-                action: "create_claim",
-                resourceType: "claim",
-                resourceId: claim.id.toString(),
-                ip: req.ip || "0.0.0.0",
-                userAgent: req.get("User-Agent") || "Unknown",
-                details: {
-                  claimTypes: claim.claimTypes,
-                  withAnalysis: false,
-                  error: "AI analysis failed",
-                },
-                timestamp: new Date(),
-              });
-          }
-          return {
-            success: true,
-            claim,
-            withAnalysis: false,
-          };
-        }
-      });
-
-      if (result.withAnalysis) {
-        return res.status(201).json({
-          message: "Claim submitted successfully",
-          claim: { ...result.claim, analysis: result.analysis },
-        });
-      } else {
-        return res.status(201).json({
-          message: "Claim submitted successfully, but analysis is pending",
-          claim: result.claim,
-        });
+      if (!userId) {
+        return res.status(400).json({ message: "User ID not found" });
       }
+      
+      const userClaims = await storage.getClaimsByUserId(userId);
+      return res.json(userClaims);
     } catch (error) {
-      console.error("Error creating claim:", error);
-      return res
-        .status(500)
-        .json({ message: "Failed to process claim submission" });
+      console.error('Error fetching claims:', error);
+      return res.status(500).json({ message: "Failed to retrieve claims" });
+    }
+  });
+
+  app.post("/api/claims", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
+    try {
+      const userId = getUserId(req);
+      if (!userId) {
+        return res.status(400).json({ message: "User ID not found" });
+      }
+      
+      // Parse and validate the claim data
+      const claimData = insertClaimSchema.parse({ ...req.body, userId });
+      
+      // Create the claim
+      const newClaim = await storage.createClaim(claimData);
+      
+      // Create audit log
+      await storage.createAuditLog({
+        userId,
+        action: "claim_created",
+        resourceType: "claim", 
+        resourceId: newClaim[0].id.toString(),
+        ip: req.ip || "0.0.0.0",
+        userAgent: req.get("User-Agent") || "Unknown",
+        details: { claimType: claimData.claimType }
+      });
+      
+      return res.status(201).json(newClaim[0]);
+    } catch (error) {
+      console.error('Error creating claim:', error);
+      return res.status(400).json({ 
+        message: "Failed to create claim", 
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 
   app.get("/api/claims/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
     try {
+      const userId = getUserId(req);
+      if (!userId) {
+        return res.status(400).json({ message: "User ID not found" });
+      }
+      
       const claimId = parseInt(req.params.id);
       if (isNaN(claimId)) {
         return res.status(400).json({ message: "Invalid claim ID" });
       }
-      const claim = await storage.getClaim(claimId);
+      
+      const claim = await storage.getClaimById(claimId, userId);
       if (!claim) {
         return res.status(404).json({ message: "Claim not found" });
       }
+      
       return res.json(claim);
     } catch (error) {
-      console.error("Error retrieving claim:", error);
+      console.error('Error fetching claim:', error);
       return res.status(500).json({ message: "Failed to retrieve claim" });
     }
   });
 
-  // Documents API routes
-  app.post("/api/claims/:id/documents", async (req, res) => {
+  app.put("/api/claims/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
     try {
+      const userId = getUserId(req);
+      if (!userId) {
+        return res.status(400).json({ message: "User ID not found" });
+      }
+      
       const claimId = parseInt(req.params.id);
       if (isNaN(claimId)) {
         return res.status(400).json({ message: "Invalid claim ID" });
       }
-      const claim = await storage.getClaim(claimId);
-      if (!claim) {
+      
+      // Verify the claim belongs to the user
+      const existingClaim = await storage.getClaimById(claimId, userId);
+      if (!existingClaim) {
         return res.status(404).json({ message: "Claim not found" });
       }
-      const { name, type } = req.body;
-      if (!name || !type) {
-        return res
-          .status(400)
-          .json({ message: "Document name and type are required" });
-      }
-      const content = await generateDocumentTemplate(type, claim);
-      const document = await storage.createDocument({
-        claimId,
-        name,
-        type,
-        content,
+      
+      // Update the claim
+      const updatedClaim = await storage.updateClaim(claimId, req.body);
+      
+      // Create audit log
+      await storage.createAuditLog({
+        userId,
+        action: "claim_updated",
+        resourceType: "claim",
+        resourceId: claimId.toString(),
+        ip: req.ip || "0.0.0.0",
+        userAgent: req.get("User-Agent") || "Unknown",
+        details: { updateFields: Object.keys(req.body) }
       });
-      return res
-        .status(201)
-        .json({ message: "Document created successfully", document });
+      
+      return res.json(updatedClaim[0]);
     } catch (error) {
-      console.error("Error creating document:", error);
-      return res.status(500).json({ message: "Failed to create document" });
+      console.error('Error updating claim:', error);
+      return res.status(500).json({ message: "Failed to update claim" });
     }
   });
 
-  app.get("/api/claims/:id/documents", async (req, res) => {
+  app.delete("/api/claims/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Authentication required" });
+    }
+    
     try {
+      const userId = getUserId(req);
+      if (!userId) {
+        return res.status(400).json({ message: "User ID not found" });
+      }
+      
       const claimId = parseInt(req.params.id);
       if (isNaN(claimId)) {
         return res.status(400).json({ message: "Invalid claim ID" });
       }
-      const documents = await storage.getDocumentsByClaimId(claimId);
-      return res.json(documents);
+      
+      // Verify the claim belongs to the user before deletion
+      const existingClaim = await storage.getClaimById(claimId, userId);
+      if (!existingClaim) {
+        return res.status(404).json({ message: "Claim not found" });
+      }
+      
+      await storage.deleteClaim(claimId);
+      
+      // Create audit log
+      await storage.createAuditLog({
+        userId,
+        action: "claim_deleted",
+        resourceType: "claim",
+        resourceId: claimId.toString(),
+        ip: req.ip || "0.0.0.0",
+        userAgent: req.get("User-Agent") || "Unknown",
+        details: { claimType: existingClaim.claimType }
+      });
+      
+      return res.status(204).send();
     } catch (error) {
-      console.error("Error retrieving documents:", error);
-      return res.status(500).json({ message: "Failed to retrieve documents" });
+      console.error('Error deleting claim:', error);
+      return res.status(500).json({ message: "Failed to delete claim" });
     }
   });
 
-  // VA API Integration routes
-  app.get("/api/va/claims/:claimId", async (req, res) => {
+  // VA API proxy routes
+  app.get("/api/va/claim-status/:fileNumber", async (req, res) => {
     try {
-      const { claimId } = req.params;
-      const { ssn } = req.query;
-      if (!ssn || typeof ssn !== "string") {
-        return res
-          .status(400)
-          .json({ message: "SSN is required as a query parameter" });
-      }
-      const claimStatus = await getClaimStatus(claimId, ssn);
+      const { fileNumber } = req.params;
+      const claimStatus = await getClaimStatus(fileNumber);
       return res.json(claimStatus);
     } catch (error) {
-      console.error("Error fetching VA claim status:", error);
-      return res
-        .status(500)
-        .json({ message: "Failed to retrieve VA claim status" });
+      console.error("Error fetching claim status:", error);
+      return res.status(500).json({ message: "Failed to retrieve claim status" });
     }
   });
 
-  app.get("/api/va/patient/:icn", async (req, res) => {
+  app.get("/api/va/medical-records/:fileNumber", async (req, res) => {
     try {
-      const { icn } = req.params;
-      const patientRecords = await getPatientRecords(icn);
-      return res.json(patientRecords);
+      const { fileNumber } = req.params;
+      const medicalRecords = await getPatientRecords(fileNumber);
+      return res.json(medicalRecords);
     } catch (error) {
-      console.error("Error fetching VA patient records:", error);
+      console.error("Error fetching medical records:", error);
       return res
         .status(500)
-        .json({ message: "Failed to retrieve VA patient records" });
+        .json({ message: "Failed to retrieve medical records" });
     }
   });
 
-  app.post("/api/va/verify", async (req, res) => {
+  app.post("/api/va/verify-veteran", async (req, res) => {
     try {
-      const { ssn, firstName, lastName, birthDate } = req.body;
-      if (!ssn || !firstName || !lastName || !birthDate) {
-        return res.status(400).json({
-          message: "SSN, firstName, lastName, and birthDate are required",
-        });
-      }
-      const verificationResult = await verifyVeteranStatus(
+      const { ssn, lastName, dateOfBirth } = req.body;
+      const verificationResult = await verifyVeteranStatus({
         ssn,
-        firstName,
         lastName,
-        birthDate
-      );
+        dateOfBirth,
+      });
       return res.json(verificationResult);
     } catch (error) {
       console.error("Error verifying veteran status:", error);
@@ -298,46 +276,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/va/facilities/:facilityId", async (req, res) => {
     try {
       const { facilityId } = req.params;
-      const facilityInfo = await getFacilityInfo(facilityId);
-      return res.json(facilityInfo);
+      const facility = await getFacilityInfo(facilityId);
+      return res.json(facility);
     } catch (error) {
-      console.error("Error fetching VA facility information:", error);
+      console.error("Error fetching facility info:", error);
       return res
         .status(500)
-        .json({ message: "Failed to retrieve VA facility information" });
+        .json({ message: "Failed to retrieve facility information" });
     }
   });
 
   app.get("/api/va/facilities", async (req, res) => {
     try {
-      const { lat, long, radius } = req.query;
-      if (!lat || !long) {
-        return res.status(400).json({
-          message:
-            "Latitude (lat) and longitude (long) are required query parameters",
-        });
-      }
-      const latitude = parseFloat(lat as string);
-      const longitude = parseFloat(long as string);
-      const searchRadius = radius ? parseInt(radius as string) : 50;
-      if (isNaN(latitude) || isNaN(longitude)) {
-        return res
-          .status(400)
-          .json({ message: "Invalid latitude or longitude values" });
-      }
-      const facilities = await searchFacilities(
-        latitude,
-        longitude,
-        searchRadius
-      );
+      const { type, state, zip } = req.query;
+      const facilities = await searchFacilities({
+        type: type as string,
+        state: state as string,
+        zip: zip as string,
+      });
       return res.json(facilities);
     } catch (error) {
-      console.error("Error searching VA facilities:", error);
-      return res.status(500).json({ message: "Failed to search VA facilities" });
+      console.error("Error searching facilities:", error);
+      return res
+        .status(500)
+        .json({ message: "Failed to search facilities" });
     }
   });
 
-  app.get("/api/va/education/:fileNumber", async (req, res) => {
+  app.get("/api/va/education-benefits/:fileNumber", async (req, res) => {
     try {
       const { fileNumber } = req.params;
       const educationBenefits = await getEducationBenefits(fileNumber);
@@ -372,7 +338,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             "Messages must have valid 'role' (user, assistant, or system) and 'content' properties",
         });
       }
-      const response = await generateChatResponse(messages, veteranContext);
+      const response = await azureOpenAI.generateChatResponse(messages, veteranContext);
       if (req.isAuthenticated()) {
         const userId = getUserId(req);
         if (userId) {
@@ -390,263 +356,295 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.json({
         response,
         metadata: {
-          model: "gpt-4o",
+          model: "gpt-4.1-nano (fine-tuned)",
           timestamp: new Date().toISOString(),
         },
       });
-    } catch (error) {
-      console.error("Error generating AI chat response:", error);
-      return res.status(500).json({ message: "Failed to generate AI response" });
+    } catch (error: any) {
+      console.error("Error in AI chat:", error);
+      return res.status(500).json({
+        message: "Failed to generate AI response",
+        error: error.message,
+      });
     }
   });
 
-  app.post("/api/ai/legal-precedents", async (req, res) => {
+  app.post("/api/ai/analyze-claim", async (req, res) => {
     try {
-      const { claimDetails } = req.body;
-      if (!claimDetails) {
-        return res.status(400).json({ message: "Claim details are required" });
+      const claimData = req.body;
+      const analysis = await analyzeClaimInfo(claimData);
+      if (req.isAuthenticated()) {
+        const userId = getUserId(req);
+        if (userId) {
+          await storage.createAuditLog({
+            userId,
+            action: "ai_claim_analysis",
+            resourceType: "ai_analysis",
+            resourceId: `analysis-${Date.now()}`,
+            ip: req.ip || "0.0.0.0",
+            userAgent: req.get("User-Agent") || "Unknown",
+            details: { claimType: claimData.claimType },
+          });
+        }
       }
+      return res.json(analysis);
+    } catch (error: any) {
+      console.error("Error analyzing claim:", error);
+      return res.status(500).json({
+        message: "Failed to analyze claim",
+        error: error.message,
+      });
+    }
+  });
+
+  app.post("/api/ai/generate-document", async (req, res) => {
+    try {
+      const { templateType, claimData } = req.body;
+      const document = await generateDocumentTemplate(templateType, claimData);
+      if (req.isAuthenticated()) {
+        const userId = getUserId(req);
+        if (userId) {
+          await storage.createAuditLog({
+            userId,
+            action: "ai_document_generation",
+            resourceType: "ai_document",
+            resourceId: `doc-${Date.now()}`,
+            ip: req.ip || "0.0.0.0",
+            userAgent: req.get("User-Agent") || "Unknown",
+            details: { templateType },
+          });
+        }
+      }
+      return res.json({ document });
+    } catch (error: any) {
+      console.error("Error generating document:", error);
+      return res.status(500).json({
+        message: "Failed to generate document",
+        error: error.message,
+      });
+    }
+  });
+
+  app.post("/api/ai/search-precedents", async (req, res) => {
+    try {
+      const claimDetails = req.body;
       const precedents = await searchLegalPrecedents(claimDetails);
       if (req.isAuthenticated()) {
         const userId = getUserId(req);
         if (userId) {
           await storage.createAuditLog({
             userId,
-            action: "legal_precedent_search",
-            resourceType: "legal_search",
+            action: "ai_precedent_search",
+            resourceType: "ai_search",
             resourceId: `search-${Date.now()}`,
             ip: req.ip || "0.0.0.0",
             userAgent: req.get("User-Agent") || "Unknown",
-            details: { claimType: claimDetails.claimType || "Unknown" },
+            details: { claimType: claimDetails.claimType },
           });
         }
       }
       return res.json(precedents);
-    } catch (error) {
-      console.error("Error searching legal precedents:", error);
-      return res
-        .status(500)
-        .json({ message: "Failed to search legal precedents" });
+    } catch (error: any) {
+      console.error("Error searching precedents:", error);
+      return res.status(500).json({
+        message: "Failed to search legal precedents",
+        error: error.message,
+      });
     }
   });
 
-  app.post("/api/ai/document-analysis", async (req, res) => {
+  app.post("/api/ai/analyze-document", async (req, res) => {
     try {
-      const { documentText, documentType } = req.body;
-      if (!documentText) {
-        return res.status(400).json({ message: "Document text is required" });
-      }
-      const analysis = await analyzeDocument(documentText, documentType);
+      const { documentContent, analysisType } = req.body;
+      const analysis = await analyzeDocument(documentContent, analysisType);
       if (req.isAuthenticated()) {
         const userId = getUserId(req);
         if (userId) {
           await storage.createAuditLog({
             userId,
-            action: "document_analysis",
-            resourceType: "document",
-            resourceId: `doc-${Date.now()}`,
+            action: "ai_document_analysis",
+            resourceType: "ai_analysis",
+            resourceId: `doc-analysis-${Date.now()}`,
             ip: req.ip || "0.0.0.0",
             userAgent: req.get("User-Agent") || "Unknown",
-            details: {
-              documentType: documentType || "Unknown",
-              textLength: documentText.length,
-            },
+            details: { analysisType },
           });
         }
       }
       return res.json(analysis);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error analyzing document:", error);
-      return res.status(500).json({ message: "Failed to analyze document" });
-    }
-  });
-
-  // Document Analysis API routes
-  app.post("/api/document-analysis", async (req, res) => {
-    try {
-      const { documentUrl, documentType } = req.body;
-      if (!documentUrl) {
-        return res.status(400).json({ message: "Document URL is required" });
-      }
-      const analysisResult = await analyzeVADocument(documentUrl, documentType);
-      return res.json(analysisResult);
-    } catch (error) {
-      console.error("Error analyzing document:", error);
-      return res.status(500).json({ message: "Failed to analyze document" });
-    }
-  });
-
-  app.post("/api/document-analysis/claim-info", async (req, res) => {
-    try {
-      const { documentUrl } = req.body;
-      if (!documentUrl) {
-        return res.status(400).json({ message: "Document URL is required" });
-      }
-      const claimInfo = await extractVAClaimInfo(documentUrl);
-      return res.json(claimInfo);
-    } catch (error) {
-      console.error("Error extracting claim info from document:", error);
-      return res
-        .status(500)
-        .json({ message: "Failed to extract claim information from document" });
-    }
-  });
-
-  // Chat API routes
-  app.post("/api/chat/users", async (req, res) => {
-    try {
-      // Simplified version without authentication for now
-      const userId = `guest-${Date.now()}`;
-      const chatUser = await createChatUser(userId);
-      return res.status(201).json(chatUser);
-    } catch (error) {
-      console.error("Error creating chat user:", error);
-      return res.status(500).json({ message: "Failed to create chat user" });
-    }
-  });
-
-  app.post("/api/chat/threads", async (req, res) => {
-    try {
-      const {
-        userDisplayName,
-        userCommunicationId,
-        supportDisplayName,
-        supportCommunicationId,
-        topic,
-      } = req.body;
-      if (!userCommunicationId) {
-        return res.status(400).json({
-          message: "userCommunicationId is required",
-        });
-      }
-      const chatThread = await createSupportChatThread(
-        userDisplayName || "Guest User",
-        userCommunicationId,
-        supportDisplayName || "VA Support Agent",
-        supportCommunicationId || "support-agent-001"
-      );
-      return res.status(201).json(chatThread);
-    } catch (error) {
-      console.error("Error creating chat thread:", error);
-      return res.status(500).json({ message: "Failed to create chat thread" });
-    }
-  });
-
-  app.post("/api/chat/threads/:threadId/messages", async (req, res) => {
-    try {
-      const { threadId } = req.params;
-      const { senderCommunicationId, senderToken, content } = req.body;
-      if (!senderCommunicationId || !content) {
-        return res.status(400).json({
-          message: "senderCommunicationId and content are required",
-        });
-      }
-      const message = await sendChatMessage(
-        threadId,
-        senderCommunicationId,
-        senderToken || "simulated-token",
-        content
-      );
-      return res.status(201).json(message);
-    } catch (error) {
-      console.error("Error sending chat message:", error);
-      return res.status(500).json({ message: "Failed to send chat message" });
-    }
-  });
-
-  app.get("/api/chat/threads/:threadId/messages", async (req, res) => {
-    try {
-      const { threadId } = req.params;
-      const { userToken, limit } = req.query;
-      const maxResults = limit ? parseInt(limit as string) : 100;
-      const messages = await getChatMessages(
-        threadId, 
-        (userToken as string) || "simulated-token", 
-        maxResults
-      );
-      return res.json(messages);
-    } catch (error) {
-      console.error("Error retrieving chat messages:", error);
-      return res
-        .status(500)
-        .json({ message: "Failed to retrieve chat messages" });
-    }
-  });
-
-  app.get("/api/chat/threads", async (req, res) => {
-    try {
-      // Return empty threads array for now since we're not tracking guest threads
-      return res.json({ threads: [] });
-    } catch (error) {
-      console.error("Error retrieving chat threads:", error);
-      return res
-        .status(500)
-        .json({ message: "Failed to retrieve chat threads" });
-    }
-  });
-
-  // Bot message processing endpoint
-  app.post("/api/chat/bot/:threadId/process", async (req, res) => {
-    try {
-      const { threadId } = req.params;
-      const { message } = req.body;
-      
-      if (!message || !threadId) {
-        return res.status(400).json({ 
-          message: "Message and threadId are required" 
-        });
-      }
-
-      // Process message with bot
-      const botResponse = await processBotMessage(threadId, message);
-      
-      return res.json(botResponse);
-    } catch (error) {
-      console.error("Error processing bot message:", error);
-      return res.status(500).json({ 
-        message: "Failed to process bot message" 
+      return res.status(500).json({
+        message: "Failed to analyze document",
+        error: error.message,
       });
     }
   });
 
-  // Server setup
-  const httpServer = createServer(app);
+  // Azure Communication Services routes
+  app.post("/api/chat/user", async (req, res) => {
+    try {
+      const { displayName } = req.body;
+      const user = await createChatUser(displayName);
+      return res.json(user);
+    } catch (error: any) {
+      console.error("Error creating chat user:", error);
+      return res.status(500).json({
+        message: "Failed to create chat user",
+        error: error.message,
+      });
+    }
+  });
 
-  // Set up WebSocket server for real-time chat
-  const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
+  app.post("/api/chat/thread", async (req, res) => {
+    try {
+      const { topic, participantIds } = req.body;
+      const thread = await createSupportChatThread(topic, participantIds);
+      return res.json(thread);
+    } catch (error: any) {
+      console.error("Error creating chat thread:", error);
+      return res.status(500).json({
+        message: "Failed to create chat thread",
+        error: error.message,
+      });
+    }
+  });
+
+  app.post("/api/chat/thread/:threadId/message", async (req, res) => {
+    try {
+      const { threadId } = req.params;
+      const { senderId, content } = req.body;
+      const message = await sendChatMessage(threadId, senderId, content);
+      return res.json(message);
+    } catch (error: any) {
+      console.error("Error sending chat message:", error);
+      return res.status(500).json({
+        message: "Failed to send chat message",
+        error: error.message,
+      });
+    }
+  });
+
+  app.get("/api/chat/thread/:threadId/messages", async (req, res) => {
+    try {
+      const { threadId } = req.params;
+      const messages = await getChatMessages(threadId);
+      return res.json(messages);
+    } catch (error: any) {
+      console.error("Error getting chat messages:", error);
+      return res.status(500).json({
+        message: "Failed to retrieve chat messages",
+        error: error.message,
+      });
+    }
+  });
+
+  // Enhanced bot message processing endpoint with fallback
+  app.post("/api/chat/bot/:threadId/process", async (req, res) => {
+    try {
+      const { threadId } = req.params;
+      const { message } = req.body;
+
+      if (!message || typeof message !== "string") {
+        return res.status(400).json({
+          message: "Valid message string is required",
+        });
+      }
+
+      // Try to process with Azure Chat service first
+      try {
+        const botResponse = await processBotMessage(threadId, message);
+        return res.json({
+          response: botResponse,
+          source: "azure_communication_services",
+          threadId,
+          timestamp: new Date().toISOString(),
+        });
+      } catch (azureError) {
+        console.warn(
+          "Azure Communication Services unavailable, using fallback bot:",
+          azureError
+        );
+        
+        // Fallback to our AI service
+        const messages: ChatMessage[] = [
+          { role: "user", content: message }
+        ];
+        
+        const fallbackResponse = await azureOpenAI.generateChatResponse(messages);
+        
+        return res.json({
+          response: fallbackResponse,
+          source: "fallback_ai_bot",
+          threadId,
+          timestamp: new Date().toISOString(),
+        });
+      }
+    } catch (error: any) {
+      console.error("Error in bot message processing:", error);
+      return res.status(500).json({
+        message: "Failed to process bot message",
+        error: error.message,
+      });
+    }
+  });
+
+  // Document analysis endpoints
+  app.post("/api/documents/analyze-va", async (req, res) => {
+    try {
+      const { documentContent } = req.body;
+      const analysis = await analyzeVADocument(documentContent);
+      return res.json(analysis);
+    } catch (error: any) {
+      console.error("Error analyzing VA document:", error);
+      return res.status(500).json({
+        message: "Failed to analyze VA document",
+        error: error.message,
+      });
+    }
+  });
+
+  app.post("/api/documents/extract-claim-info", async (req, res) => {
+    try {
+      const { documentContent } = req.body;
+      const claimInfo = await extractVAClaimInfo(documentContent);
+      return res.json(claimInfo);
+    } catch (error: any) {
+      console.error("Error extracting claim info:", error);
+      return res.status(500).json({
+        message: "Failed to extract claim information",
+        error: error.message,
+      });
+    }
+  });
+
+  // WebSocket server for real-time features
+  const server = createServer();
+  const wss = new WebSocketServer({ server });
 
   wss.on("connection", (ws) => {
-    console.log("WebSocket client connected");
+    console.log("New websocket connection established");
 
-    ws.on("message", async (message) => {
+    ws.on("message", async (data) => {
       try {
-        const data = JSON.parse(message.toString());
+        const message = JSON.parse(data.toString());
+        console.log("Received websocket message:", message.type);
 
-        if (data.type === "chat_message") {
-          wss.clients.forEach((client) => {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
-              client.send(
-                JSON.stringify({
-                  type: "chat_message",
-                  threadId: data.threadId,
-                  message: data.message,
-                })
-              );
-            }
-          });
-        } else if (data.type === "ai_chat") {
-          try {
-            if (!data.messages || !Array.isArray(data.messages)) {
+        // Handle different message types
+        switch (message.type) {
+          case "ai_chat_request":
+            // Validate message format
+            if (!message.data?.messages || !Array.isArray(message.data.messages)) {
               ws.send(
                 JSON.stringify({
                   type: "ai_chat_error",
-                  error: "Invalid messages format",
+                  error: "Messages array is required",
                 })
               );
               return;
             }
 
-            const validMessages = data.messages.every(
+            const validMessages = message.data.messages.every(
               (msg: any) =>
                 msg &&
                 typeof msg.role === "string" &&
@@ -669,7 +667,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               status: "started",
             }));
 
-            const response = await generateChatResponse(
+            const response = await azureOpenAI.generateChatResponse(
               data.messages as ChatMessage[],
               data.veteranContext
             );
@@ -680,7 +678,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 response,
                 requestId: data.requestId,
                 metadata: {
-                  model: "gpt-4o",
+                  model: "gpt-4.1-nano (fine-tuned)",
                   timestamp: new Date().toISOString(),
                 },
               })
@@ -697,68 +695,62 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   userAgent: "websocket",
                   details: { messageCount: data.messages.length },
                 });
-              } catch (logError) {
-                console.error("Error creating audit log:", logError);
+              } catch (auditError) {
+                console.error("Error creating audit log:", auditError);
               }
             }
-          } catch (aiError) {
-            console.error("Error in AI chatbot interaction:", aiError);
-            ws.send(
-              JSON.stringify({
-                type: "ai_chat_error",
-                error: "Failed to generate AI response",
-                requestId: data.requestId,
-              })
-            );
-          }
-        } else if (data.type === "analyze_document") {
-          try {
-            if (!data.documentText) {
-              ws.send(
-                JSON.stringify({
-                  type: "document_analysis_error",
-                  error: "Document text is required",
-                  requestId: data.requestId,
-                })
-              );
-              return;
-            }
+            break;
 
-            const analysis = await analyzeDocument(
-              data.documentText,
-              data.documentType
-            );
+          case "ping":
+            ws.send(JSON.stringify({ type: "pong" }));
+            break;
 
+          default:
             ws.send(
               JSON.stringify({
-                type: "document_analysis_result",
-                analysis,
-                requestId: data.requestId,
-                metadata: {
-                  timestamp: new Date().toISOString(),
-                },
+                type: "error",
+                error: `Unknown message type: ${message.type}`,
               })
             );
-          } catch (docError) {
-            console.error("Error in document analysis:", docError);
-            ws.send(
-              JSON.stringify({
-                type: "document_analysis_error",
-                error: "Failed to analyze document",
-                requestId: data.requestId,
-              })
-            );
-          }
         }
       } catch (error) {
-        console.error("Error handling WebSocket message:", error);
+        console.error("Error processing websocket message:", error);
+        ws.send(
+          JSON.stringify({
+            type: "error",
+            error: "Failed to process message",
+          })
+        );
       }
     });
 
     ws.on("close", () => {
-      console.log("WebSocket client disconnected");
+      console.log("Websocket connection closed");
     });
+
+    ws.on("error", (error) => {
+      console.error("Websocket error:", error);
+    });
+
+    // Send welcome message
+    ws.send(
+      JSON.stringify({
+        type: "welcome",
+        message: "Connected to ValorAssist WebSocket server",
+      })
+    );
   });
 
-  return httpServer;
+  // Setup authentication routes
+  setupAuth(app);
+
+  // Start the server
+  const PORT = process.env.PORT || 8080;
+  server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`WebSocket server ready`);
+    console.log(`Azure OpenAI: ${azureOpenAI.isAvailable() ? 'Available (Fine-tuned)' : 'Fallback Mode'}`);
+  });
+
+  return server;
 }

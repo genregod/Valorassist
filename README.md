@@ -4,7 +4,14 @@ A comprehensive platform to help veterans navigate the VA claims process with AI
 
 ## 🚀 Recent Updates
 
-**ROUTING FIXED** ✅ (Latest)
+**AZURE OPENAI INTEGRATION** ✅ (Latest)
+- Integrated fine-tuned Azure OpenAI gpt-4.1-nano model specialized for VA claims assistance
+- Replaced generic OpenAI with domain-specific fine-tuned model "1-nano-2025-04-14-qa_frstrun"
+- Enhanced chatbot responses with VA-specific knowledge and improved accuracy
+- Maintained fallback functionality for robust service availability
+- **STATUS**: Ready for deployment with enhanced VA expertise
+
+**ROUTING FIXED** ✅
 - Fixed Azure IIS routing configuration for API endpoints
 - Updated web.config to properly direct `/api/*` requests to Node.js server
 - Chatbot endpoints should now return JSON responses instead of HTML
@@ -35,7 +42,7 @@ A comprehensive platform to help veterans navigate the VA claims process with AI
 - **Frontend**: React + TypeScript + Vite
 - **Backend**: Node.js + Express
 - **Deployment**: Azure App Service with GitHub Actions
-- **AI**: OpenAI GPT-4o (optional) with fallback functionality
+- **AI**: Fine-tuned Azure OpenAI gpt-4.1-nano model (primary) with OpenAI GPT-4o fallback
 - **Chat**: Azure Communication Services (optional) with local fallback
 
 ## Testing the Chatbot
@@ -50,12 +57,20 @@ The chatbot should now be fully functional:
 The application works out of the box with fallback functionality. For enhanced features, configure:
 
 ```bash
-# Optional - for AI-powered responses
+# Primary AI - Fine-tuned Azure OpenAI (Recommended)
+AZURE_OPENAI_API_KEY=your_azure_openai_api_key
+AZURE_OPENAI_ENDPOINT=https://eastus2.api.cognitive.microsoft.com/
+AZURE_OPENAI_DEPLOYMENT_ID=1-nano-2025-04-14-qa_frstrun
+AZURE_OPENAI_API_VERSION=2024-04-01-preview
+
+# Fallback AI - Generic OpenAI (Optional)
 OPENAI_API_KEY=your_openai_api_key
 
 # Optional - for Azure Communication Services
 AZURE_COMMUNICATION_CONNECTION_STRING=your_azure_connection_string
 ```
+
+**Note**: The fine-tuned Azure OpenAI model provides significantly better responses for VA-specific questions and claims assistance.
 
 ## Local Development
 

@@ -18,16 +18,43 @@ interface Message {
   isUser: boolean;
 }
 
+interface UserContext {
+  // Basic Info
+  veteranId?: string;
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+  
+  // Military Service
+  branch?: 'Army' | 'Navy' | 'Air Force' | 'Marines' | 'Coast Guard' | 'Space Force';
+  serviceStartDate?: Date;
+  serviceEndDate?: Date;
+  rank?: string;
+  dischargeType?: 'Honorable' | 'General' | 'Other Than Honorable' | 'Bad Conduct' | 'Dishonorable';
+  
+  // Current Session
+  currentClaimType?: string;
+  conversationStage?: 'initial' | 'gathering_info' | 'providing_guidance' | 'escalating';
+  urgencyLevel?: 'low' | 'medium' | 'high' | 'emergency';
+  initialIntent?: 'file_claim' | 'check_status' | 'appeal' | 'general_help';
+}
+
 interface ChatWindowProps {
   isOpen: boolean;
   onClose: () => void;
+  initialIntent?: 'file_claim' | 'check_status' | 'appeal' | 'general_help';
+  prefilledMessage?: string;
 }
 
-export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
+export function ChatWindow({ isOpen, onClose, initialIntent, prefilledMessage }: ChatWindowProps) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentThread, setCurrentThread] = useState<string | null>(null);
   const [chatUser, setChatUser] = useState<any>(null);
+  const [userContext, setUserContext] = useState<UserContext>({
+    initialIntent,
+    conversationStage: 'initial'
+  });
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   // const { user } = useAuth();
@@ -91,6 +118,13 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
         senderCommunicationId: chatUser.communicationUserId,
         senderToken: chatUser.token,
         content,
+        userContext, // Include user context
+        systemContext: {
+          threadId: currentThread,
+          sessionStartTime: new Date(),
+          lastActivity: new Date(),
+          conversationHistory: messages,
+        }
       });
       return await res.json();
     },
@@ -126,6 +160,13 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
       createChatUserMutation.mutate();
     }
   }, [isOpen, user, chatUser, createChatUserMutation]);
+
+  // Set prefilled message when chat opens with intent
+  useEffect(() => {
+    if (isOpen && prefilledMessage && !message) {
+      setMessage(prefilledMessage);
+    }
+  }, [isOpen, prefilledMessage, message]);
 
   // Create thread after chat user is created
   useEffect(() => {
@@ -190,7 +231,41 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
             {messages.length === 0 ? (
               <div className="text-center text-gray-500 mt-8">
                 <MessageCircle className="h-12 w-12 mx-auto mb-2 text-gray-300" />
-                <p>Start a conversation with our VA support team</p>
+                <div className="space-y-2">
+                  <p className="font-medium">Welcome to VA Support Chat</p>
+                  <p className="text-sm">
+                    {initialIntent === 'file_claim' && "I'll help you file your VA disability claim"}
+                    {initialIntent === 'check_status' && "I'll help you check your claim status"}
+                    {initialIntent === 'appeal' && "I'll help you with your appeal process"}
+                    {!initialIntent && "I'm here to help with your VA benefits and claims"}
+                  </p>
+                  <div className="flex flex-wrap gap-2 justify-center mt-4">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => setMessage("I want to file a new disability claim")}
+                      className="text-xs"
+                    >
+                      File New Claim
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => setMessage("I need to check my claim status")}
+                      className="text-xs"
+                    >
+                      Check Status
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => setMessage("I need help with an appeal")}
+                      className="text-xs"
+                    >
+                      Appeal Help
+                    </Button>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="space-y-4">
